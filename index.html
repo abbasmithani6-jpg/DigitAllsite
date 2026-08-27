@@ -17,34 +17,34 @@
       <img src="digitall-logo-mark.png" class="logo-mark" alt="DigitAll logo">
       <div class="logo-text">
         <div class="word">Digit<span>All</span></div>
-        <div class="tag">DIGITAL FOR ALL</div>
+        <div class="tag" data-i18n="logo_tag">DIGITAL FOR ALL</div>
       </div>
     </a>
   </div>
 
+  <div class="toggle-group currency" role="group" aria-label="Currency Toggle">
+    <button id="btn-usd" onclick="setCurrency('usd')">USD ($)</button>
+    <button id="btn-mga" class="active" onclick="setCurrency('mga')">MGA (Ar)</button>
+  </div>
 
-    <div class="toggle-group currency" role="group" aria-label="Currency Toggle">
-      <button id="btn-usd" onclick="setCurrency('usd')">USD ($)</button>
-      <button id="btn-mga" class="active" onclick="setCurrency('mga')">MGA (Ar)</button>
-    </div>
+  <!-- Language Toggle Buttons -->
+  <div class="toggle-group lang" role="group" aria-label="Language Toggle">
+    <button id="lang-en" class="active" onclick="setLanguage('en')">EN</button>
+    <button id="lang-fr" onclick="setLanguage('fr')">FR</button>
+    <button id="lang-mg" onclick="setLanguage('mg')">MG</button>
+  </div>
 
-    <div class="toggle-group lang" role="group" aria-label="Language Toggle">
-      <a href="index.html"><button class="active">EN</button></a>
-      <a href="fr.html"><button>FR</button></a>
-      <a href="mg.html"><button>MG</button></a>
-    </div>
-
-    <a href="login.html" class="btn btn-ghost">Sign In</a>
-    <a href="signup.html" class="btn btn-teal">Sign Up</a>
+  <div class="auth-buttons">
+    <a href="login.html" class="btn btn-ghost" data-i18n="nav_signin">Sign In</a>
+    <a href="signup.html" class="btn btn-teal" data-i18n="nav_signup">Sign Up</a>
   </div>
 </header>
 
 <nav class="tabs" id="tabs">
-  <button class="active" data-target="why">Why DigitAll Matters</button>
-  <button data-target="control">Financial Control Center</button>
-  <button data-target="trajectory">Spending Trajectory</button>
-  <button data-target="cogs">Cogs Engine</button>
-  <button data-target="ai">Financial AI</button>
+  <button class="active" data-target="why" data-i18n="tab_why">Why DigitAll Matters</button>
+  <button data-target="control" data-i18n="tab_control">Financial Control Center</button>
+  <button data-target="trajectory" data-i18n="tab_trajectory">Spending Trajectory</button>
+  <button data-target="ai" data-i18n="tab_ai">Financial AI</button>
 </nav>
 
 <main>
@@ -52,42 +52,42 @@
   <!-- Section 1: Why DigitAll Matters -->
   <section id="why">
     <div class="manifesto-card">
-      <span class="eyebrow">THE DIGITALL MANIFESTO</span>
-      <h1 class="hero-title">Why Tracking Every Payment Matters</h1>
-      <p class="lead">Silent money leaks erode your wealth over time. DigitAll turns chaotic transactions into complete clarity.</p>
+      <span class="eyebrow" data-i18n="manifesto_eyebrow">THE DIGITALL MANIFESTO</span>
+      <h1 class="hero-title" data-i18n="hero_title">Why Tracking Every Payment Matters</h1>
+      <p class="lead" data-i18n="hero_lead">Silent money leaks erode your wealth over time. DigitAll turns chaotic transactions into complete clarity.</p>
 
       <div class="split-two">
         <div class="info-card digital">
-          <h3 style="color: var(--teal);">DIGITAL</h3>
-          <p>Seamless, cloud-first, accessible anytime and anywhere across all your devices.</p>
+          <h3 style="color: var(--teal);" data-i18n="card_digital_title">DIGITAL</h3>
+          <p data-i18n="card_digital_desc">Seamless, cloud-first, accessible anytime and anywhere across all your devices.</p>
         </div>
         <div class="info-card all">
-          <h3 style="color: var(--purple-light);">ALL</h3>
-          <p>Built for EVERYONE. Affordable for students, families, and local businesses in both USD and Ariary.</p>
+          <h3 style="color: var(--purple-light);" data-i18n="card_all_title">ALL</h3>
+          <p data-i18n="card_all_desc">Built for EVERYONE. Affordable for students, families, and local businesses in both USD and Ariary.</p>
         </div>
       </div>
 
       <div class="cta-row">
-        <button class="btn btn-teal" onclick="scrollToSection('control')">Explore Control Center</button>
-        <a href="signup.html" class="btn btn-purple">Sign Up</a>
+        <button class="btn btn-teal" onclick="scrollToSection('control')" data-i18n="btn_control">Explore Control Center</button>
+        <a href="signup.html" class="btn btn-purple" data-i18n="btn_signup">Sign Up</a>
       </div>
     </div>
 
     <div class="pillars" style="margin-top:48px;">
       <div class="pillar-card">
-        <span class="pillar-badge">PILLAR 01</span>
-        <h3>1. Stop Silent Cash Leaks</h3>
-        <p>Daily snacks, forgotten $4 subscriptions, and hidden transfer fees can secretly drain over $1,800 (8,500,000 Ar) annually.</p>
+        <span class="pillar-badge" data-i18n="pillar1_badge">PILLAR 01</span>
+        <h3 data-i18n="pillar1_title">1. Stop Silent Cash Leaks</h3>
+        <p data-i18n="pillar1_desc">Daily snacks, forgotten $4 subscriptions, and hidden transfer fees can secretly drain over $1,800 (8,500,000 Ar) annually.</p>
       </div>
       <div class="pillar-card">
-        <span class="pillar-badge">PILLAR 02</span>
-        <h3>2. Crystal-Clear Decisions</h3>
-        <p>When you know food accounts for 34% of income and utilities take 18%, you regain total control over your monthly budget.</p>
+        <span class="pillar-badge" data-i18n="pillar2_badge">PILLAR 02</span>
+        <h3 data-i18n="pillar2_title">2. Crystal-Clear Decisions</h3>
+        <p data-i18n="pillar2_desc">When you know food accounts for 34% of income and utilities take 18%, you regain total control over your monthly budget.</p>
       </div>
       <div class="pillar-card">
-        <span class="pillar-badge">PILLAR 03</span>
-        <h3>3. Forward Projection</h3>
-        <p>It is not just about yesterday's spending — it is about forecasting whether you are heading toward debt or building lasting savings.</p>
+        <span class="pillar-badge" data-i18n="pillar3_badge">PILLAR 03</span>
+        <h3 data-i18n="pillar3_title">3. Forward Projection</h3>
+        <p data-i18n="pillar3_desc">It is not just about yesterday's spending — it is about forecasting whether you are heading toward debt or building lasting savings.</p>
       </div>
     </div>
 
@@ -95,33 +95,33 @@
     <div class="simulator" style="margin-top:32px;">
       <div class="sim-head">
         <div>
-          <h3>Interactive Leak Simulator</h3>
-          <p>Adjust the sliders to see how small daily habits compound into massive long-term savings with DigitAll.</p>
+          <h3 data-i18n="sim_title">Interactive Leak Simulator</h3>
+          <p data-i18n="sim_subtitle">Adjust the sliders to see how small daily habits compound into massive long-term savings with DigitAll.</p>
         </div>
-        <span class="sim-tag">Leak Detection Engine</span>
+        <span class="sim-tag" data-i18n="sim_tag">Leak Detection Engine</span>
       </div>
 
       <div class="sim-body">
         <div>
           <div class="slider-row">
-            <label>Daily Snacks & Drinks: <span class="val" id="val-snacks">14,996 Ar / day</span></label>
+            <label><span data-i18n="label_snacks">Daily Snacks & Drinks</span>: <span class="val" id="val-snacks">14,996 Ar / day</span></label>
             <input type="range" id="sl-snacks" min="0" max="30000" value="14996" step="1">
           </div>
           <div class="slider-row">
-            <label>Unused Subscriptions: <span class="val" id="val-subs">64,268 Ar / month</span></label>
+            <label><span data-i18n="label_subs">Unused Subscriptions</span>: <span class="val" id="val-subs">64,268 Ar / month</span></label>
             <input type="range" id="sl-subs" min="0" max="200000" value="64268" step="1">
           </div>
           <div class="slider-row">
-            <label>Mobile Money & ATM Fees: <span class="val" id="val-fees">25,707 Ar / month</span></label>
+            <label><span data-i18n="label_fees">Mobile Money & ATM Fees</span>: <span class="val" id="val-fees">25,707 Ar / month</span></label>
             <input type="range" id="sl-fees" min="0" max="100000" value="25707" step="1">
           </div>
         </div>
 
         <div class="drain-panel">
-          <div class="label">ANNUAL CASH LEAK</div>
+          <div class="label" data-i18n="annual_leak_label">ANNUAL CASH LEAK</div>
           <div class="amount" id="annual-drain">6,553,189 Ar</div>
-          <div class="note">Money lost purely from untracked daily spending habits.</div>
-          <div class="sub-label">5-YEAR COMPOUNDED LOSS</div>
+          <div class="note" data-i18n="annual_leak_note">Money lost purely from untracked daily spending habits.</div>
+          <div class="sub-label" data-i18n="five_year_label">5-YEAR COMPOUNDED LOSS</div>
           <div class="sub-amount" id="five-year">32,765,945 Ar</div>
         </div>
       </div>
@@ -131,25 +131,25 @@
   <!-- Section 2: Financial Control Center -->
   <section id="control">
     <div class="section-head">
-      <h2 class="section-title">Financial Control Center</h2>
-      <p class="section-sub">All your accounts, categories, and targets on a single unified dashboard — updated in real time.</p>
+      <h2 class="section-title" data-i18n="control_title">Financial Control Center</h2>
+      <p class="section-sub" data-i18n="control_sub">All your accounts, categories, and targets on a single unified dashboard — updated in real time.</p>
     </div>
     <div class="feature-grid">
       <div class="feature-card">
-        <h3>Live Balance Overview</h3>
-        <p>Monitor your consolidated net worth across all cash, bank, and wallet accounts instantly.</p>
+        <h3 data-i18n="feat_balance_title">Live Balance Overview</h3>
+        <p data-i18n="feat_balance_desc">Monitor your consolidated net worth across all cash, bank, and wallet accounts instantly.</p>
       </div>
       <div class="feature-card">
-        <h3>Smart Categorization</h3>
-        <p>Automatically group every single transaction with granular precision and custom rules.</p>
+        <h3 data-i18n="feat_cat_title">Smart Categorization</h3>
+        <p data-i18n="feat_cat_desc">Automatically group every single transaction with granular precision and custom rules.</p>
       </div>
       <div class="feature-card">
-        <h3>Custom Spending Targets</h3>
-        <p>Set dynamic thresholds per category and receive instant alerts before you overspend.</p>
+        <h3 data-i18n="feat_targets_title">Custom Spending Targets</h3>
+        <p data-i18n="feat_targets_desc">Set dynamic thresholds per category and receive instant alerts before you overspend.</p>
       </div>
       <div class="feature-card">
-        <h3>Multi-Account Sync</h3>
-        <p>Keep Mobile Money, bank balances, and physical cash in total harmony within one app.</p>
+        <h3 data-i18n="feat_sync_title">Multi-Account Sync</h3>
+        <p data-i18n="feat_sync_desc">Keep Mobile Money, bank balances, and physical cash in total harmony within one app.</p>
       </div>
     </div>
   </section>
@@ -157,87 +157,51 @@
   <!-- Section 3: Spending Trajectory -->
   <section id="trajectory">
     <div class="section-head">
-      <h2 class="section-title">Spending Trajectory</h2>
-      <p class="section-sub">Visual projections of your cash flow across days, weeks, months, or years with precise percentages.</p>
+      <h2 class="section-title" data-i18n="trajectory_title">Spending Trajectory</h2>
+      <p class="section-sub" data-i18n="trajectory_sub">Visual projections of your cash flow across days, weeks, months, or years with precise percentages.</p>
     </div>
     <div class="feature-grid">
       <div class="feature-card">
-        <h3>Timeframe Switching</h3>
-        <p>Seamlessly toggle between daily micro-views and multi-year macroeconomic projections.</p>
+        <h3 data-i18n="feat_tf_title">Timeframe Switching</h3>
+        <p data-i18n="feat_tf_desc">Seamlessly toggle between daily micro-views and multi-year macroeconomic projections.</p>
       </div>
       <div class="feature-card">
-        <h3>Percentage Delta Indicators</h3>
-        <p>Spot variations immediately compared to previous periods with smart trend tags.</p>
+        <h3 data-i18n="feat_delta_title">Percentage Delta Indicators</h3>
+        <p data-i18n="feat_delta_desc">Spot variations immediately compared to previous periods with smart trend tags.</p>
       </div>
       <div class="feature-card">
-        <h3>Category Expansion</h3>
-        <p>Identify which specific category is spiking before it impacts your overall financial health.</p>
+        <h3 data-i18n="feat_exp_title">Category Expansion</h3>
+        <p data-i18n="feat_exp_desc">Identify which specific category is spiking before it impacts your overall financial health.</p>
       </div>
       <div class="feature-card">
-        <h3>Exportable Reports</h3>
-        <p>Download clean, structured summaries for any custom timeframe for tax or accounting needs.</p>
+        <h3 data-i18n="feat_reports_title">Exportable Reports</h3>
+        <p data-i18n="feat_reports_desc">Download clean, structured summaries for any custom timeframe for tax or accounting needs.</p>
       </div>
     </div>
   </section>
 
-  <!-- Section 4: Cogs Animation Engine -->
-  <section id="cogs">
-    <div class="cogs-panel">
-      <div class="cogs-head">
-        <div class="cogs-head-left">
-          <div class="cogs-icon">✨</div>
-          <div>
-            <h3>Mechanical Cogs Engine <span class="motor-badge">INTERACTIVE ENGINE</span></h3>
-            <p>See how mechanical gear cogs interconnect to spell out D-I-G-I-T-A-L-L.</p>
-          </div>
-        </div>
-        <div class="cogs-controls">
-          <button id="btn-pause" onclick="toggleAnimation()">⏸ Pause</button>
-          <button id="btn-speed" onclick="cycleSpeed()">⏩ 1x Speed</button>
-          <button onclick="resetGears()">↺</button>
-        </div>
-      </div>
-
-      <div class="gear-stage" id="gear-stage"></div>
-
-      <div class="letter-info">
-        <div class="letter-info-left">
-          <div class="letter-chip" id="letter-chip">D</div>
-          <div class="letter-info-text">
-            <div class="meta" id="letter-meta">LETTER 1 OF 8: Gear #1 (12 Teeth)</div>
-            <div class="desc" id="letter-desc">Digital First — Fast, portable, synced across the cloud.</div>
-          </div>
-        </div>
-        <div class="letter-info-right">
-          <span class="hint">Click any gear to inspect</span>
-          <button class="btn btn-purple" onclick="nextLetter()">Next Letter →</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 5: AI Financial Intelligence -->
+  <!-- Section 4: AI Financial Intelligence -->
   <section id="ai">
     <div class="section-head">
-      <h2 class="section-title">Financial AI Intelligence</h2>
-      <p class="section-sub">Personalized analysis of your spending habits, written in simple and direct language.</p>
+      <h2 class="section-title" data-i18n="ai_title">Financial AI Intelligence</h2>
+      <p class="section-sub" data-i18n="ai_sub">Personalized analysis of your spending habits, written in simple and direct language.</p>
     </div>
     <div class="feature-grid">
       <div class="feature-card">
-        <h3>Pattern Recognition</h3>
-        <p>DigitAll's AI uncovers hidden recurring expense patterns that usually go unnoticed.</p>
+        <h3 data-i18n="feat_pattern_title">Pattern Recognition</h3>
+        <p data-i18n="feat_pattern_desc">DigitAll's AI uncovers hidden recurring expense patterns that usually go unnoticed.</p>
       </div>
       <div class="feature-card">
-        <h3>Personalized Insights</h3>
-        <p>Receive clear explanations regarding what changed in your spending and why.</p>
+        <h3 data-i18n="feat_insights_title">Personalized Insights</h3>
+        <p data-i18n="feat_insights_desc">Receive clear explanations regarding what changed in your spending and why.</p>
       </div>
       <div class="feature-card">
-        <h3>Actionable Advice</h3>
-        <p>Get practical recommendations tailored specifically to your income and targets.</p>
+        <h3 data-i18n="feat_advice_title">Actionable Advice</h3>
+        <p data-i18n="feat_advice_desc">Get practical recommendations tailored specifically to your income and targets.</p>
       </div>
       <div class="feature-card">
-        <h3>Continuous Learning</h3>
-        <p>Insights grow richer and more accurate the more you record your daily payments.</p>
+        <h3 data-i18n="feat_learn_title">Continuous Learning</h3>
+        <p data-i18n="feat_learn_desc">Insights grow richer and more accurate the more you record your daily payments.</p>
       </div>
     </div>
   </section>
@@ -245,160 +209,10 @@
 </main>
 
 <footer>
-  © 2026 DigitAll — Digital For All. Crafted for Madagascar and the global community.
+  <span data-i18n="footer_text">© 2026 DigitAll — Digital For All. Crafted for Madagascar and the global community.</span>
 </footer>
 
-<script>
-  /* ===== 1. Scroll-Spy Navigation ===== */
-  const tabButtons = document.querySelectorAll('nav.tabs button');
-  
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const targetId = button.getAttribute('data-target');
-      scrollToSection(targetId);
-    });
-  });
-
-  function scrollToSection(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-  }
-
-  /* ===== 2. Currency State Management ===== */
-  const RATE = 4284.53;
-  let currency = 'mga';
-
-  function setCurrency(newCurrency) {
-    currency = newCurrency;
-    document.getElementById('btn-usd').classList.toggle('active', newCurrency === 'usd');
-    document.getElementById('btn-mga').classList.toggle('active', newCurrency === 'mga');
-    updateSimulator();
-  }
-
-  /* ===== 3. Calculator & Simulator Logic ===== */
-  function formatNumber(num) {
-    return Math.round(num).toLocaleString('en-US').replace(/,/g, ' ');
-  }
-
-  function updateSimulator() {
-    const snacksDay = Number(document.getElementById('sl-snacks').value);
-    const subsMonth = Number(document.getElementById('sl-subs').value);
-    const feesMonth = Number(document.getElementById('sl-fees').value);
-
-    ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
-      const slider = document.getElementById(id);
-      const percent = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
-      slider.style.setProperty('--fill', percent + '%');
-    });
-
-    const symbol = currency === 'usd' ? '$' : 'Ar';
-    const convert = value => currency === 'usd' ? value / RATE : value;
-
-    document.getElementById('val-snacks').textContent = `${formatNumber(convert(snacksDay))} ${symbol} / day`;
-    document.getElementById('val-subs').textContent = `${formatNumber(convert(subsMonth))} ${symbol} / month`;
-    document.getElementById('val-fees').textContent = `${formatNumber(convert(feesMonth))} ${symbol} / month`;
-
-    const totalAnnual = (snacksDay * 365) + (subsMonth * 12) + (feesMonth * 12);
-    document.getElementById('annual-drain').textContent = `${formatNumber(convert(totalAnnual))} ${symbol}`;
-    document.getElementById('five-year').textContent = `${formatNumber(convert(totalAnnual * 5))} ${symbol}`;
-  }
-
-  ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
-    document.getElementById(id).addEventListener('input', updateSimulator);
-  });
-  
-  updateSimulator();
-
-  /* ===== 4. Interactive Gear Engine ===== */
-  const LETTERS = [
-    { letter: 'D', teeth: 12, color: '#00F5A4', desc: 'Digital First — Fast, portable, synced across the cloud.' },
-    { letter: 'I', teeth: 10, color: '#7B3FF2', desc: 'Insightful — Instantly categorized payments and insights.' },
-    { letter: 'G', teeth: 14, color: '#3FB8FF', desc: 'Guardrails — Healthy budget limits to keep you on track.' },
-    { letter: 'I', teeth: 10, color: '#FFB020', desc: 'Intelligent — Financial AI reveals silent leaks.' },
-    { letter: 'T', teeth: 12, color: '#FF5FA2', desc: 'Trajectory — Predict whether your savings grow or decline.' },
-    { letter: 'A', teeth: 13, color: '#7B3FF2', desc: 'Affordable — Plans built for students, families, and shops.' },
-    { letter: 'L', teeth: 11, color: '#00F5A4', desc: 'Local — Built natively for Ariary and USD conversion.' },
-    { letter: 'L', teeth: 11, color: '#3FB8FF', desc: 'Lasting — Small daily habits compounding into real wealth.' }
-  ];
-
-  function createGearSVG(color) {
-    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <g fill="none" stroke="${color}" stroke-width="4">
-        <circle cx="50" cy="50" r="34"/>
-        <circle cx="50" cy="50" r="20" fill="${color}22"/>
-      </g>
-      ${Array.from({ length: 10 }).map((_, index) => {
-        const angle = (index / 10) * 360;
-        return `<rect x="47" y="6" width="6" height="14" fill="${color}" transform="rotate(${angle} 50 50)"/>`;
-      }).join('')}
-    </svg>`;
-  }
-
-  const stage = document.getElementById('gear-stage');
-  let selectedIndex = 0;
-
-  LETTERS.forEach((item, i) => {
-    const gearElement = document.createElement('div');
-    gearElement.className = 'gear' + (i === selectedIndex ? ' selected' : '');
-    gearElement.style.color = item.color;
-    gearElement.style.animationDuration = (5 + i * 0.4) + 's';
-    gearElement.style.animationDirection = i % 2 === 0 ? 'normal' : 'reverse';
-    gearElement.innerHTML = createGearSVG(item.color) + 
-      `<div style="margin-top:-64px; text-align:center; font-weight:800; color:${item.color}; font-size:22px; pointer-events:none;">${item.letter}</div>`;
-    
-    gearElement.addEventListener('click', () => selectLetter(i));
-    stage.appendChild(gearElement);
-  });
-
-  function selectLetter(index) {
-    selectedIndex = index;
-    document.querySelectorAll('.gear').forEach((gear, idx) => {
-      gear.classList.toggle('selected', idx === index);
-    });
-    
-    const current = LETTERS[index];
-    document.getElementById('letter-chip').textContent = current.letter;
-    document.getElementById('letter-chip').style.background = current.color;
-    document.getElementById('letter-meta').textContent = `LETTER ${index + 1} OF ${LETTERS.length}: Gear #${index + 1} (${current.teeth} Teeth)`;
-    document.getElementById('letter-desc').textContent = current.desc;
-  }
-
-  function nextLetter() {
-    selectLetter((selectedIndex + 1) % LETTERS.length);
-  }
-
-  let isPaused = false;
-  function toggleAnimation() {
-    isPaused = !isPaused;
-    stage.classList.toggle('paused', isPaused);
-    document.getElementById('btn-pause').textContent = isPaused ? '▶ Play' : '⏸ Pause';
-  }
-
-  const SPEEDS = [1, 2, 0.5];
-  let speedIndex = 0;
-  function cycleSpeed() {
-    speedIndex = (speedIndex + 1) % SPEEDS.length;
-    const speed = SPEEDS[speedIndex];
-    document.getElementById('btn-speed').textContent = `⏩ ${speed}x Speed`;
-    document.querySelectorAll('.gear').forEach((gear, i) => {
-      gear.style.animationDuration = ((5 + i * 0.4) / speed) + 's';
-    });
-  }
-
-  function resetGears() {
-    selectLetter(0);
-    isPaused = false;
-    stage.classList.remove('paused');
-    document.getElementById('btn-pause').textContent = '⏸ Pause';
-    speedIndex = 0;
-    document.getElementById('btn-speed').textContent = '⏩ 1x Speed';
-    document.querySelectorAll('.gear').forEach((gear, i) => {
-      gear.style.animationDuration = (5 + i * 0.4) + 's';
-    });
-  }
-
-  selectLetter(0);
-</script>
-<!-- DigitAll Chatbot Widget -->
+<!-- Floating Chatbot Widget -->
 <style>
   #digitall-chat-bubble {
     position: fixed;
@@ -527,14 +341,14 @@
 
 <div id="digitall-chat-panel">
   <div id="digitall-chat-header">
-    <span>DigitAll Assistant</span>
+    <span data-i18n="chat_header">DigitAll Assistant</span>
     <button id="digitall-chat-close" onclick="digitallToggleChat()">×</button>
   </div>
   <div id="digitall-chat-messages">
-    <div class="digitall-msg bot">Hi! I'm the DigitAll assistant. Ask me anything about tracking your spending, currencies, or plans.</div>
+    <div class="digitall-msg bot" data-i18n="chat_welcome">Hi! I'm the DigitAll assistant. Ask me anything about tracking your spending, currencies, or plans.</div>
   </div>
   <div id="digitall-chat-input-row">
-    <input type="text" id="digitall-chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') digitallSendMessage()">
+    <input type="text" id="digitall-chat-input" data-i18n-ph="chat_placeholder" placeholder="Type a message..." onkeydown="if(event.key==='Enter') digitallSendMessage()">
     <button id="digitall-chat-send" onclick="digitallSendMessage()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12L20 4L13 20L11 13L4 12Z" fill="#04160f"/></svg>
     </button>
@@ -542,6 +356,265 @@
 </div>
 
 <script>
+  /* ===== Inline Translation Dictionary ===== */
+  const translations = {
+    fr: {
+      logo_tag: "LE NUMÉRIQUE POUR TOUS",
+      nav_signin: "Se connecter",
+      nav_signup: "S'inscrire",
+      tab_why: "Pourquoi DigitAll ?",
+      tab_control: "Centre de contrôle",
+      tab_trajectory: "Trajectoire des dépenses",
+      tab_ai: "IA Financière",
+      manifesto_eyebrow: "LE MANIFESTE DIGITALL",
+      hero_title: "Pourquoi chaque paiement compte",
+      hero_lead: "Les fuites d'argent invisibles érodent votre richesse. DigitAll transforme la confusion en clarté totale.",
+      card_digital_title: "NUMÉRIQUE",
+      card_digital_desc: "Fluide, axé sur le cloud, accessible partout et à tout moment sur tous vos appareils.",
+      card_all_title: "POUR TOUS",
+      card_all_desc: "Conçu pour TOUT LE MONDE. Accessible aux étudiants, familles et entreprises en USD et Ariary.",
+      btn_control: "Explorer le centre de contrôle",
+      btn_signup: "S'inscrire",
+      pillar1_badge: "PILIER 01",
+      pillar1_title: "1. Stoppez les fuites d'argent",
+      pillar1_desc: "Snacks quotidiens, abonnements oubliés et frais cachés érodent secrètement plus de 8 500 000 Ar par an.",
+      pillar2_badge: "PILIER 02",
+      pillar2_title: "2. Décisions claires",
+      pillar2_desc: "Quand vous savez que l'alimentation représente 34% de vos revenus, vous reprenez le contrôle de votre budget.",
+      pillar3_badge: "PILIER 03",
+      pillar3_title: "3. Projections futures",
+      pillar3_desc: "Anticipez si vous vous dirigez vers des dettes ou si vous construisez une épargne durable.",
+      sim_title: "Simulateur de fuites d'argent",
+      sim_subtitle: "Ajustez les curseurs pour voir l'impact des petites habitudes quotidiennes à long terme.",
+      sim_tag: "Moteur de détection",
+      label_snacks: "Snacks & boissons par jour",
+      label_subs: "Abonnements inutilisés",
+      label_fees: "Frais Mobile Money / DAB",
+      annual_leak_label: "FUITE D'ARGENT ANNUELLE",
+      annual_leak_note: "Argent perdu uniquement en raison d'habitudes quotidiennes non suivies.",
+      five_year_label: "PERTE CUMULÉE SUR 5 ANS",
+      control_title: "Centre de contrôle financier",
+      control_sub: "Tous vos comptes, catégories et objectifs sur un tableau de bord unique.",
+      feat_balance_title: "Aperçu du solde en direct",
+      feat_balance_desc: "Suivez instantanément votre valeur nette globale sur tous vos comptes.",
+      feat_cat_title: "Catégorisation intelligente",
+      feat_cat_desc: "Regroupez automatiquement chaque transaction avec une précision granulaire.",
+      feat_targets_title: "Objectifs personnalisés",
+      feat_targets_desc: "Définissez des seuils par catégorie et recevez des alertes avant de dépasser votre budget.",
+      feat_sync_title: "Synchronisation multi-comptes",
+      feat_sync_desc: "Harmonisez Mobile Money, comptes bancaires et espèces physiques au même endroit.",
+      trajectory_title: "Trajectoire des dépenses",
+      trajectory_sub: "Projections visuelles de votre trésorerie sur des jours, semaines, mois ou années.",
+      feat_tf_title: "Changement d'échelle",
+      feat_tf_desc: "Passez de vues quotidiennes à des projections pluriannuelles en un instant.",
+      feat_delta_title: "Indicateurs de variation",
+      feat_delta_desc: "Repérez les variations immédiatement par rapport aux périodes précédentes.",
+      feat_exp_title: "Expansion par catégorie",
+      feat_exp_desc: "Identifiez les catégories en hausse avant qu'elles n'affectent votre santé financière.",
+      feat_reports_title: "Rapports exportables",
+      feat_reports_desc: "Téléchargez des résumés structurés pour votre comptabilité.",
+      ai_title: "Intelligence Artificielle Financière",
+      ai_sub: "Analyse personnalisée de vos habitudes de dépense en langage simple.",
+      feat_pattern_title: "Détection de schémas",
+      feat_pattern_desc: "L'IA de DigitAll détecte les dépenses récurrentes cachées.",
+      feat_insights_title: "Analyses personnalisées",
+      feat_insights_desc: "Obtenez des explications claires sur l'évolution de vos dépenses.",
+      feat_advice_title: "Conseils pratiques",
+      feat_advice_desc: "Recevez des recommandations adaptées à vos revenus et objectifs.",
+      feat_learn_title: "Apprentissage continu",
+      feat_learn_desc: "Les analyses s'améliorent à mesure que vous enregistrez vos paiements.",
+      footer_text: "© 2026 DigitAll — Le numérique pour tous. Conçu pour Madagascar et le monde entier.",
+      chat_header: "Assistant DigitAll",
+      chat_welcome: "Bonjour ! Je suis l'assistant DigitAll. Posez-moi des questions sur vos dépenses, devises ou plans.",
+      chat_placeholder: "Écrivez un message..."
+    },
+    mg: {
+      logo_tag: "DIGITAL HO AN'NY REHETRA",
+      nav_signin: "Hiditra",
+      nav_signup: "Hisoratra anarana",
+      tab_why: "Nahoana no DigitAll?",
+      tab_control: "Ivom-pifehezana",
+      tab_trajectory: "Taratry ny fandaniana",
+      tab_ai: "AI Ara-bola",
+      manifesto_eyebrow: "NY MANIFESTO DIGITALL",
+      hero_title: "Nahoana no zava-dehibe ny fanaraha-maso ny fandoavam-bola",
+      hero_lead: "Ny fahaverezam-bola kely isan'andro dia manimba ny hafalianao. DigitAll dia manova ny korontana ho mazava tsara.",
+      card_digital_title: "DIGITAL",
+      card_digital_desc: "Azo idirana amin'ny fotoana rehetra sy amin'ny fitaovana rehetra amin'ny alalan'ny Cloud.",
+      card_all_title: "AN'NY REHETRA",
+      card_all_desc: "Natao ho an'ny REHETRA. Takatry ny mpianatra, fianakaviana ary fandraharahana amin'ny USD sy Ariary.",
+      btn_control: "Hijery ny Ivom-pifehezana",
+      btn_signup: "Hisoratra anarana",
+      pillar1_badge: "ANDRY 01",
+      pillar1_title: "1. Atsatopy ny fahaverezam-bola",
+      pillar1_desc: "Ny sakafo kely isan'andro sy ny sarany affeno dia mety hahalany mihoatra ny 8 500 000 Ar isan-taona.",
+      pillar2_badge: "ANDRY 02",
+      pillar2_title: "2. Decision mazava tsara",
+      pillar2_desc: "Rehefa fantatrao fa 34% amin'ny fidiran'ny vola ny sakafo, dia miverina aminao ny fifehezana ny tetibola.",
+      pillar3_badge: "ANDRY 03",
+      pillar3_title: "3. Vinavinan'ny ho avy",
+      pillar3_desc: "Tsy momba ny omaly ihany — momba ny vinavina na ho any amin'ny trosa na ho amin'ny tahiry ianao.",
+      sim_title: "Mpanao sarisary ny fahaverezam-bola",
+      sim_subtitle: "Ovay ny sliding mba hahitana ny vokatry ny fahazarana kely isan'andro amin'ny ho avy.",
+      sim_tag: "Masinina mpanamarina",
+      label_snacks: "Sakafo & zava-pisotro isan'andro",
+      label_subs: "Abonnement tsy ampiasaina",
+      label_fees: "Saran'ny Mobile Money / ATM",
+      annual_leak_label: "FAHAVEREZAM-BOLA ISAN-TAONA",
+      annual_leak_note: "Vola lost vokatry ny fandaniana kely tsy voasoratra.",
+      five_year_label: "FAHAVEREZANA AMIN'NY TAONA 5",
+      control_title: "Ivom-pifehezana ara-bola",
+      control_sub: "Ny kontonao, sokajy ary tanjona rehetra amin'ny takelaka iray.",
+      feat_balance_title: "Paseho ny ambim-bika",
+      feat_balance_desc: "Araho avy hatrany ny sandan'ny volanao amin'ny kaonty rehetra.",
+      feat_cat_title: "Sokajy manan-tsaina",
+      feat_cat_desc: "Andaharo ho azy ny fifanakalozana rehetra amin'ny antsipiriany.",
+      feat_targets_title: "Tanjona manokana",
+      feat_targets_desc: "Mametraha fetra isaky ny sokajy ary mahazo fampitandremana alohan'ny hahaverezana vola.",
+      feat_sync_title: "Fampiarahana kaonty maro",
+      feat_sync_desc: "Ampifanaraho ny Mobile Money, banky ary vola tanana amin'ny fampiharana iray.",
+      trajectory_title: "Taratry ny fandaniana",
+      trajectory_sub: "Fanehoana ny fikorianan'ny vola amin'ny andro, herinandro, mois na taona.",
+      feat_tf_title: "Fiovan'ny fotoana",
+      feat_tf_desc: "Mifamadiha mora foana amin'ny fahitana isan'andro sy ny vinavina mandritra ny taona maro.",
+      feat_delta_title: "Mpanondro ny fiovana",
+      feat_delta_desc: "Hitoera amin'ny fiovana avy hatrany mihoatra amin'ny fotoana lasa.",
+      feat_exp_title: "Fivelaran'ny sokajy",
+      feat_exp_desc: "Fantaro ny sokajy misy fiakarana alohan'ny hisiansa amin'ny ara-bolanao.",
+      feat_reports_title: "Rapor azo avoaka",
+      feat_reports_desc: "Ampidino ny famintinana nodiovina ho an'ny kontability.",
+      ai_title: "AI Ara-bola Manan-tsaina",
+      ai_sub: "Famakafakana manokana ny fahazarana mandany vola amin'ny fiteny tsotra.",
+      feat_pattern_title: "Fahafantarana ny fahazarana",
+      feat_pattern_desc: "Mamoaka ny fandaniana miverimberina miafina ny AI-n'ny DigitAll.",
+      feat_insights_title: "Fijery manokana",
+      feat_insights_desc: "Mahazo fanazavana mazava momba ny niova amin'ny fandanianao.",
+      feat_advice_title: "Torohevitra azo ampiharina",
+      feat_advice_desc: "Mahazo torohevitra mifanaraka amin'ny fidiran'ny volanao sy ny tanjonao.",
+      feat_learn_title: "Fianarana mitohy",
+      feat_learn_desc: "Lasa tsara kokoa ny fanadihadiana rehefa manoratra ny fandoavam-bola ianao.",
+      footer_text: "© 2026 DigitAll — Digital ho an'ny rehetra. Natao ho an'i Madagasikara sy ny tontolo rolled.",
+      chat_header: "Mpanampy DigitAll",
+      chat_welcome: "Manao ahoana! Izaho no mpanampy DigitAll. Anontanio ahy ny momba ny fandaniana, vola, na drafitra.",
+      chat_placeholder: "Manorata hafatra..."
+    }
+  };
+
+  let currentLang = 'en';
+  const originalEnglish = {};
+  const originalPlaceholders = {};
+
+  /* ===== 1. Scroll-Spy Navigation ===== */
+  const tabButtons = document.querySelectorAll('nav.tabs button');
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const targetId = button.getAttribute('data-target');
+      scrollToSection(targetId);
+    });
+  });
+
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* ===== 2. Currency & Calculator State ===== */
+  const RATE = 4284.53;
+  let currency = 'mga';
+
+  function setCurrency(newCurrency) {
+    currency = newCurrency;
+    document.getElementById('btn-usd').classList.toggle('active', newCurrency === 'usd');
+    document.getElementById('btn-mga').classList.toggle('active', newCurrency === 'mga');
+    updateSimulator();
+  }
+
+  function formatNumber(num) {
+    return Math.round(num).toLocaleString('en-US').replace(/,/g, ' ');
+  }
+
+  function getDynamicUnits() {
+    if (currentLang === 'fr') {
+      return { day: '/ jour', month: '/ mois' };
+    } else if (currentLang === 'mg') {
+      return { day: '/ andro', month: '/ volana' };
+    }
+    return { day: '/ day', month: '/ month' };
+  }
+
+  function updateSimulator() {
+    const snacksDay = Number(document.getElementById('sl-snacks').value);
+    const subsMonth = Number(document.getElementById('sl-subs').value);
+    const feesMonth = Number(document.getElementById('sl-fees').value);
+
+    ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
+      const slider = document.getElementById(id);
+      const percent = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+      slider.style.setProperty('--fill', percent + '%');
+    });
+
+    const symbol = currency === 'usd' ? '$' : 'Ar';
+    const convert = value => currency === 'usd' ? value / RATE : value;
+    const units = getDynamicUnits();
+
+    document.getElementById('val-snacks').textContent = `${formatNumber(convert(snacksDay))} ${symbol} ${units.day}`;
+    document.getElementById('val-subs').textContent = `${formatNumber(convert(subsMonth))} ${symbol} ${units.month}`;
+    document.getElementById('val-fees').textContent = `${formatNumber(convert(feesMonth))} ${symbol} ${units.month}`;
+
+    const totalAnnual = (snacksDay * 365) + (subsMonth * 12) + (feesMonth * 12);
+    document.getElementById('annual-drain').textContent = `${formatNumber(convert(totalAnnual))} ${symbol}`;
+    document.getElementById('five-year').textContent = `${formatNumber(convert(totalAnnual * 5))} ${symbol}`;
+  }
+
+  ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateSimulator);
+  });
+
+  /* ===== 3. Complete Universal Translation Engine ===== */
+  document.addEventListener('DOMContentLoaded', () => {
+    // Cache original English values
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      originalEnglish[el.getAttribute('data-i18n')] = el.textContent.trim();
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      originalPlaceholders[el.getAttribute('data-i18n-ph')] = el.getAttribute('placeholder');
+    });
+
+    updateSimulator();
+  });
+
+  function setLanguage(lang) {
+    currentLang = lang;
+
+    ['en', 'fr', 'mg'].forEach(l => {
+      const btn = document.getElementById(`lang-${l}`);
+      if (btn) btn.classList.toggle('active', l === lang);
+    });
+
+    // Translate standard text content
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (lang === 'en') {
+        el.textContent = originalEnglish[key];
+      } else if (translations[lang] && translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+
+    // Translate input placeholders
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const key = el.getAttribute('data-i18n-ph');
+      if (lang === 'en') {
+        el.setAttribute('placeholder', originalPlaceholders[key]);
+      } else if (translations[lang] && translations[lang][key]) {
+        el.setAttribute('placeholder', translations[lang][key]);
+      }
+    });
+
+    // Force updates to simulator values & units
+    updateSimulator();
+  }
+
+  /* ===== 4. Worker Chatbot Integration ===== */
   const DIGITALL_CHAT_URL = "https://digitall-chat.abbasmithani6.workers.dev";
 
   function digitallToggleChat() {
@@ -565,7 +638,7 @@
 
     const typingBubble = document.createElement('div');
     typingBubble.className = 'digitall-msg typing';
-    typingBubble.textContent = 'Typing...';
+    typingBubble.textContent = currentLang === 'fr' ? 'Saisie...' : (currentLang === 'mg' ? 'Manoratra...' : 'Typing...');
     messagesEl.appendChild(typingBubble);
     messagesEl.scrollTop = messagesEl.scrollHeight;
 
@@ -573,7 +646,7 @@
       const res = await fetch(DIGITALL_CHAT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ message, lang: currentLang })
       });
       const data = await res.json();
 
@@ -581,13 +654,13 @@
 
       const botBubble = document.createElement('div');
       botBubble.className = 'digitall-msg bot';
-      botBubble.textContent = data.reply || "Sorry, something went wrong.";
+      botBubble.textContent = data.reply || (currentLang === 'fr' ? 'Désolé, une erreur est survenue.' : (currentLang === 'mg' ? 'Mampahafantatra fa nisy olana kely.' : 'Sorry, something went wrong.'));
       messagesEl.appendChild(botBubble);
     } catch (err) {
       typingBubble.remove();
       const errorBubble = document.createElement('div');
       errorBubble.className = 'digitall-msg bot';
-      errorBubble.textContent = "Sorry, I couldn't connect just now. Please try again.";
+      errorBubble.textContent = currentLang === 'fr' ? 'Désolé, connexion impossible pour le moment.' : (currentLang === 'mg' ? 'Tsy afaka mifandray amin\'izao fotoana izao.' : 'Sorry, I couldn\'t connect just now. Please try again.');
       messagesEl.appendChild(errorBubble);
     }
 
