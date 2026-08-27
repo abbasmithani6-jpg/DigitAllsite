@@ -1,181 +1,257 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DigitAll | Log In</title>
+<title>Sign In | DigitAll</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
 <style>
-  :root{
-    --bg:#0a0518;
-    --card:#160b38;
-    --card-border: rgba(255,255,255,0.08);
-    --purple:#580CEB;
-    --teal:#00F5A4;
-    --red:#FF4D5E;
-    --text:#FFFFFF;
-    --text-dim:#B9AFDA;
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-display: "Stack Sans Notch", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  .auth-wrapper {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
   }
-  *{ box-sizing: border-box; }
-  body{
-    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-    background: radial-gradient(1200px 600px at 20% -10%, #1a0f45 0%, var(--bg) 55%) fixed, var(--bg);
-    font-family: var(--font); color: var(--text); padding: 24px;
+  .auth-card {
+    background: rgba(22, 11, 56, 0.8);
+    border: 1px solid rgba(88, 12, 235, 0.4);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
   }
-  .card{
-    width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--purple);
-    border-radius: 24px; padding: 40px 36px;
+  .auth-header {
+    text-align: center;
+    margin-bottom: 32px;
   }
-  .logo-row{ display:flex; align-items:center; gap:10px; margin-bottom: 28px; }
-  .logo-row .word{ font-family: var(--font-display); font-weight:800; font-size: 20px; }
-  .logo-row .word span{ color: var(--teal); }
-  h1{ font-family: var(--font-display); font-size: 24px; margin: 0 0 6px; }
-  p.sub{ color: var(--text-dim); font-size: 14px; margin: 0 0 28px; }
-  label{ display:block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text-dim); }
-  input{
-    width:100%; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border);
-    color: var(--text); border-radius: 12px; padding: 13px 14px; font-size: 15px; margin-bottom: 18px;
-    font-family: var(--font);
+  .auth-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 8px;
   }
-  input:focus{ outline:none; border-color: var(--teal); }
-  button{
-    width:100%; background: var(--teal); color:#04160f; border:none; border-radius: 999px;
-    padding: 14px; font-size: 15px; font-weight: 800; cursor:pointer; font-family: var(--font);
-    transition: opacity .15s ease;
+  .auth-subtitle {
+    font-size: 14px;
+    color: #B9AFDA;
   }
-  button:hover{ opacity: 0.9; }
-  button:disabled{ opacity: 0.5; cursor: not-allowed; }
-  .msg{ margin-top: 18px; font-size: 14px; line-height: 1.5; padding: 12px 14px; border-radius: 10px; display:none; }
-  .msg.success{ display:block; background: rgba(0,245,164,0.1); border: 1px solid rgba(0,245,164,0.35); color: var(--teal); }
-  .msg.error{ display:block; background: rgba(255,77,94,0.1); border: 1px solid rgba(255,77,94,0.35); color: var(--red); }
-  .row-between{ display:flex; justify-content:flex-end; margin: -10px 0 20px; }
-  .link-btn{
-    background:none; border:none; color: var(--text-dim); font-size: 13px; font-weight: 600;
-    text-decoration: underline; cursor:pointer; padding:0; width:auto; font-family: var(--font);
+  .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-  .link-btn:hover{ color: var(--teal); }
-  .footer-note{ margin-top: 20px; text-align:center; font-size: 13px; color: var(--text-dim); }
+  .form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #D3CEE8;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .form-control {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 15px;
+    color: #FFFFFF;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+  .form-control:focus {
+    border-color: #00F5A4;
+    box-shadow: 0 0 12px rgba(0, 245, 164, 0.2);
+  }
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #B9AFDA;
+    cursor: pointer;
+  }
+  .remember-me input {
+    accent-color: #00F5A4;
+  }
+  .forgot-link {
+    color: #00F5A4;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .forgot-link:hover {
+    text-decoration: underline;
+  }
+  .btn-auth {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+  }
+  .auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #B9AFDA;
+  }
+  .auth-footer a {
+    color: #00F5A4;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .auth-footer a:hover {
+    text-decoration: underline;
+  }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="logo-row">
-    <div class="word">Digit<span>All</span></div>
+<header class="topbar">
+  <div class="logo-block">
+    <a href="index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
+      <img src="digitall-logo-mark.png" class="logo-mark" alt="DigitAll logo">
+      <div class="logo-text">
+        <div class="word">Digit<span>All</span></div>
+        <div class="tag" data-i18n="logo_tag">DIGITAL FOR ALL</div>
+      </div>
+    </a>
   </div>
 
-  <h1>Welcome back</h1>
-  <p class="sub">Log in to your DigitAll account.</p>
+  <div class="toggle-group lang" role="group" aria-label="Language Toggle">
+    <button id="lang-en" class="active" onclick="setLanguage('en')">EN</button>
+    <button id="lang-fr" onclick="setLanguage('fr')">FR</button>
+    <button id="lang-mg" onclick="setLanguage('mg')">MG</button>
+  </div>
+</header>
 
-  <form id="login-form">
-    <label for="email">Email</label>
-    <input type="email" id="email" required placeholder="you@example.com">
-
-    <label for="password">Password</label>
-    <input type="password" id="password" required placeholder="Your password">
-
-    <div class="row-between">
-      <button type="button" class="link-btn" id="forgot-btn">Forgot password?</button>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title" data-i18n="login_title">Welcome Back</h1>
+      <p class="auth-subtitle" data-i18n="login_subtitle">Sign in to access your financial control center.</p>
     </div>
 
-    <button type="submit" id="submit-btn">Log In</button>
-  </form>
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label data-i18n="lbl_email">Email Address</label>
+        <input type="email" class="form-control" data-i18n-ph="ph_email" placeholder="name@example.com" required>
+      </div>
 
-  <div class="msg" id="msg"></div>
+      <div class="form-group">
+        <label data-i18n="lbl_password">Password</label>
+        <input type="password" class="form-control" data-i18n-ph="ph_password" placeholder="••••••••" required>
+      </div>
 
-  <p class="footer-note">Don't have an account yet? Sign up first.</p>
+      <div class="form-actions">
+        <label class="remember-me">
+          <input type="checkbox">
+          <span data-i18n="lbl_remember">Remember me</span>
+        </label>
+        <a href="#" class="forgot-link" data-i18n="link_forgot">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-teal btn-auth" data-i18n="btn_login">Sign In</button>
+    </form>
+
+    <div class="auth-footer">
+      <span data-i18n="no_account">Don't have an account?</span> 
+      <a href="signup.html" data-i18n="link_signup">Sign Up</a>
+    </div>
+  </div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getAuth,
-    signInWithEmailAndPassword,
-    sendPasswordResetEmail
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
-    authDomain: "digitall-c77d8.firebaseapp.com",
-    projectId: "digitall-c77d8",
-    storageBucket: "digitall-c77d8.firebasestorage.app",
-    messagingSenderId: "922798712588",
-    appId: "1:922798712588:web:43235136b5b1bf58168b29"
+<script>
+  const translations = {
+    fr: {
+      logo_tag: "LE NUMÉRIQUE POUR TOUS",
+      login_title: "Bon retour",
+      login_subtitle: "Connectez-vous pour accéder à votre centre de contrôle financier.",
+      lbl_email: "Adresse Email",
+      ph_email: "nom@exemple.com",
+      lbl_password: "Mot de passe",
+      ph_password: "••••••••",
+      lbl_remember: "Se souvenir de moi",
+      link_forgot: "Mot de passe oublié ?",
+      btn_login: "Se Connecter",
+      no_account: "Vous n'avez pas de compte ?",
+      link_signup: "S'inscrire"
+    },
+    mg: {
+      logo_tag: "DIGITAL HO AN'NY REHETRA",
+      login_title: "Tonga soa indray",
+      login_subtitle: "Tidiro ny kaontinao hidirana amin'ny ivom-pifehezana ara-bola.",
+      lbl_email: "Adiresy Email",
+      ph_email: "anarana@ohatra.com",
+      lbl_password: "Tenypahatsiarovana",
+      ph_password: "••••••••",
+      lbl_remember: "Tsarovy izaho",
+      link_forgot: "Adino ny tenypahatsiarovana?",
+      btn_login: "Hiditra",
+      no_account: "Mbola tsy manana kaonty?",
+      link_signup: "Hisoratra anarana"
+    }
   };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+  let currentLang = 'en';
+  const originalEnglish = {};
+  const originalPlaceholders = {};
 
-  const form = document.getElementById("login-form");
-  const msgEl = document.getElementById("msg");
-  const submitBtn = document.getElementById("submit-btn");
-  const forgotBtn = document.getElementById("forgot-btn");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      originalEnglish[el.getAttribute('data-i18n')] = el.textContent.trim();
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      originalPlaceholders[el.getAttribute('data-i18n-ph')] = el.getAttribute('placeholder');
+    });
+  });
 
-  function showMessage(text, type) {
-    msgEl.textContent = text;
-    msgEl.className = "msg " + type;
+  function setLanguage(lang) {
+    currentLang = lang;
+
+    ['en', 'fr', 'mg'].forEach(l => {
+      const btn = document.getElementById(`lang-${l}`);
+      if (btn) btn.classList.toggle('active', l === lang);
+    });
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (lang === 'en') {
+        el.textContent = originalEnglish[key];
+      } else if (translations[lang] && translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const key = el.getAttribute('data-i18n-ph');
+      if (lang === 'en') {
+        el.setAttribute('placeholder', originalPlaceholders[key]);
+      } else if (translations[lang] && translations[lang][key]) {
+        el.setAttribute('placeholder', translations[lang][key]);
+      }
+    });
   }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Logging in...";
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      if (!user.emailVerified) {
-        showMessage(
-          "Please verify your email before logging in. Check your inbox for the verification link we sent when you signed up.",
-          "error"
-        );
-      } else {
-        showMessage(`Welcome back, ${email}! You're logged in.`, "success");
-        // TODO: redirect to the main DigitAll dashboard (index.html) here, e.g.:
-        // window.location.href = "index.html";
-      }
-    } catch (err) {
-      let friendly = "Something went wrong. Please try again.";
-      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") friendly = "Incorrect email or password.";
-      if (err.code === "auth/user-not-found") friendly = "No account found with that email.";
-      if (err.code === "auth/invalid-email") friendly = "That email address doesn't look valid.";
-      if (err.code === "auth/too-many-requests") friendly = "Too many attempts. Please wait a moment and try again.";
-      showMessage(friendly, "error");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Log In";
-    }
-  });
-
-  forgotBtn.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    if (!email) {
-      showMessage("Enter your email above first, then tap Forgot password.", "error");
-      return;
-    }
-    forgotBtn.disabled = true;
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showMessage(`Password reset link sent to ${email}. Check your inbox.`, "success");
-    } catch (err) {
-      let friendly = "Couldn't send reset email. Please try again.";
-      if (err.code === "auth/user-not-found") friendly = "No account found with that email.";
-      if (err.code === "auth/invalid-email") friendly = "That email address doesn't look valid.";
-      showMessage(friendly, "error");
-    } finally {
-      forgotBtn.disabled = false;
-    }
-  });
+  function handleLogin(event) {
+    event.preventDefault();
+    alert(currentLang === 'fr' ? 'Connexion en cours...' : (currentLang === 'mg' ? 'Mampiditra...' : 'Logging in...'));
+  }
 </script>
-
 </body>
 </html>
