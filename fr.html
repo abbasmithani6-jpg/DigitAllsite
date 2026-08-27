@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigitAll | Numérique Pour Tous</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo-block">
+    <a href="fr.html" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
+      <img src="digitall-logo-mark.png" class="logo-mark" alt="Logo DigitAll">
+      <div class="logo-text">
+        <div class="word">Digit<span>All</span></div>
+        <div class="tag">NUMÉRIQUE POUR TOUS</div>
+      </div>
+    </a>
+  </div>
+
+
+
+    <div class="toggle-group currency" role="group" aria-label="Devise">
+      <button id="btn-usd" onclick="setCurrency('usd')">USD ($)</button>
+      <button id="btn-mga" class="active" onclick="setCurrency('mga')">MGA (Ar)</button>
+    </div>
+
+    <div class="toggle-group lang" role="group" aria-label="Langue">
+      <a href="en.html"><button>EN</button></a>
+      <a href="fr.html"><button class="active">FR</button></a>
+      <a href="mg.html"><button>MG</button></a>
+    </div>
+
+    <a href="login.html" class="btn btn-ghost">Connexion</a>
+    <a href="signup.html" class="btn btn-teal">S'inscrire</a>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-target="why">Pourquoi DigitAll Compte</button>
+  <button data-target="control">Centre de Contrôle Financier</button>
+  <button data-target="trajectory">Trajectoire des Dépenses</button>
+  <button data-target="cogs">Moteur à Engrenages</button>
+  <button data-target="ai">IA Financière</button>
+</nav>
+
+<main>
+
+  <!-- Section 1 : Pourquoi DigitAll Compte -->
+  <section id="why">
+    <div class="manifesto-card">
+      <span class="eyebrow">LE MANIFESTE DIGITALL</span>
+      <h1 class="hero-title">Pourquoi Suivre Chaque Paiement Est Essentiel</h1>
+      <p class="lead">Les fuites d'argent silencieuses érodent votre patrimoine au fil du temps. DigitAll transforme des transactions chaotiques en une clarté totale.</p>
+
+      <div class="split-two">
+        <div class="info-card digital">
+          <h3 style="color: var(--teal);">NUMÉRIQUE</h3>
+          <p>Fluide, axé sur le cloud, accessible à tout moment et partout sur tous vos appareils.</p>
+        </div>
+        <div class="info-card all">
+          <h3 style="color: var(--purple-light);">TOUS</h3>
+          <p>Conçu pour TOUT LE MONDE. Abordable pour les étudiants, les familles et les commerces locaux, en USD comme en Ariary.</p>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn btn-teal" onclick="scrollToSection('control')">Explorer le Centre de Contrôle</button>
+        <a href="signup.html" class="btn btn-purple">S'inscrire</a>
+      </div>
+    </div>
+
+    <div class="pillars" style="margin-top:48px;">
+      <div class="pillar-card">
+        <span class="pillar-badge">PILIER 01</span>
+        <h3>1. Stoppez les Fuites d'Argent Silencieuses</h3>
+        <p>Les collations quotidiennes, les abonnements oubliés à 4$ et les frais de transfert cachés peuvent vous coûter secrètement plus de 1 800 $ (8 500 000 Ar) par an.</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-badge">PILIER 02</span>
+        <h3>2. Des Décisions d'une Clarté Absolue</h3>
+        <p>Lorsque vous savez que l'alimentation représente 34 % de vos revenus et les charges 18 %, vous reprenez le contrôle total de votre budget mensuel.</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-badge">PILIER 03</span>
+        <h3>3. Projection vers l'Avenir</h3>
+        <p>Il ne s'agit pas seulement des dépenses d'hier — il s'agit de prévoir si vous allez vers l'endettement ou vers une épargne durable.</p>
+      </div>
+    </div>
+
+    <!-- Simulateur de fuites interactif -->
+    <div class="simulator" style="margin-top:32px;">
+      <div class="sim-head">
+        <div>
+          <h3>Simulateur Interactif de Fuites</h3>
+          <p>Ajustez les curseurs pour voir comment de petites habitudes quotidiennes se transforment en économies importantes à long terme avec DigitAll.</p>
+        </div>
+        <span class="sim-tag">Moteur de Détection des Fuites</span>
+      </div>
+
+      <div class="sim-body">
+        <div>
+          <div class="slider-row">
+            <label>Collations et Boissons Quotidiennes : <span class="val" id="val-snacks">14 996 Ar / jour</span></label>
+            <input type="range" id="sl-snacks" min="0" max="30000" value="14996" step="1">
+          </div>
+          <div class="slider-row">
+            <label>Abonnements Non Utilisés : <span class="val" id="val-subs">64 268 Ar / mois</span></label>
+            <input type="range" id="sl-subs" min="0" max="200000" value="64268" step="1">
+          </div>
+          <div class="slider-row">
+            <label>Mobile Money et Frais de Distributeur : <span class="val" id="val-fees">25 707 Ar / mois</span></label>
+            <input type="range" id="sl-fees" min="0" max="100000" value="25707" step="1">
+          </div>
+        </div>
+
+        <div class="drain-panel">
+          <div class="label">FUITE DE TRÉSORERIE ANNUELLE</div>
+          <div class="amount" id="annual-drain">6 553 189 Ar</div>
+          <div class="note">Argent perdu uniquement à cause d'habitudes de dépenses quotidiennes non suivies.</div>
+          <div class="sub-label">PERTE CUMULÉE SUR 5 ANS</div>
+          <div class="sub-amount" id="five-year">32 765 945 Ar</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2 : Centre de Contrôle Financier -->
+  <section id="control">
+    <div class="section-head">
+      <h2 class="section-title">Centre de Contrôle Financier</h2>
+      <p class="section-sub">Tous vos comptes, catégories et objectifs sur un seul tableau de bord unifié — mis à jour en temps réel.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Aperçu du Solde en Direct</h3>
+        <p>Suivez instantanément votre patrimoine net consolidé sur tous vos comptes espèces, bancaires et portefeuilles.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Catégorisation Intelligente</h3>
+        <p>Regroupez automatiquement chaque transaction avec une précision fine et des règles personnalisées.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Objectifs de Dépenses Personnalisés</h3>
+        <p>Définissez des seuils dynamiques par catégorie et recevez des alertes instantanées avant de dépasser votre budget.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Synchronisation Multi-Comptes</h3>
+        <p>Gardez Mobile Money, soldes bancaires et espèces physiques en parfaite harmonie dans une seule application.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3 : Trajectoire des Dépenses -->
+  <section id="trajectory">
+    <div class="section-head">
+      <h2 class="section-title">Trajectoire des Dépenses</h2>
+      <p class="section-sub">Projections visuelles de votre flux de trésorerie par jour, semaine, mois ou année, avec des pourcentages précis.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Changement de Période</h3>
+        <p>Basculez facilement entre des vues quotidiennes détaillées et des projections macroéconomiques sur plusieurs années.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Indicateurs de Variation en Pourcentage</h3>
+        <p>Repérez immédiatement les variations par rapport aux périodes précédentes grâce à des indicateurs de tendance intelligents.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Détail par Catégorie</h3>
+        <p>Identifiez quelle catégorie explose avant qu'elle n'affecte votre santé financière globale.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Rapports Exportables</h3>
+        <p>Téléchargez des résumés clairs et structurés pour toute période, utiles pour la fiscalité ou la comptabilité.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4 : Moteur à Engrenages -->
+  <section id="cogs">
+    <div class="cogs-panel">
+      <div class="cogs-head">
+        <div class="cogs-head-left">
+          <div class="cogs-icon">✨</div>
+          <div>
+            <h3>Moteur à Engrenages Mécaniques <span class="motor-badge">MOTEUR INTERACTIF</span></h3>
+            <p>Découvrez comment des engrenages mécaniques s'assemblent pour former D-I-G-I-T-A-L-L.</p>
+          </div>
+        </div>
+        <div class="cogs-controls">
+          <button id="btn-pause" onclick="toggleAnimation()">⏸ Pause</button>
+          <button id="btn-speed" onclick="cycleSpeed()">⏩ Vitesse 1x</button>
+          <button onclick="resetGears()">↺</button>
+        </div>
+      </div>
+
+      <div class="gear-stage" id="gear-stage"></div>
+
+      <div class="letter-info">
+        <div class="letter-info-left">
+          <div class="letter-chip" id="letter-chip">D</div>
+          <div class="letter-info-text">
+            <div class="meta" id="letter-meta">LETTRE 1 SUR 8 : Engrenage n°1 (12 dents)</div>
+            <div class="desc" id="letter-desc">Digital d'abord — Rapide, portable, synchronisé dans le cloud.</div>
+          </div>
+        </div>
+        <div class="letter-info-right">
+          <span class="hint">Cliquez sur un engrenage pour l'explorer</span>
+          <button class="btn btn-purple" onclick="nextLetter()">Lettre Suivante →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5 : IA Financière -->
+  <section id="ai">
+    <div class="section-head">
+      <h2 class="section-title">Intelligence Financière IA</h2>
+      <p class="section-sub">Analyse personnalisée de vos habitudes de dépenses, expliquée en langage simple et direct.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Reconnaissance de Schémas</h3>
+        <p>L'IA de DigitAll détecte les schémas de dépenses récurrents qui passent habituellement inaperçus.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Analyses Personnalisées</h3>
+        <p>Recevez des explications claires sur ce qui a changé dans vos dépenses et pourquoi.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Conseils Pratiques</h3>
+        <p>Obtenez des recommandations concrètes adaptées à vos revenus et à vos objectifs.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Apprentissage Continu</h3>
+        <p>Les analyses deviennent plus riches et précises à mesure que vous enregistrez vos paiements quotidiens.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 DigitAll — Le Numérique Pour Tous. Conçu pour Madagascar et la communauté mondiale.
+</footer>
+
+<script>
+  /* ===== 1. Navigation ===== */
+  const tabButtons = document.querySelectorAll('nav.tabs button');
+  
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const targetId = button.getAttribute('data-target');
+      scrollToSection(targetId);
+    });
+  });
+
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* ===== 2. Gestion de la devise ===== */
+  const RATE = 4284.53;
+  let currency = 'mga';
+
+  function setCurrency(newCurrency) {
+    currency = newCurrency;
+    document.getElementById('btn-usd').classList.toggle('active', newCurrency === 'usd');
+    document.getElementById('btn-mga').classList.toggle('active', newCurrency === 'mga');
+    updateSimulator();
+  }
+
+  /* ===== 3. Calculateur / Simulateur ===== */
+  function formatNumber(num) {
+    return Math.round(num).toLocaleString('fr-FR').replace(/,/g, ' ').replace(/\u202f/g, ' ');
+  }
+
+  function updateSimulator() {
+    const snacksDay = Number(document.getElementById('sl-snacks').value);
+    const subsMonth = Number(document.getElementById('sl-subs').value);
+    const feesMonth = Number(document.getElementById('sl-fees').value);
+
+    ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
+      const slider = document.getElementById(id);
+      const percent = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+      slider.style.setProperty('--fill', percent + '%');
+    });
+
+    const symbol = currency === 'usd' ? '$' : 'Ar';
+    const convert = value => currency === 'usd' ? value / RATE : value;
+
+    document.getElementById('val-snacks').textContent = `${formatNumber(convert(snacksDay))} ${symbol} / jour`;
+    document.getElementById('val-subs').textContent = `${formatNumber(convert(subsMonth))} ${symbol} / mois`;
+    document.getElementById('val-fees').textContent = `${formatNumber(convert(feesMonth))} ${symbol} / mois`;
+
+    const totalAnnual = (snacksDay * 365) + (subsMonth * 12) + (feesMonth * 12);
+    document.getElementById('annual-drain').textContent = `${formatNumber(convert(totalAnnual))} ${symbol}`;
+    document.getElementById('five-year').textContent = `${formatNumber(convert(totalAnnual * 5))} ${symbol}`;
+  }
+
+  ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateSimulator);
+  });
+  
+  updateSimulator();
+
+  /* ===== 4. Moteur à engrenages interactif ===== */
+  const LETTERS = [
+    { letter: 'D', teeth: 12, color: '#00F5A4', desc: 'Digital d\u2019abord — Rapide, portable, synchronisé dans le cloud.' },
+    { letter: 'I', teeth: 10, color: '#7B3FF2', desc: 'Intuitif — Paiements catégorisés instantanément et informations claires.' },
+    { letter: 'G', teeth: 14, color: '#3FB8FF', desc: 'Garde-fous — Des limites budgétaires saines pour rester sur la bonne voie.' },
+    { letter: 'I', teeth: 10, color: '#FFB020', desc: 'Intelligent — L\u2019IA financière révèle les fuites silencieuses.' },
+    { letter: 'T', teeth: 12, color: '#FF5FA2', desc: 'Trajectoire — Prédisez si votre épargne augmente ou diminue.' },
+    { letter: 'A', teeth: 13, color: '#7B3FF2', desc: 'Abordable — Des formules pensées pour étudiants, familles et commerces.' },
+    { letter: 'L', teeth: 11, color: '#00F5A4', desc: 'Local — Conçu nativement pour la conversion Ariary et USD.' },
+    { letter: 'L', teeth: 11, color: '#3FB8FF', desc: 'Lucratif — De petites habitudes quotidiennes qui se transforment en vraie richesse.' }
+  ];
+
+  function createGearSVG(color) {
+    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="${color}" stroke-width="4">
+        <circle cx="50" cy="50" r="34"/>
+        <circle cx="50" cy="50" r="20" fill="${color}22"/>
+      </g>
+      ${Array.from({ length: 10 }).map((_, index) => {
+        const angle = (index / 10) * 360;
+        return `<rect x="47" y="6" width="6" height="14" fill="${color}" transform="rotate(${angle} 50 50)"/>`;
+      }).join('')}
+    </svg>`;
+  }
+
+  const stage = document.getElementById('gear-stage');
+  let selectedIndex = 0;
+
+  LETTERS.forEach((item, i) => {
+    const gearElement = document.createElement('div');
+    gearElement.className = 'gear' + (i === selectedIndex ? ' selected' : '');
+    gearElement.style.color = item.color;
+    gearElement.style.animationDuration = (5 + i * 0.4) + 's';
+    gearElement.style.animationDirection = i % 2 === 0 ? 'normal' : 'reverse';
+    gearElement.innerHTML = createGearSVG(item.color) + 
+      `<div style="margin-top:-64px; text-align:center; font-weight:800; color:${item.color}; font-size:22px; pointer-events:none;">${item.letter}</div>`;
+    
+    gearElement.addEventListener('click', () => selectLetter(i));
+    stage.appendChild(gearElement);
+  });
+
+  function selectLetter(index) {
+    selectedIndex = index;
+    document.querySelectorAll('.gear').forEach((gear, idx) => {
+      gear.classList.toggle('selected', idx === index);
+    });
+    
+    const current = LETTERS[index];
+    document.getElementById('letter-chip').textContent = current.letter;
+    document.getElementById('letter-chip').style.background = current.color;
+    document.getElementById('letter-meta').textContent = `LETTRE ${index + 1} SUR ${LETTERS.length} : Engrenage n°${index + 1} (${current.teeth} dents)`;
+    document.getElementById('letter-desc').textContent = current.desc;
+  }
+
+  function nextLetter() {
+    selectLetter((selectedIndex + 1) % LETTERS.length);
+  }
+
+  let isPaused = false;
+  function toggleAnimation() {
+    isPaused = !isPaused;
+    stage.classList.toggle('paused', isPaused);
+    document.getElementById('btn-pause').textContent = isPaused ? '▶ Lecture' : '⏸ Pause';
+  }
+
+  const SPEEDS = [1, 2, 0.5];
+  let speedIndex = 0;
+  function cycleSpeed() {
+    speedIndex = (speedIndex + 1) % SPEEDS.length;
+    const speed = SPEEDS[speedIndex];
+    document.getElementById('btn-speed').textContent = `⏩ Vitesse ${speed}x`;
+    document.querySelectorAll('.gear').forEach((gear, i) => {
+      gear.style.animationDuration = ((5 + i * 0.4) / speed) + 's';
+    });
+  }
+
+  function resetGears() {
+    selectLetter(0);
+    isPaused = false;
+    stage.classList.remove('paused');
+    document.getElementById('btn-pause').textContent = '⏸ Pause';
+    speedIndex = 0;
+    document.getElementById('btn-speed').textContent = '⏩ Vitesse 1x';
+    document.querySelectorAll('.gear').forEach((gear, i) => {
+      gear.style.animationDuration = (5 + i * 0.4) + 's';
+    });
+  }
+
+  selectLetter(0);
+</script>
+<!-- DigitAll Chatbot Widget -->
+<style>
+  #digitall-chat-bubble {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #00F5A4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,245,164,0.4);
+    z-index: 9999;
+    border: none;
+    transition: transform 0.2s ease;
+  }
+  #digitall-chat-bubble:hover { transform: scale(1.08); }
+  #digitall-chat-bubble svg { width: 28px; height: 28px; }
+
+  #digitall-chat-panel {
+    position: fixed;
+    bottom: 96px;
+    right: 24px;
+    width: 340px;
+    max-width: calc(100vw - 48px);
+    height: 460px;
+    max-height: calc(100vh - 140px);
+    background: #160b38;
+    border: 1px solid #580CEB;
+    border-radius: 20px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  #digitall-chat-panel.open { display: flex; }
+
+  #digitall-chat-header {
+    background: #580CEB;
+    color: white;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 800;
+    font-size: 15px;
+  }
+  #digitall-chat-close {
+    background: none; border: none; color: white; font-size: 20px; cursor: pointer; line-height: 1;
+  }
+
+  #digitall-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .digitall-msg {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .digitall-msg.bot {
+    background: rgba(255,255,255,0.06);
+    color: #FFFFFF;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .digitall-msg.user {
+    background: #00F5A4;
+    color: #04160f;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .digitall-msg.typing {
+    background: rgba(255,255,255,0.06);
+    color: #B9AFDA;
+    align-self: flex-start;
+    font-style: italic;
+  }
+
+  #digitall-chat-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  #digitall-chat-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: white;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+  }
+  #digitall-chat-input:focus { border-color: #00F5A4; }
+  #digitall-chat-send {
+    background: #00F5A4;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+</style>
+
+<button id="digitall-chat-bubble" onclick="digitallToggleChat()" aria-label="Open chat">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 4h16v12H7l-3 3V4z" stroke="#04160f" stroke-width="2" stroke-linejoin="round" fill="none"/>
+  </svg>
+</button>
+
+<div id="digitall-chat-panel">
+  <div id="digitall-chat-header">
+    <span>DigitAll Assistant</span>
+    <button id="digitall-chat-close" onclick="digitallToggleChat()">×</button>
+  </div>
+  <div id="digitall-chat-messages">
+    <div class="digitall-msg bot">Hi! I'm the DigitAll assistant. Ask me anything about tracking your spending, currencies, or plans.</div>
+  </div>
+  <div id="digitall-chat-input-row">
+    <input type="text" id="digitall-chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') digitallSendMessage()">
+    <button id="digitall-chat-send" onclick="digitallSendMessage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12L20 4L13 20L11 13L4 12Z" fill="#04160f"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const DIGITALL_CHAT_URL = "https://digitall-chat.abbasmithani6.workers.dev";
+
+  function digitallToggleChat() {
+    document.getElementById('digitall-chat-panel').classList.toggle('open');
+  }
+
+  async function digitallSendMessage() {
+    const input = document.getElementById('digitall-chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    const messagesEl = document.getElementById('digitall-chat-messages');
+
+    const userBubble = document.createElement('div');
+    userBubble.className = 'digitall-msg user';
+    userBubble.textContent = message;
+    messagesEl.appendChild(userBubble);
+
+    input.value = '';
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    const typingBubble = document.createElement('div');
+    typingBubble.className = 'digitall-msg typing';
+    typingBubble.textContent = 'Typing...';
+    messagesEl.appendChild(typingBubble);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    try {
+      const res = await fetch(DIGITALL_CHAT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+
+      typingBubble.remove();
+
+      const botBubble = document.createElement('div');
+      botBubble.className = 'digitall-msg bot';
+      botBubble.textContent = data.reply || "Sorry, something went wrong.";
+      messagesEl.appendChild(botBubble);
+    } catch (err) {
+      typingBubble.remove();
+      const errorBubble = document.createElement('div');
+      errorBubble.className = 'digitall-msg bot';
+      errorBubble.textContent = "Sorry, I couldn't connect just now. Please try again.";
+      messagesEl.appendChild(errorBubble);
+    }
+
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+</script>
+</body>
+</html>
