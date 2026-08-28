@@ -31,10 +31,10 @@
     #loginScreen h2 { margin-bottom: 20px; text-align: center; color: var(--text-main); }
     .input-group { margin-bottom: 16px; position: relative; }
     .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-    input[type="email"], input[type="password"], input[type="text"], input[type="number"] {
+    input[type="email"], input[type="password"], input[type="text"], input[type="number"], select {
       width: 100%; padding: 10px 14px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s;
     }
-    input:focus { border-color: var(--accent-color); }
+    input:focus, select:focus { border-color: var(--accent-color); }
     .btn-primary { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
     .btn-primary:hover { background: var(--accent-hover); }
     .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -65,7 +65,7 @@
     .search-input { max-width: 280px; padding: 8px 12px; font-size: 13px; }
 
     /* Form Grids */
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end; }
     .form-grid button { height: 40px; }
 
     /* Tables */
@@ -92,7 +92,7 @@
     .btn-edit { background: var(--edit-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
     .btn-edit:hover { background: var(--edit-hover); }
 
-    /* Autocomplete Suggestions Dropdown */
+    /* Autocomplete Dropdown */
     .autocomplete-list {
       position: absolute;
       top: 100%;
@@ -111,35 +111,12 @@
       display: none;
     }
 
-    .autocomplete-list.active {
-      display: block;
-    }
-
-    .autocomplete-item {
-      padding: 10px 14px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .autocomplete-item:last-child {
-      border-bottom: none;
-    }
-
-    .autocomplete-item:hover {
-      background-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .autocomplete-item strong {
-      color: var(--text-main);
-      font-size: 14px;
-    }
-
-    .autocomplete-item span {
-      color: var(--text-muted);
-      font-size: 12px;
-    }
+    .autocomplete-list.active { display: block; }
+    .autocomplete-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background-color: rgba(255, 255, 255, 0.08); }
+    .autocomplete-item strong { color: var(--text-main); font-size: 14px; }
+    .autocomplete-item span { color: var(--text-muted); font-size: 12px; }
 
     /* Modal */
     #editModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
@@ -188,8 +165,16 @@
             <input type="text" id="promoCodeInput" placeholder="SUMMER20" required>
           </div>
           <div class="input-group">
-            <label>Discount Percentage (%)</label>
-            <input type="number" id="discountInput" placeholder="20" min="1" max="100" required>
+            <label>Discount Type</label>
+            <select id="discountTypeInput">
+              <option value="percent">Percentage (%)</option>
+              <option value="money">Money Amount ($/£)</option>
+              <option value="credits">Store Credits</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Discount Value</label>
+            <input type="number" id="discountValueInput" placeholder="20" min="1" required>
           </div>
           <div class="input-group">
             <label>Max Total Uses</label>
@@ -209,7 +194,7 @@
             <thead>
               <tr>
                 <th>Code</th>
-                <th>Discount</th>
+                <th>Discount / Reward</th>
                 <th>Current Uses</th>
                 <th>Max Uses</th>
                 <th>Actions</th>
@@ -249,13 +234,13 @@
       <div class="dashboard-card">
         <h2>Send Promo Code Email</h2>
         
-        <div class="input-group">
+        <div class="input-group" style="position: relative;">
           <label>Recipient Name</label>
           <input type="text" id="admin-user-name" placeholder="Start typing name..." autocomplete="off">
           <ul id="name-suggestions" class="autocomplete-list"></ul>
         </div>
 
-        <div class="input-group">
+        <div class="input-group" style="position: relative;">
           <label>Recipient Email Address</label>
           <input type="email" id="admin-user-email" placeholder="Start typing email..." required autocomplete="off">
           <ul id="email-suggestions" class="autocomplete-list"></ul>
@@ -276,14 +261,24 @@
     <div class="modal-content">
       <h3 style="margin-bottom: 16px;">Edit Promo Code: <span id="editModalCodeTitle"></span></h3>
       <input type="hidden" id="editModalCode">
+      
       <div class="input-group">
-        <label>Discount Percentage (%)</label>
-        <input type="number" id="editModalDiscount" required>
+        <label>Discount Type</label>
+        <select id="editModalType">
+          <option value="percent">Percentage (%)</option>
+          <option value="money">Money Amount ($/£)</option>
+          <option value="credits">Store Credits</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Discount Value</label>
+        <input type="number" id="editModalValue" required>
       </div>
       <div class="input-group">
         <label>Max Uses</label>
         <input type="number" id="editModalMaxUses" required>
       </div>
+
       <div class="modal-actions">
         <button class="btn-primary" onclick="savePromoEdit()">Save Changes</button>
         <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
@@ -322,7 +317,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Global user database cache for autocomplete search
+    // Cache database users globally for autocomplete search
     window.allUsers = [];
 
     // Tab Switcher
@@ -404,7 +399,7 @@
         const usersTable = document.getElementById("usersTableBody");
         usersTable.innerHTML = "";
         
-        window.allUsers = []; // Reset autocomplete cache
+        window.allUsers = [];
         let userCount = 0;
         let foundSelf = false;
 
@@ -421,7 +416,6 @@
           const role = u.role || (currentUser && docSnap.id === currentUser.uid ? "admin" : "user");
           const safeId = docSnap.id;
 
-          // Cache user info for Outlook-style autocomplete
           if (email || fullName) {
             window.allUsers.push({ name: fullName, email: email });
           }
@@ -484,17 +478,23 @@
 
         promoSnap.forEach((docSnap) => {
           const p = docSnap.data();
-          const discount = p.discountPercent ?? 0;
+          const type = p.discountType || (p.discountPercent !== undefined ? 'percent' : 'money');
+          const val = p.discountValue ?? p.discountPercent ?? 0;
           const maxUses = p.maxUses ?? 0;
+
+          let displayValue = "";
+          if (type === "percent") displayValue = `${val}% Off`;
+          else if (type === "money") displayValue = `$${val} Off`;
+          else if (type === "credits") displayValue = `${val} Credits`;
 
           promoTable.innerHTML += `
             <tr>
               <td><strong>${docSnap.id}</strong></td>
-              <td>${discount}%</td>
+              <td><span class="badge">${displayValue}</span></td>
               <td>${p.currentUses ?? 0}</td>
               <td>${maxUses}</td>
               <td>
-                <button class="btn-edit" onclick="window.openEditModal('${docSnap.id}', ${discount}, ${maxUses})">Edit</button>
+                <button class="btn-edit" onclick="window.openEditModal('${docSnap.id}', '${type}', ${val}, ${maxUses})">Edit</button>
               </td>
             </tr>`;
         });
@@ -503,18 +503,20 @@
       }
     }
 
-    // Submit New Promo
+    // Submit New Promo Code
     document.getElementById("createPromoForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!auth.currentUser) return alert("Admin login required.");
 
       const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
-      const discount = Number(document.getElementById("discountInput").value);
+      const type = document.getElementById("discountTypeInput").value;
+      const val = Number(document.getElementById("discountValueInput").value);
       const maxUses = Number(document.getElementById("maxUsesInput").value);
 
       try {
         await setDoc(doc(db, "promocodes", code), {
-          discountPercent: discount,
+          discountType: type,
+          discountValue: val,
           currentUses: 0,
           maxUses: maxUses,
           createdAt: new Date().toISOString()
@@ -527,11 +529,12 @@
       }
     });
 
-    // Edit Modal Logic
-    window.openEditModal = function(code, discount, maxUses) {
+    // Edit Modal Handlers
+    window.openEditModal = function(code, type, val, maxUses) {
       document.getElementById("editModalCodeTitle").innerText = code;
       document.getElementById("editModalCode").value = code;
-      document.getElementById("editModalDiscount").value = discount;
+      document.getElementById("editModalType").value = type;
+      document.getElementById("editModalValue").value = val;
       document.getElementById("editModalMaxUses").value = maxUses;
       document.getElementById("editModal").style.display = "flex";
     };
@@ -542,12 +545,14 @@
 
     window.savePromoEdit = async function() {
       const code = document.getElementById("editModalCode").value;
-      const discount = Number(document.getElementById("editModalDiscount").value);
+      const type = document.getElementById("editModalType").value;
+      const val = Number(document.getElementById("editModalValue").value);
       const maxUses = Number(document.getElementById("editModalMaxUses").value);
 
       try {
         await updateDoc(doc(db, "promocodes", code), {
-          discountPercent: discount,
+          discountType: type,
+          discountValue: val,
           maxUses: maxUses
         });
         alert(`Updated ${code}`);
@@ -559,7 +564,7 @@
     };
   </script>
 
-  <!-- Load admin.js at end of body -->
+  <!-- Load admin.js -->
   <script src="admin.js"></script>
 </body>
 </html>
