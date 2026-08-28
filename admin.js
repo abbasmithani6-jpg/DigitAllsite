@@ -1,11 +1,11 @@
-// Initialize EmailJS with Public Key
+// // Initialize EmailJS with Public Key
 (function() {
   if (typeof emailjs !== 'undefined') {
     emailjs.init("l9xhVDI7VRC5H1tqk");
   }
 })();
 
-// Autocomplete Search Logic (Outlook Style)
+// Outlook-Style Autocomplete Logic
 document.addEventListener('DOMContentLoaded', function() {
   const nameInput = document.getElementById('admin-user-name');
   const emailInput = document.getElementById('admin-user-email');
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Filter database users matching name or email
+      // Search users matching name or email
       const matches = window.allUsers.filter(u => {
         const nameMatch = u.name && u.name.toLowerCase().includes(query);
         const emailMatch = u.email && u.email.toLowerCase().includes(query);
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Limit results to top 5
+      // Display top 5 matches
       matches.slice(0, 5).forEach(user => {
         const li = document.createElement('li');
         li.className = 'autocomplete-item';
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setupAutocomplete(nameInput, nameList);
   setupAutocomplete(emailInput, emailList);
 
-  // Close lists when clicking anywhere outside
+  // Close suggestions when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.closest('#emailTab')) {
       if (nameList) nameList.classList.remove('active');
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Global delegated click listener for sending emails
+// Delegated Click Listener for Email Dispatch
 document.addEventListener('click', function(event) {
   if (event.target && event.target.id === 'send-promo-btn') {
     event.preventDefault();
