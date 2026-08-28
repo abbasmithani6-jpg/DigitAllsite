@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigitAll Admin Portal</title>
+
+  <!-- Load EmailJS SDK first -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <!-- Load admin.js with defer -->
+  <script src="admin.js" defer></script>
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #10b981;
+      --accent-hover: #059669;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --danger-color: #ef4444;
+      --danger-hover: #dc2626;
+      --edit-color: #3b82f6;
+      --edit-hover: #2563eb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+    /* Login Screen */
+    #loginScreen { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; width: 100%; max-width: 400px; margin-top: 80px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    #loginScreen h2 { margin-bottom: 20px; text-align: center; color: var(--text-main); }
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="email"], input[type="password"], input[type="text"], input[type="number"] {
+      width: 100%; padding: 10px 14px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s;
+    }
+    input:focus { border-color: var(--accent-color); }
+    .btn-primary { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    /* Dashboard Layout */
+    #adminDashboard { display: none; width: 100%; max-width: 1100px; margin-top: 10px; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
+    header h1 { font-size: 24px; }
+    .btn-logout { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+    .btn-logout:hover { color: var(--text-main); border-color: var(--text-muted); }
+
+    /* Navigation Tabs */
+    .tab-navigation { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+    .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px 18px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+    .tab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+    .tab-btn.active { color: var(--text-main); background: var(--card-bg); border: 1px solid var(--border-color); }
+
+    /* Tab Sections */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Section Cards & Analytics Bar */
+    .dashboard-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .card-header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+    .dashboard-card h2 { font-size: 18px; color: var(--text-main); }
+    
+    /* Search Bar Input */
+    .search-input { max-width: 280px; padding: 8px 12px; font-size: 13px; }
+
+    /* Form Grids */
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; }
+    .form-grid button { height: 40px; }
+
+    /* Tables */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    th { background: #0f172a; color: var(--text-muted); padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-color); }
+    td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+    tr.user-main-row { cursor: pointer; transition: background 0.2s; }
+    tr.user-main-row:hover { background-color: rgba(255,255,255,0.03); }
+
+    /* Expandable User Info Details Drawer */
+    .user-details-row { display: none; background: #0f172a; }
+    .user-details-row.active { display: table-row; }
+    .user-details-container { padding: 16px; font-size: 13px; line-height: 1.6; border-left: 3px solid var(--accent-color); margin: 4px 0; }
+    .user-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .user-detail-item { color: var(--text-muted); }
+    .user-detail-item span { color: var(--text-main); font-weight: 600; display: block; margin-top: 2px; word-break: break-all; }
+
+    /* Badges & Action Buttons */
+    .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; background: rgba(16, 185, 129, 0.1); color: var(--accent-color); display: inline-block; }
+    .badge-admin { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .badge-count { background: #0f172a; color: var(--text-muted); border: 1px solid var(--border-color); padding: 2px 10px; border-radius: 20px; font-size: 13px; }
+    .action-btns { display: flex; gap: 8px; }
+    .btn-edit { background: var(--edit-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+    .btn-edit:hover { background: var(--edit-hover); }
+
+    /* Modal */
+    #editModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; width: 100%; max-width: 400px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-cancel { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Admin Login Screen -->
+  <div id="loginScreen">
+    <h2>DigitAll Admin</h2>
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" id="emailInput" placeholder="admin@digitall.com" required>
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" required>
+    </div>
+    <button class="btn-primary" onclick="handleLogin()">Sign In to Dashboard</button>
+  </div>
+
+  <!-- 2. Admin Dashboard -->
+  <div id="adminDashboard">
+    <header>
+      <h1>DigitAll Control Panel</h1>
+      <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" onclick="switchTab('promoTab', this)">Promo Codes</button>
+      <button class="tab-btn" onclick="switchTab('usersTab', this)">Registered Users</button>
+      <button class="tab-btn" onclick="switchTab('emailTab', this)">Send Email</button>
+    </div>
+
+    <!-- TAB 1: Promo Codes -->
+    <div id="promoTab" class="tab-content active">
+      <div class="dashboard-card">
+        <h2>Create New Promo Code</h2>
+        <form id="createPromoForm" class="form-grid">
+          <div class="input-group">
+            <label>Code Name</label>
+            <input type="text" id="promoCodeInput" placeholder="SUMMER20" required>
+          </div>
+          <div class="input-group">
+            <label>Discount Percentage (%)</label>
+            <input type="number" id="discountInput" placeholder="20" min="1" max="100" required>
+          </div>
+          <div class="input-group">
+            <label>Max Total Uses</label>
+            <input type="number" id="maxUsesInput" placeholder="100" min="1" required>
+          </div>
+          <button type="submit" class="btn-primary">Add Code</button>
+        </form>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="card-header-flex">
+          <h2>Active Promo Codes <span id="promoCounter" class="badge-count">0</span></h2>
+          <input type="text" id="searchPromoInput" class="search-input" placeholder="Search codes..." onkeyup="filterPromos()">
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Discount</th>
+                <th>Current Uses</th>
+                <th>Max Uses</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="promoTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Registered Users Table -->
+    <div id="usersTab" class="tab-content">
+      <div class="dashboard-card">
+        <div class="card-header-flex">
+          <div>
+            <h2>Registered Accounts <span id="userCounter" class="badge-count">0</span></h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Tap on any user's name to toggle their details.</p>
+          </div>
+          <input type="text" id="searchUserInput" class="search-input" placeholder="Search users or email..." onkeyup="filterUsers()">
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Full Name</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Send Email -->
+    <div id="emailTab" class="tab-content">
+      <div class="dashboard-card">
+        <h2>Send Promo Code Email</h2>
+        <div class="input-group">
+          <label>Recipient Name</label>
+          <input type="text" id="admin-user-name" placeholder="John Doe">
+        </div>
+        <div class="input-group">
+          <label>Recipient Email Address</label>
+          <input type="email" id="admin-user-email" placeholder="user@example.com" required>
+        </div>
+        <div class="input-group">
+          <label>Promo Code to Send</label>
+          <input type="text" id="admin-promo-code" placeholder="WELCOME10">
+        </div>
+        <button id="send-promo-btn" type="button" class="btn-primary" style="margin-top: 10px;">Send Promo Code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Edit Promo Modal -->
+  <div id="editModal">
+    <div class="modal-content">
+      <h3 style="margin-bottom: 16px;">Edit Promo Code: <span id="editModalCodeTitle"></span></h3>
+      <input type="hidden" id="editModalCode">
+      <div class="input-group">
+        <label>Discount Percentage (%)</label>
+        <input type="number" id="editModalDiscount" required>
+      </div>
+      <div class="input-group">
+        <label>Max Uses</label>
+        <input type="number" id="editModalMaxUses" required>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="savePromoEdit()">Save Changes</button>
+        <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Firebase Logic Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      onAuthStateChanged, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      getDocs, 
+      doc, 
+      setDoc, 
+      updateDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
+      authDomain: "digitall-c77d8.firebaseapp.com",
+      projectId: "digitall-c77d8",
+      storageBucket: "digitall-c77d8.firebasestorage.app",
+      messagingSenderId: "922798712588",
+      appId: "1:922798712588:web:43235136b5b1bf58168b29"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Tab Switcher
+    window.switchTab = function(tabId, element) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      element.classList.add('active');
+    };
+
+    // Toggle User Expansion
+    window.toggleUserDetails = function(id) {
+      const detailsRow = document.getElementById(`user-details-${id}`);
+      if (detailsRow) {
+        detailsRow.classList.toggle('active');
+      }
+    };
+
+    // Real-time Search Filters
+    window.filterPromos = function() {
+      const term = document.getElementById("searchPromoInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#promoTableBody tr");
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(term) ? "" : "none";
+      });
+    };
+
+    window.filterUsers = function() {
+      const term = document.getElementById("searchUserInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#usersTableBody tr.user-main-row");
+      rows.forEach(row => {
+        const userId = row.getAttribute('data-id');
+        const detailsRow = document.getElementById(`user-details-${userId}`);
+        const text = (row.innerText + " " + (detailsRow ? detailsRow.innerText : "")).toLowerCase();
+        
+        if (text.includes(term)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+          if (detailsRow) detailsRow.classList.remove('active');
+        }
+      });
+    };
+
+    // Auth Observer
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("adminDashboard").style.display = "block";
+        loadDashboardData();
+      } else {
+        document.getElementById("loginScreen").style.display = "block";
+        document.getElementById("adminDashboard").style.display = "none";
+      }
+    });
+
+    window.handleLogin = async function() {
+      const email = document.getElementById("emailInput").value;
+      const password = document.getElementById("passwordInput").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        alert("Login failed: " + error.message);
+      }
+    };
+
+    window.handleLogout = function() {
+      signOut(auth);
+    };
+
+    async function loadDashboardData() {
+      try {
+        const currentUser = auth.currentUser;
+        
+        // Load Users
+        const usersSnap = await getDocs(collection(db, "users"));
+        const usersTable = document.getElementById("usersTableBody");
+        usersTable.innerHTML = "";
+        
+        let userCount = 0;
+        let foundSelf = false;
+
+        usersSnap.forEach((docSnap) => {
+          userCount++;
+          const u = docSnap.data();
+          if (currentUser && docSnap.id === currentUser.uid) foundSelf = true;
+          
+          const fullName = (u.firstName || u.lastName) 
+            ? `${u.firstName || ""} ${u.lastName || ""}`.trim() 
+            : (u.name || u.displayName || "Unnamed User");
+            
+          const email = u.email || "No email on record";
+          const role = u.role || (currentUser && docSnap.id === currentUser.uid ? "admin" : "user");
+          const safeId = docSnap.id;
+
+          usersTable.innerHTML += `
+            <tr class="user-main-row" data-id="${safeId}" onclick="window.toggleUserDetails('${safeId}')">
+              <td>
+                <strong style="font-size: 15px;">${fullName}</strong>
+                <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">(Tap for details)</span>
+              </td>
+            </tr>
+            <tr id="user-details-${safeId}" class="user-details-row">
+              <td>
+                <div class="user-details-container">
+                  <div class="user-details-grid">
+                    <div class="user-detail-item">Full Name: <span>${fullName}</span></div>
+                    <div class="user-detail-item">Email Address: <span>${email}</span></div>
+                    <div class="user-detail-item">User ID: <span><code>${safeId}</code></span></div>
+                    <div class="user-detail-item">Account Role: <span><span class="badge ${role === 'admin' ? 'badge-admin' : ''}">${role}</span></span></div>
+                  </div>
+                </div>
+              </td>
+            </tr>`;
+        });
+
+        if (!foundSelf && currentUser) {
+          userCount++;
+          const adminId = currentUser.uid;
+          usersTable.innerHTML = `
+            <tr class="user-main-row" data-id="${adminId}" onclick="window.toggleUserDetails('${adminId}')">
+              <td>
+                <strong style="font-size: 15px;">Admin Account (You)</strong>
+                <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">(Tap for details)</span>
+              </td>
+            </tr>
+            <tr id="user-details-${adminId}" class="user-details-row">
+              <td>
+                <div class="user-details-container">
+                  <div class="user-details-grid">
+                    <div class="user-detail-item">Email Address: <span>${currentUser.email}</span></div>
+                    <div class="user-detail-item">User ID: <span><code>${adminId}</code></span></div>
+                    <div class="user-detail-item">Role: <span><span class="badge badge-admin">admin</span></span></div>
+                  </div>
+                </div>
+              </td>
+            </tr>` + usersTable.innerHTML;
+        }
+
+        document.getElementById("userCounter").innerText = userCount;
+
+        // Load Promo Codes
+        const promoSnap = await getDocs(collection(db, "promocodes"));
+        const promoTable = document.getElementById("promoTableBody");
+        promoTable.innerHTML = "";
+        
+        document.getElementById("promoCounter").innerText = promoSnap.size;
+
+        promoSnap.forEach((docSnap) => {
+          const p = docSnap.data();
+          const discount = p.discountPercent ?? 0;
+          const maxUses = p.maxUses ?? 0;
+
+          promoTable.innerHTML += `
+            <tr>
+              <td><strong>${docSnap.id}</strong></td>
+              <td>${discount}%</td>
+              <td>${p.currentUses ?? 0}</td>
+              <td>${maxUses}</td>
+              <td>
+                <button class="btn-edit" onclick="window.openEditModal('${docSnap.id}', ${discount}, ${maxUses})">Edit</button>
+              </td>
+            </tr>`;
+        });
+      } catch (err) {
+        console.error("Data fetch error:", err);
+      }
+    }
+
+    // Submit New Promo
+    document.getElementById("createPromoForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!auth.currentUser) return alert("Admin login required.");
+
+      const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
+      const discount = Number(document.getElementById("discountInput").value);
+      const maxUses = Number(document.getElementById("maxUsesInput").value);
+
+      try {
+        await setDoc(doc(db, "promocodes", code), {
+          discountPercent: discount,
+          currentUses: 0,
+          maxUses: maxUses,
+          createdAt: new Date().toISOString()
+        });
+        alert(`Promo code ${code} created!`);
+        document.getElementById("createPromoForm").reset();
+        loadDashboardData();
+      } catch (err) {
+        alert("Error creating promo code: " + err.message);
+      }
+    });
+
+    // Edit Modal Logic
+    window.openEditModal = function(code, discount, maxUses) {
+      document.getElementById("editModalCodeTitle").innerText = code;
+      document.getElementById("editModalCode").value = code;
+      document.getElementById("editModalDiscount").value = discount;
+      document.getElementById("editModalMaxUses").value = maxUses;
+      document.getElementById("editModal").style.display = "flex";
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById("editModal").style.display = "none";
+    };
+
+    window.savePromoEdit = async function() {
+      const code = document.getElementById("editModalCode").value;
+      const discount = Number(document.getElementById("editModalDiscount").value);
+      const maxUses = Number(document.getElementById("editModalMaxUses").value);
+
+      try {
+        await updateDoc(doc(db, "promocodes", code), {
+          discountPercent: discount,
+          maxUses: maxUses
+        });
+        alert(`Updated ${code}`);
+        window.closeEditModal();
+        loadDashboardData();
+      } catch (err) {
+        alert("Update error: " + err.message);
+      }
+    };
+  </script>
+</body>
+</html>
