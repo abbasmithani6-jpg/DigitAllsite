@@ -1,370 +1,750 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DigitAll</title>
-  <style>
-    :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --accent-color: #10b981;
-      --accent-hover: #059669;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-color: #334155;
-      --input-bg: #0f172a;
-      --danger-color: #ef4444;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigitAll | Digital For All</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  :root {
+    --bg-dark: #0D0F12;
+    --card-bg: #161920;
+    --card-border: #262B36;
+    --text-main: #FFFFFF;
+    --text-muted: #9CA3AF;
+    --teal: #00F5A4;
+    --purple: #7B3FF2;
+    --purple-light: #A77BFF;
+  }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding: 24px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Stack Sans Notch', sans-serif;
+  }
 
-    /* Login Screen Container */
-    #loginContainer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 80vh;
-    }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    background: #11141A;
+    border-bottom: 1px solid var(--card-border);
+  }
 
-    .login-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 32px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
+  .logo-block {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 
-    .login-card h2 { text-align: center; margin-bottom: 24px; color: var(--text-main); }
+  .logo-mark { height: 32px; width: auto; }
 
-    /* Dashboard Layout */
-    #dashboardContainer { display: none; }
-    header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 32px auto; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
-    header h1 { font-size: 24px; }
+  .logo-text .word {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .logo-text .word span { color: var(--teal); }
+  .logo-text .tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+  }
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+  .inline-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 12px;
+  }
 
-    /* Common Card Styles */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-    }
+  .rate-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1C212C;
+    border: 1px solid var(--card-border);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .rate-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+  }
 
-    .card h2 { margin-bottom: 8px; font-size: 20px; color: var(--accent-color); }
-    .card-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+  .toggle-group {
+    display: flex;
+    background: #1C212C;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 2px;
+  }
+  .toggle-group button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .toggle-group button.active {
+    background: var(--purple);
+    color: #FFF;
+  }
 
-    /* Form Inputs & Buttons */
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-    input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
-      width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s;
-    }
-    input:focus { border-color: var(--accent-color); }
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-    .btn-primary { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    
-    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-    .btn-secondary:hover { color: var(--text-main); border-color: var(--text-muted); }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-ghost { background: transparent; color: var(--text-main); border: 1px solid var(--card-border); }
+  .btn-teal { background: var(--teal); color: #0D0F12; }
+  .btn-purple { background: var(--purple); color: #FFF; }
 
-    /* Plans Grid */
-    .plan-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.02); }
-    .plan-box.active { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.05); }
-    .plan-title { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
-    .badge-active { background: rgba(16, 185, 129, 0.15); color: var(--accent-color); font-size: 11px; padding: 2px 8px; border-radius: 12px; }
+  nav.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    background: #11141A;
+    border-bottom: 1px solid var(--card-border);
+  }
+  nav.tabs button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  nav.tabs button.active {
+    color: var(--teal);
+    border-bottom-color: var(--teal);
+  }
 
-    /* Onboarding Modal */
-    #onboardingModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 2000; }
-    .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; text-align: center; }
-    .modal-content h3 { font-size: 20px; margin-bottom: 10px; color: var(--accent-color); }
-    .modal-content p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+  main { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
 
-    #errorMessage { color: var(--danger-color); font-size: 13px; margin-top: 12px; text-align: center; display: none; }
-  </style>
+  .manifesto-card, .feature-card, .simulator, .cogs-panel, .info-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+
+  .hero-title { font-size: 36px; font-weight: 800; margin: 12px 0; }
+  .lead { font-size: 16px; color: var(--text-muted); margin-bottom: 24px; }
+
+  .split-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+  .cta-row { display: flex; gap: 12px; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  section { margin-bottom: 60px; }
+  .section-head { margin-bottom: 24px; }
+  .section-title { font-size: 28px; font-weight: 800; }
+  .section-sub { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+
+  .sim-body { display: grid; grid-template-columns: 1fr 300px; gap: 32px; margin-top: 24px; }
+  .slider-row { margin-bottom: 16px; }
+  .slider-row label { display: block; font-size: 13px; margin-bottom: 6px; }
+  .slider-row input { width: 100%; accent-color: var(--teal); }
+
+  .drain-panel {
+    background: #0D0F12;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .drain-panel .amount { font-size: 28px; font-weight: 800; color: var(--teal); margin: 8px 0; }
+  .drain-panel .sub-amount { font-size: 18px; font-weight: 700; color: var(--purple-light); }
+
+  .letter-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0D0F12;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+  }
+  .letter-info-left { display: flex; align-items: center; gap: 16px; }
+  .letter-chip {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--card-border); }
+</style>
 </head>
 <body>
 
-  <!-- VIEW 1: LOGIN FORM -->
-  <div id="loginContainer">
-    <div class="login-card">
-      <h2>DigitAll Sign In</h2>
-      <form id="loginForm">
-        <div class="input-group">
-          <label>Email Address</label>
-          <input type="email" id="emailInput" placeholder="user@example.com" required>
-        </div>
-        <div class="input-group">
-          <label>Password</label>
-          <input type="password" id="passwordInput" placeholder="••••••••" required>
-        </div>
-        <button type="submit" id="loginBtn" class="btn-primary">Sign In</button>
-        <div id="errorMessage"></div>
-      </form>
+<header class="topbar">
+  <div class="logo-block">
+    <a href="#" onclick="event.preventDefault();" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
+      <img src="digitall-logo-mark.png" class="logo-mark" alt="DigitAll logo">
+      <div class="logo-text">
+        <div class="word">Digit<span>All</span></div>
+        <div class="tag" data-i18n="tag">DIGITAL FOR ALL</div>
+      </div>
+    </a>
+
+    <div class="inline-controls">
+      <div class="rate-pill">
+        <span class="rate-dot"></span>
+        <span id="rate-display">1$ = 4,284.53 Ar</span>
+      </div>
+      <div class="toggle-group currency" role="group">
+        <button id="btn-usd" onclick="setCurrency('usd')">USD ($)</button>
+        <button id="btn-mga" class="active" onclick="setCurrency('mga')">MGA (Ar)</button>
+      </div>
+      <div class="toggle-group lang" role="group">
+        <button id="lang-en" class="active" onclick="setLanguage('en')">EN</button>
+        <button id="lang-fr" onclick="setLanguage('fr')">FR</button>
+        <button id="lang-mg" onclick="setLanguage('mg')">MG</button>
+      </div>
     </div>
   </div>
 
-  <!-- VIEW 2: USER DASHBOARD -->
-  <div id="dashboardContainer">
-    <header>
-      <h1>Welcome, <span id="welcomeName">User</span></h1>
-      <button class="btn-secondary" id="logoutBtn">Sign Out</button>
-    </header>
-
-    <main class="dashboard-grid">
-      <!-- SECTION 1: Accounts & Profile -->
-      <section class="card">
-        <h2>Account Settings</h2>
-        <p class="card-desc">Update your personal profile, email, and security password.</p>
-        
-        <form id="updateProfileForm" style="margin-bottom: 24px;">
-          <div class="input-group">
-            <label>Display Name</label>
-            <input type="text" id="profileNameInput" placeholder="Enter full name" required>
-          </div>
-          <div class="input-group">
-            <label>Age (Used for AI Transport Insights)</label>
-            <input type="number" id="profileAgeInput" placeholder="e.g. 25" min="13" max="120" required>
-          </div>
-          <div class="input-group">
-            <label>Email Address</label>
-            <input type="text" id="profileEmailInput" disabled style="opacity: 0.6; cursor: not-allowed;">
-          </div>
-          <button type="submit" class="btn-primary">Update Profile</button>
-        </form>
-
-        <hr style="border-color: var(--border-color); margin-bottom: 20px;">
-
-        <form id="changePasswordForm">
-          <h3 style="font-size: 15px; margin-bottom: 12px;">Change Password</h3>
-          <div class="input-group">
-            <label>New Password</label>
-            <input type="password" id="newPasswordInput" placeholder="••••••••" required minlength="6">
-          </div>
-          <button type="submit" class="btn-primary" style="background: var(--border-color);">Update Password</button>
-        </form>
-      </section>
-
-      <!-- SECTION 2: Plans & Subscriptions -->
-      <section class="card">
-        <h2>Your Plans</h2>
-        <p class="card-desc">Manage your active subscription tiers and transport analytics access.</p>
-
-        <div class="plan-box active">
-          <div class="plan-title">
-            <span>Starter Plan</span>
-            <span class="badge-active">CURRENT PLAN</span>
-          </div>
-          <p style="font-size: 12px; color: var(--text-muted);">Includes basic transport tracking and standard AI insights.</p>
-        </div>
-
-        <div class="plan-box">
-          <div class="plan-title">
-            <span>Pro Commuter Plan</span>
-            <span style="font-size: 12px; color: var(--text-muted);">$9.99/mo</span>
-          </div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Advanced route optimization, spending breakdown, and personalized age-based AI budget tools.</p>
-          <button type="button" class="btn-secondary" style="width: 100%; font-size: 12px;" onclick="alert('Upgrade functionality coming soon!')">Upgrade to Pro</button>
-        </div>
-      </section>
-    </main>
+  <div class="header-controls">
+    <a href="login.html" class="btn btn-ghost" data-i18n="signIn">Sign In</a>
+    <a href="signup.html" class="btn btn-teal" data-i18n="signUp">Sign Up</a>
   </div>
+</header>
 
-  <!-- First Time Onboarding Modal (Asks for Age) -->
-  <div id="onboardingModal">
-    <div class="modal-content">
-      <h3>One quick question! 👋</h3>
-      <p>Please enter your age so our AI can personalize your dashboard and better analyze your transport spending habits.</p>
-      <form id="onboardingForm">
-        <div class="input-group">
-          <input type="number" id="onboardingAgeInput" placeholder="Enter your age" min="13" max="120" required autofocus>
+<nav class="tabs" id="tabs">
+  <button class="active" onclick="scrollToSection('why')" data-i18n="tabWhy">Why DigitAll Matters</button>
+  <button onclick="scrollToSection('control')" data-i18n="tabControl">Financial Control Center</button>
+  <button onclick="scrollToSection('trajectory')" data-i18n="tabTrajectory">Spending Trajectory</button>
+  <button onclick="scrollToSection('cogs')" data-i18n="tabCogs">Pillars Engine</button>
+  <button onclick="scrollToSection('ai')" data-i18n="tabAi">Financial AI</button>
+</nav>
+
+<main>
+
+  <section id="why">
+    <div class="manifesto-card">
+      <span style="color:var(--teal); font-size:11px; font-weight:800; letter-spacing:1px;" data-i18n="eyebrow">THE DIGITALL MANIFESTO</span>
+      <h1 class="hero-title" data-i18n="heroTitle">Why Tracking Every Payment Matters</h1>
+      <p class="lead" data-i18n="heroLead">Silent money leaks erode your wealth over time. DigitAll turns chaotic transactions into complete clarity.</p>
+
+      <div class="split-two">
+        <div class="info-card">
+          <h3 style="color: var(--teal); margin-bottom:8px;">DIGITAL</h3>
+          <p data-i18n="digitalDesc" style="color:var(--text-muted); font-size:14px;">Seamless, cloud-first, accessible anytime and anywhere across all your devices.</p>
         </div>
-        <button type="submit" class="btn-primary">Save & Continue</button>
-      </form>
+        <div class="info-card">
+          <h3 style="color: var(--purple-light); margin-bottom:8px;">ALL</h3>
+          <p data-i18n="allDesc" style="color:var(--text-muted); font-size:14px;">Built for EVERYONE. Affordable for students, families, and local businesses in both USD and Ariary.</p>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn btn-teal" onclick="scrollToSection('control')" data-i18n="btnExplore">Explore Control Center</button>
+        <a href="signup.html" class="btn btn-purple" data-i18n="signUp">Sign Up</a>
+      </div>
     </div>
-  </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword,
-      onAuthStateChanged, 
-      updateProfile, 
-      updatePassword, 
-      signOut 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      getDoc, 
-      setDoc 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <div class="simulator" style="margin-top:32px;">
+      <div class="sim-head">
+        <h3 data-i18n="simTitle" style="font-size:20px; font-weight:800;">Interactive Leak Simulator</h3>
+        <p data-i18n="simSub" style="color:var(--text-muted); font-size:13px; margin-top:4px;">Adjust the sliders to see how small daily habits compound into massive long-term savings.</p>
+      </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
-      authDomain: "digitall-c77d8.firebaseapp.com",
-      projectId: "digitall-c77d8",
-      storageBucket: "digitall-c77d8.firebasestorage.app",
-      messagingSenderId: "922798712588",
-      appId: "1:922798712588:web:43235136b5b1bf58168b29"
-    };
+      <div class="sim-body">
+        <div>
+          <div class="slider-row">
+            <label><span data-i18n="lblSnacks">Daily Snacks & Drinks</span>: <span id="val-snacks" style="color:var(--teal); font-weight:700;">14 996 Ar / day</span></label>
+            <input type="range" id="sl-snacks" min="0" max="30000" value="14996" step="1">
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="lblSubs">Unused Subscriptions</span>: <span id="val-subs" style="color:var(--teal); font-weight:700;">64 268 Ar / month</span></label>
+            <input type="range" id="sl-subs" min="0" max="200000" value="64268" step="1">
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="lblFees">Mobile Money & ATM Fees</span>: <span id="val-fees" style="color:var(--teal); font-weight:700;">25 707 Ar / month</span></label>
+            <input type="range" id="sl-fees" min="0" max="100000" value="25707" step="1">
+          </div>
+        </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        <div class="drain-panel">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted);" data-i18n="annualLeakLabel">ANNUAL CASH LEAK</div>
+          <div class="amount" id="annual-drain">6 553 189 Ar</div>
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted); margin-top:16px;" data-i18n="fiveYearLabel">5-YEAR COMPOUNDED LOSS</div>
+          <div class="sub-amount" id="five-year">32 765 945 Ar</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    const loginContainer = document.getElementById("loginContainer");
-    const dashboardContainer = document.getElementById("dashboardContainer");
-    const loginBtn = document.getElementById("loginBtn");
-    const errorDiv = document.getElementById("errorMessage");
+  <section id="control">
+    <div class="section-head">
+      <h2 class="section-title" data-i18n="controlTitle">Financial Control Center</h2>
+      <p class="section-sub" data-i18n="controlSub">All your accounts, categories, and targets on a single unified dashboard — updated in real time.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3 data-i18n="f1Title">Live Balance Overview</h3>
+        <p data-i18n="f1Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Monitor your consolidated net worth across all cash, bank, and wallet accounts instantly.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="f2Title">Smart Categorization</h3>
+        <p data-i18n="f2Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Automatically group every single transaction with granular precision and custom rules.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="f3Title">Custom Spending Targets</h3>
+        <p data-i18n="f3Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Set dynamic thresholds per category and receive instant alerts before you overspend.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="f4Title">Multi-Account Sync</h3>
+        <p data-i18n="f4Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Keep Mobile Money, bank balances, and physical cash in total harmony within one app.</p>
+      </div>
+    </div>
+  </section>
 
-    let currentUser = null;
+  <section id="trajectory">
+    <div class="section-head">
+      <h2 class="section-title" data-i18n="trajTitle">Spending Trajectory</h2>
+      <p class="section-sub" data-i18n="trajSub">Visual projections of your cash flow across days, weeks, months, or years with precise percentages.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3 data-i18n="t1Title">Timeframe Switching</h3>
+        <p data-i18n="t1Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Seamlessly toggle between daily micro-views and multi-year macroeconomic projections.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="t2Title">Percentage Delta Indicators</h3>
+        <p data-i18n="t2Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Spot variations immediately compared to previous periods with smart trend tags.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="t3Title">Category Expansion</h3>
+        <p data-i18n="t3Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Identify which specific category is spiking before it impacts your overall financial health.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="t4Title">Exportable Reports</h3>
+        <p data-i18n="t4Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Download clean, structured summaries for any custom timeframe for tax or accounting needs.</p>
+      </div>
+    </div>
+  </section>
 
-    // Monitor Auth State Changes
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        loginContainer.style.display = "none";
-        dashboardContainer.style.display = "block";
-        document.getElementById("profileEmailInput").value = user.email;
+  <section id="cogs">
+    <div class="cogs-panel">
+      <div class="section-head">
+        <h3 style="font-size:20px; font-weight:800;" data-i18n="cogsTitle">DigitAll Brand Pillars</h3>
+        <p data-i18n="cogsSub" style="color:var(--text-muted); font-size:13px; margin-top:4px;">Select any letter below to explore the core pillars of D-I-G-I-T-A-L-L.</p>
+      </div>
 
-        // Fetch user data from Firestore
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+      <div class="letter-grid" id="letter-grid" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:32px 0;"></div>
 
-        let userAge = null;
-        let userName = user.displayName || "";
+      <div class="letter-info">
+        <div class="letter-info-left">
+          <div class="letter-chip" id="letter-chip">D</div>
+          <div>
+            <div id="letter-meta" style="font-size:10px; font-weight:800; color:var(--teal);">LETTER 1 OF 8</div>
+            <div id="letter-desc" style="font-size:14px; font-weight:600; margin-top:2px;">Digital First — Fast, portable, synced across the cloud.</div>
+          </div>
+        </div>
+        <button class="btn btn-purple" onclick="nextLetter()" data-i18n="cogsNext">Next Letter →</button>
+      </div>
+    </div>
+  </section>
 
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          userAge = data.age || null;
-          if (data.name) userName = data.name;
-        }
+  <section id="ai">
+    <div class="section-head">
+      <h2 class="section-title" data-i18n="aiTitle">Financial AI Intelligence</h2>
+      <p class="section-sub" data-i18n="aiSub">Personalized analysis of your spending habits, written in simple and direct language.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3 data-i18n="a1Title">Pattern Recognition</h3>
+        <p data-i18n="a1Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">DigitAll's AI uncovers hidden recurring expense patterns that usually go unnoticed.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="a2Title">Personalized Insights</h3>
+        <p data-i18n="a2Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Receive clear explanations regarding what changed in your spending and why.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="a3Title">Actionable Advice</h3>
+        <p data-i18n="a3Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Get practical recommendations tailored specifically to your income and targets.</p>
+      </div>
+      <div class="feature-card">
+        <h3 data-i18n="a4Title">Continuous Learning</h3>
+        <p data-i18n="a4Desc" style="color:var(--text-muted); font-size:13px; margin-top:8px;">Insights grow richer and more accurate the more you record your daily payments.</p>
+      </div>
+    </div>
+  </section>
 
-        document.getElementById("profileNameInput").value = userName;
-        document.getElementById("welcomeName").innerText = userName || user.email.split('@')[0];
-        if (userAge) document.getElementById("profileAgeInput").value = userAge;
+</main>
 
-        // Open Age modal on first login if age missing
-        if (!userAge) {
-          document.getElementById("onboardingModal").style.display = "flex";
-        }
+<footer>
+  <span data-i18n="footerText">© 2026 DigitAll — Digital For All. Crafted for Madagascar and the global community.</span>
+</footer>
+
+<script>
+  const translations = {
+    en: {
+      tag: "DIGITAL FOR ALL",
+      signIn: "Sign In",
+      signUp: "Sign Up",
+      tabWhy: "Why DigitAll Matters",
+      tabControl: "Financial Control Center",
+      tabTrajectory: "Spending Trajectory",
+      tabCogs: "Pillars Engine",
+      tabAi: "Financial AI",
+      eyebrow: "THE DIGITALL MANIFESTO",
+      heroTitle: "Why Tracking Every Payment Matters",
+      heroLead: "Silent money leaks erode your wealth over time. DigitAll turns chaotic transactions into complete clarity.",
+      digitalDesc: "Seamless, cloud-first, accessible anytime and anywhere across all your devices.",
+      allDesc: "Built for EVERYONE. Affordable for students, families, and local businesses in both USD and Ariary.",
+      btnExplore: "Explore Control Center",
+      simTitle: "Interactive Leak Simulator",
+      simSub: "Adjust the sliders to see how small daily habits compound into massive long-term savings.",
+      lblSnacks: "Daily Snacks & Drinks",
+      lblSubs: "Unused Subscriptions",
+      lblFees: "Mobile Money & ATM Fees",
+      annualLeakLabel: "ANNUAL CASH LEAK",
+      fiveYearLabel: "5-YEAR COMPOUNDED LOSS",
+      perDay: "day",
+      perMonth: "month",
+      controlTitle: "Financial Control Center",
+      controlSub: "All your accounts, categories, and targets on a single unified dashboard — updated in real time.",
+      f1Title: "Live Balance Overview",
+      f1Desc: "Monitor your consolidated net worth across all cash, bank, and wallet accounts instantly.",
+      f2Title: "Smart Categorization",
+      f2Desc: "Automatically group every single transaction with granular precision and custom rules.",
+      f3Title: "Custom Spending Targets",
+      f3Desc: "Set dynamic thresholds per category and receive instant alerts before you overspend.",
+      f4Title: "Multi-Account Sync",
+      f4Desc: "Keep Mobile Money, bank balances, and physical cash in total harmony within one app.",
+      trajTitle: "Spending Trajectory",
+      trajSub: "Visual projections of your cash flow across days, weeks, months, or years with precise percentages.",
+      t1Title: "Timeframe Switching",
+      t1Desc: "Seamlessly toggle between daily micro-views and multi-year macroeconomic projections.",
+      t2Title: "Percentage Delta Indicators",
+      t2Desc: "Spot variations immediately compared to previous periods with smart trend tags.",
+      t3Title: "Category Expansion",
+      t3Desc: "Identify which specific category is spiking before it impacts your overall financial health.",
+      t4Title: "Exportable Reports",
+      t4Desc: "Download clean, structured summaries for any custom timeframe for tax or accounting needs.",
+      cogsTitle: "DigitAll Brand Pillars",
+      cogsSub: "Select any letter below to explore the core pillars of D-I-G-I-T-A-L-L.",
+      cogsNext: "Next Letter →",
+      letterPrefix: "LETTER",
+      aiTitle: "Financial AI Intelligence",
+      aiSub: "Personalized analysis of your spending habits, written in simple and direct language.",
+      a1Title: "Pattern Recognition",
+      a1Desc: "DigitAll's AI uncovers hidden recurring expense patterns that usually go unnoticed.",
+      a2Title: "Personalized Insights",
+      a2Desc: "Receive clear explanations regarding what changed in your spending and why.",
+      a3Title: "Actionable Advice",
+      a3Desc: "Get practical recommendations tailored specifically to your income and targets.",
+      a4Title: "Continuous Learning",
+      a4Desc: "Insights grow richer and more accurate the more you record your daily payments.",
+      footerText: "© 2026 DigitAll — Digital For All. Crafted for Madagascar and the global community.",
+      gearLetters: [
+        { letter: 'D', color: '#00F5A4', desc: 'Digital First — Fast, portable, synced across the cloud.' },
+        { letter: 'I', color: '#7B3FF2', desc: 'Insightful — Instantly categorized payments and insights.' },
+        { letter: 'G', color: '#3FB8FF', desc: 'Guardrails — Healthy budget limits to keep you on track.' },
+        { letter: 'I', color: '#FFB020', desc: 'Intelligent — Financial AI reveals silent leaks.' },
+        { letter: 'T', color: '#FF5FA2', desc: 'Trajectory — Predict whether your savings grow or decline.' },
+        { letter: 'A', color: '#7B3FF2', desc: 'Affordable — Plans built for students, families, and shops.' },
+        { letter: 'L', color: '#00F5A4', desc: 'Local — Built natively for Ariary and USD conversion.' },
+        { letter: 'L', color: '#3FB8FF', desc: 'Lasting — Small daily habits compounding into real wealth.' }
+      ]
+    },
+    fr: {
+      tag: "LE NUMÉRIQUE POUR TOUS",
+      signIn: "Se Connecter",
+      signUp: "S'inscrire",
+      tabWhy: "Pourquoi DigitAll ?",
+      tabControl: "Centre de Contrôle",
+      tabTrajectory: "Trajectoire des Dépenses",
+      tabCogs: "Piliers de Marque",
+      tabAi: "IA Financière",
+      eyebrow: "LE MANIFESTE DIGITALL",
+      heroTitle: "Pourquoi chaque paiement compte",
+      heroLead: "Les fuites d'argent invisibles érodent votre richesse. DigitAll transforme les transactions chaotiques en clarté absolue.",
+      digitalDesc: "Fluide, axé sur le cloud, accessible partout et à tout moment sur tous vos appareils.",
+      allDesc: "Conçu pour TOUS. Accessible aux étudiants, familles et entreprises locales en USD et Ariary.",
+      btnExplore: "Explorer le Centre de Contrôle",
+      simTitle: "Simulateur Interactif de Fuites",
+      simSub: "Ajustez les curseurs pour voir comment de petites habitudes génèrent d'importantes économies.",
+      lblSnacks: "Gourmandises & Boissons",
+      lblSubs: "Abonnements Inutilisés",
+      lblFees: "Frais Mobile Money & ATM",
+      annualLeakLabel: "FUITE D'ARGENT ANNUELLE",
+      fiveYearLabel: "PERTE CUMULÉE SUR 5 ANS",
+      perDay: "jour",
+      perMonth: "mois",
+      controlTitle: "Centre de Contrôle Financier",
+      controlSub: "Tous vos comptes, catégories et objectifs sur un seul tableau de bord mis à jour en temps réel.",
+      f1Title: "Aperçu du Solde en Direct",
+      f1Desc: "Suivez votre valeur nette consolidée sur l'ensemble de vos comptes bancaires et espèces.",
+      f2Title: "Catégorisation Intelligente",
+      f2Desc: "Regroupez automatiquement chaque transaction avec une précision granulaire.",
+      f3Title: "Objectifs de Dépense",
+      f3Desc: "Définissez des seuils dynamiques et recevez des alertes instantanées.",
+      f4Title: "Synchronisation Multi-Comptes",
+      f4Desc: "Gardez votre Mobile Money et vos soldes bancaires en parfaite harmonie.",
+      trajTitle: "Trajectoire des Dépenses",
+      trajSub: "Projections visuelles de votre trésorerie sur des jours, semaines, mois ou années.",
+      t1Title: "Changement de Période",
+      t1Desc: "Basculez facilement entre la vue quotidienne et des projections macroéconomiques.",
+      t2Title: "Indicateurs de Variation %",
+      t2Desc: "Repérez immédiatement les écarts par rapport aux périodes précédentes.",
+      t3Title: "Analyse des Catégories",
+      t3Desc: "Identifiez la catégorie en hausse avant qu'elle n'impacte votre santé financière.",
+      t4Title: "Rapports Exportables",
+      t4Desc: "Téléchargez des synthèses claires pour vos besoins comptables ou fiscaux.",
+      cogsTitle: "Piliers de Marque DigitAll",
+      cogsSub: "Sélectionnez une lettre ci-dessous pour explorer les piliers de D-I-G-I-T-A-L-L.",
+      cogsNext: "Lettre Suivante →",
+      letterPrefix: "LETTRE",
+      aiTitle: "Intelligence Artificielle Financière",
+      aiSub: "Analyse personnalisée de vos habitudes de dépense en langage simple.",
+      a1Title: "Reconnaissance de Modèles",
+      a1Desc: "L'IA de DigitAll détecte les dépenses récurrentes cachées.",
+      a2Title: "Analyses Personnalisées",
+      a2Desc: "Obtenez des explications claires sur l'évolution de vos dépenses.",
+      a3Title: "Conseils Pratiques",
+      a3Desc: "Recevez des recommandations concrètes adaptées à vos revenus.",
+      a4Title: "Apprentissage Continu",
+      a4Desc: "Les analyses deviennent de plus en plus précises au fur et à mesure de vos saisies.",
+      footerText: "© 2026 DigitAll — Le Numérique pour Tous. Conçu pour Madagascar et la communauté internationale.",
+      gearLetters: [
+        { letter: 'D', color: '#00F5A4', desc: 'Digital d\'abord — Rapide, mobile, synchronisé sur le cloud.' },
+        { letter: 'I', color: '#7B3FF2', desc: 'Intelligent — Catégorisation instantanée des paiements.' },
+        { letter: 'G', color: '#3FB8FF', desc: 'Garde-fous — Limites budgétaires pour garder le cap.' },
+        { letter: 'I', color: '#FFB020', desc: 'Insightful — L\'IA financière révèle les fuites d\'argent.' },
+        { letter: 'T', color: '#FF5FA2', desc: 'Trajectoire — Anticipez la croissance de votre épargne.' },
+        { letter: 'A', color: '#7B3FF2', desc: 'Accessible — Offres adaptées aux étudiants et commerces.' },
+        { letter: 'L', color: '#00F5A4', desc: 'Local — Conçu pour la conversion Ariary et USD.' },
+        { letter: 'L', color: '#3FB8FF', desc: 'Durable — De petites habitudes qui créent de la richesse.' }
+      ]
+    },
+    mg: {
+      tag: "DIGITAL HO AN'NY REHETRA",
+      signIn: "Hiditra",
+      signUp: "Hanoratra anarana",
+      tabWhy: "Nahoana no DigitAll?",
+      tabControl: "Ivon-toerana Fitantanana",
+      tabTrajectory: "Zotran'ny Fandaniana",
+      tabCogs: "Piliers DigitAll",
+      tabAi: "AI Ara-Pitantanana",
+      eyebrow: "NY MANIFESTO DIGITALL",
+      heroTitle: "Nahoana no Zava-dehibe ny Fanarahana ny Fandaniana",
+      heroLead: "Ny fahaverezam-bola kely isan’andro dia manimba ny tahiry. DigitAll dia manova ny korontana ho mazava tsara.",
+      digitalDesc: "Mora ampiasaina amin'ny cloud, azo idirana amin'ny fotoana rehetra sy amin'ny fitaovana rehetra.",
+      allDesc: "Natao ho an'ny REHETRA. Takatry ny mpianatra, ny fianakaviana, ary ny mpivarotra amin'ny USD sy Ariary.",
+      btnExplore: "Jereo ny Ivon-toerana Fitantanana",
+      simTitle: "Mpampitaha Fahaverezam-bola",
+      simSub: "Ovay ny slider hahitana ny fitsitsiana azo atao amin'ny DigitAll.",
+      lblSnacks: "Tsakitsaky Isan'andro",
+      lblSubs: "Abonnements Tsy Ampiasaina",
+      lblFees: "Saran'ny Mobile Money & ATM",
+      annualLeakLabel: "FAHAVEREZAM-BOLA ISAN-TAONA",
+      fiveYearLabel: "FAHAVEREZANA AMIN'NY TAONA 5",
+      perDay: "andro",
+      perMonth: "volana",
+      controlTitle: "Ivon-toerana Fitantanana Vola",
+      controlSub: "Ny kaontinao sy ny tanjonao amin'ny solaitrabe iray — havaozina amin'ny fotoana tena izy.",
+      f1Title: "Topi-maso ny Solde",
+      f1Desc: "Araho avy hatrany ny fitambaran'ny fanananao amin'ny banky, mobile money, ary lelavola.",
+      f2Title: "Sokajy Intelligente",
+      f2Desc: "Sokajio ho azy ny fifampiraharahana rehetra amin'ny fomba tsara.",
+      f3Title: "Tanjona Fandaniana",
+      f3Desc: "Mametraha fetra isaky ny sokajy ary mahazo fampandrenesana alohan'ny hihoarana izany.",
+      f4Title: "Fampiraisana Kaonty Maro",
+      f4Desc: "Ampifanaraho tsara ny Mobile Money, ny banky, ary ny lelavola amin'ny fampiharana iray.",
+      trajTitle: "Zotran'ny Fandaniana",
+      trajSub: "Sary mampiseho ny fizotran'ny vola amin'ny andro, volana, na taona amin'ny pronsantajy mazava.",
+      t1Title: "Fanovana Fotoana",
+      t1Desc: "Mifamadiha amin'ny fisongadinana isan'andro sy ny vinavina mandritra ny taona maro.",
+      t2Title: "Mpanondro Fanovana %",
+      t2Desc: "Jereo avy hatrany ny fahasamihafana mihoatra ny fotoana teo aloha.",
+      t3Title: "Fandinihana Sokajy",
+      t3Desc: "Fantaro hoe amin'ny sokajy aiza no misy fisondrotana alohan'ny hisy fiantraikana amin'ny volanao.",
+      t4Title: "Rapor Azo Avoaka",
+      t4Desc: "Ampidino ny famintinana mazava ho an'ny kaonty na ny hetra.",
+      cogsTitle: "Piliers DigitAll",
+      cogsSub: "Fidilizo ny soratra eto ambany mba handinihana ny D-I-G-I-T-A-L-L.",
+      cogsNext: "Soratra Manaraka →",
+      letterPrefix: "SORATRA",
+      aiTitle: "AI Ara-Pitantanana Vola",
+      aiSub: "Fandinihana manokana ny fahazaranao mandany vola amin'ny fiteny tsotra sy mazava.",
+      a1Title: "Fahafantarana Lamina",
+      a1Desc: "Ny AI-n'i DigitAll dia mamantatra ny fandaniana miverimberina takona.",
+      a2Title: "Fahafantarana Manokana",
+      a2Desc: "Mahazo fanazavana mazava momba ny fiovana amin'ny fandanianao sy ny anton'izany.",
+      a3Title: "Torohevitra Azo Ampiharina",
+      a3Desc: "Mahazo torohevitra azo ampiharina mifanaraka amin'ny fidiran-bolanao.",
+      a4Title: "Fianarana Mitohy",
+      a4Desc: "Lasa marina kokoa ny fampahalalana arakaraka ny handraisanao an-tsoratra ny fandanianao.",
+      footerText: "© 2026 DigitAll — Digital ho an'ny Rehetra. Natao ho an'i Madagasikara sy izao tontolo izao.",
+      gearLetters: [
+        { letter: 'D', color: '#00F5A4', desc: 'Digital Voalohany — Haingana, azo entina, ampiarahina amin\'ny cloud.' },
+        { letter: 'I', color: '#7B3FF2', desc: 'Fahafantarana — Sokajy haingana ny fandaniana sy ny fahalalana.' },
+        { letter: 'G', color: '#3FB8FF', desc: 'Fepetra — Fetra ara-tetibola mba hitazonana anao amin\'ny lalana tsara.' },
+        { letter: 'I', color: '#FFB020', desc: 'Manan-tsaina — Ny AI ara-pahasalamana dia mampiseho ny fahaverezana.' },
+        { letter: 'T', color: '#FF5FA2', desc: 'Zotra — Maminavina raha mitombo na mihena ny tahiry.' },
+        { letter: 'A', color: '#7B3FF2', desc: 'Takatry ny Vola — Tetikasa natao ho an\'ny mpianatra sy ny mpivarotra.' },
+        { letter: 'L', color: '#00F5A4', desc: 'An-toerana — Natao manokana ho an\'ny Ariary sy USD.' },
+        { letter: 'L', color: '#3FB8FF', desc: 'Maharitra — Fahazarana kely isan\'andro mampitombo ny harena.' }
+      ]
+    }
+  };
+
+  let currentLang = 'en';
+  let currency = 'mga';
+  const RATE = 4284.53;
+
+  function setLanguage(lang) {
+    if (!translations[lang]) return;
+    currentLang = lang;
+
+    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+    document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+    document.getElementById('lang-mg').classList.toggle('active', lang === 'mg');
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang][key]) el.textContent = translations[lang][key];
+    });
+
+    const currentGears = translations[lang].gearLetters;
+    for (let i = 0; i < LETTERS.length; i++) {
+      LETTERS[i].desc = currentGears[i].desc;
+    }
+
+    updateSimulator();
+    selectLetter(selectedIndex);
+  }
+
+  function setCurrency(newCurrency) {
+    currency = newCurrency;
+    document.getElementById('btn-usd').classList.toggle('active', newCurrency === 'usd');
+    document.getElementById('btn-mga').classList.toggle('active', newCurrency === 'mga');
+    updateSimulator();
+  }
+
+  function formatNumber(num) {
+    return Math.round(num).toLocaleString('en-US').replace(/,/g, ' ');
+  }
+
+  function updateSimulator() {
+    const snacksDay = Number(document.getElementById('sl-snacks').value);
+    const subsMonth = Number(document.getElementById('sl-subs').value);
+    const feesMonth = Number(document.getElementById('sl-fees').value);
+
+    const symbol = currency === 'usd' ? '$' : 'Ar';
+    const convert = value => currency === 'usd' ? value / RATE : value;
+
+    const perDayText = translations[currentLang].perDay;
+    const perMonthText = translations[currentLang].perMonth;
+
+    document.getElementById('val-snacks').textContent = `${formatNumber(convert(snacksDay))} ${symbol} / ${perDayText}`;
+    document.getElementById('val-subs').textContent = `${formatNumber(convert(subsMonth))} ${symbol} / ${perMonthText}`;
+    document.getElementById('val-fees').textContent = `${formatNumber(convert(feesMonth))} ${symbol} / ${perMonthText}`;
+
+    const totalAnnual = (snacksDay * 365) + (subsMonth * 12) + (feesMonth * 12);
+    document.getElementById('annual-drain').textContent = `${formatNumber(convert(totalAnnual))} ${symbol}`;
+    document.getElementById('five-year').textContent = `${formatNumber(convert(totalAnnual * 5))} ${symbol}`;
+  }
+
+  ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateSimulator);
+  });
+
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* Pillar Grid Engine */
+  let LETTERS = JSON.parse(JSON.stringify(translations.en.gearLetters));
+  const letterGrid = document.getElementById('letter-grid');
+  let selectedIndex = 0;
+
+  LETTERS.forEach((item, i) => {
+    const card = document.createElement('button');
+    card.className = 'letter-card' + (i === selectedIndex ? ' active' : '');
+    card.style.cssText = `
+      width: 52px; height: 52px; border-radius: 12px; 
+      border: 2px solid ${item.color}; background: transparent; 
+      color: ${item.color}; font-size: 20px; font-weight: 800; 
+      cursor: pointer; transition: all 0.2s ease;
+    `;
+    card.textContent = item.letter;
+    card.addEventListener('click', () => selectLetter(i));
+    letterGrid.appendChild(card);
+  });
+
+  function selectLetter(index) {
+    selectedIndex = index;
+    const cards = letterGrid.querySelectorAll('.letter-card');
+    cards.forEach((card, idx) => {
+      const item = LETTERS[idx];
+      if (idx === index) {
+        card.style.background = item.color;
+        card.style.color = '#0D0F12';
+        card.style.transform = 'scale(1.1)';
       } else {
-        currentUser = null;
-        loginContainer.style.display = "flex";
-        dashboardContainer.style.display = "none";
+        card.style.background = 'transparent';
+        card.style.color = item.color;
+        card.style.transform = 'scale(1)';
       }
     });
 
-    // Handle Login Form Submission
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("emailInput").value.trim();
-      const password = document.getElementById("passwordInput").value;
+    const current = LETTERS[index];
+    const prefix = translations[currentLang].letterPrefix;
 
-      errorDiv.style.display = "none";
-      loginBtn.innerText = "Signing in...";
-      loginBtn.disabled = true;
+    document.getElementById('letter-chip').textContent = current.letter;
+    document.getElementById('letter-chip').style.background = current.color;
+    document.getElementById('letter-chip').style.color = '#0D0F12';
+    document.getElementById('letter-meta').textContent = `${prefix} ${index + 1} OF ${LETTERS.length}`;
+    document.getElementById('letter-desc').textContent = current.desc;
+  }
 
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        console.error("Login Error:", error);
-        loginBtn.innerText = "Sign In";
-        loginBtn.disabled = false;
-        errorDiv.style.display = "block";
+  function nextLetter() {
+    selectLetter((selectedIndex + 1) % LETTERS.length);
+  }
 
-        switch (error.code) {
-          case 'auth/invalid-credential':
-          case 'auth/wrong-password':
-          case 'auth/user-not-found':
-            errorDiv.innerText = "Invalid email or password.";
-            break;
-          case 'auth/invalid-email':
-            errorDiv.innerText = "Invalid email address format.";
-            break;
-          case 'auth/too-many-requests':
-            errorDiv.innerText = "Too many failed attempts. Try again later.";
-            break;
-          default:
-            errorDiv.innerText = error.message;
-        }
-      }
-    });
-
-    // Handle Onboarding Age Submission
-    document.getElementById("onboardingForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const ageVal = Number(document.getElementById("onboardingAgeInput").value);
-      
-      if (currentUser && ageVal) {
-        try {
-          await setDoc(doc(db, "users", currentUser.uid), {
-            email: currentUser.email,
-            age: ageVal,
-            updatedAt: new Date().toISOString()
-          }, { merge: true });
-
-          document.getElementById("profileAgeInput").value = ageVal;
-          document.getElementById("onboardingModal").style.display = "none";
-          alert("Age saved successfully!");
-        } catch (err) {
-          alert("Error saving age: " + err.message);
-        }
-      }
-    });
-
-    // Handle Name & Age Updates
-    document.getElementById("updateProfileForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const newName = document.getElementById("profileNameInput").value.trim();
-      const newAge = Number(document.getElementById("profileAgeInput").value);
-
-      try {
-        await updateProfile(currentUser, { displayName: newName });
-        await setDoc(doc(db, "users", currentUser.uid), {
-          name: newName,
-          age: newAge,
-          updatedAt: new Date().toISOString()
-        }, { merge: true });
-
-        document.getElementById("welcomeName").innerText = newName || currentUser.email.split('@')[0];
-        alert("Profile updated successfully!");
-      } catch (err) {
-        alert("Failed to update profile: " + err.message);
-      }
-    });
-
-    // Handle Password Change
-    document.getElementById("changePasswordForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const newPass = document.getElementById("newPasswordInput").value;
-
-      try {
-        await updatePassword(currentUser, newPass);
-        alert("Password updated successfully!");
-        document.getElementById("changePasswordForm").reset();
-      } catch (err) {
-        alert("Failed to update password: " + err.message);
-      }
-    });
-
-    // Sign Out Handler
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth);
-    });
-  </script>
+  setLanguage('en');
+</script>
 </body>
 </html>
