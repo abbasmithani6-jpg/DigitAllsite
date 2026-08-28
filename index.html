@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DigitAll - User Dashboard</title>
+  <title>DigitAll</title>
   <style>
     :root {
       --bg-color: #0f172a;
@@ -14,11 +14,34 @@
       --text-muted: #94a3b8;
       --border-color: #334155;
       --input-bg: #0f172a;
+      --danger-color: #ef4444;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding: 24px; }
 
+    /* Login Screen Container */
+    #loginContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .login-card h2 { text-align: center; margin-bottom: 24px; color: var(--text-main); }
+
+    /* Dashboard Layout */
+    #dashboardContainer { display: none; }
     header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 32px auto; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
     header h1 { font-size: 24px; }
 
@@ -30,6 +53,7 @@
       margin: 0 auto;
     }
 
+    /* Common Card Styles */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -40,15 +64,18 @@
     .card h2 { margin-bottom: 8px; font-size: 20px; color: var(--accent-color); }
     .card-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
 
+    /* Form Inputs & Buttons */
     .input-group { margin-bottom: 16px; }
     .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-    input[type="text"], input[type="password"], input[type="number"] {
+    input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
       width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s;
     }
     input:focus { border-color: var(--accent-color); }
 
-    .btn-primary { width: 100%; padding: 10px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
+    .btn-primary { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
     .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    
     .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
     .btn-secondary:hover { color: var(--text-main); border-color: var(--text-muted); }
 
@@ -63,73 +90,98 @@
     .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; text-align: center; }
     .modal-content h3 { font-size: 20px; margin-bottom: 10px; color: var(--accent-color); }
     .modal-content p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+
+    #errorMessage { color: var(--danger-color); font-size: 13px; margin-top: 12px; text-align: center; display: none; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Welcome, <span id="welcomeName">User</span></h1>
-    <button class="btn-secondary" id="logoutBtn">Sign Out</button>
-  </header>
-
-  <main class="dashboard-grid">
-    
-    <section class="card">
-      <h2>Account Settings</h2>
-      <p class="card-desc">Update your personal profile, email, and security password.</p>
-      
-      <form id="updateProfileForm" style="margin-bottom: 24px;">
-        <div class="input-group">
-          <label>Display Name</label>
-          <input type="text" id="profileNameInput" placeholder="Enter full name" required>
-        </div>
-        <div class="input-group">
-          <label>Age (Used for AI Transport Insights)</label>
-          <input type="number" id="profileAgeInput" placeholder="e.g. 25" min="13" max="120" required>
-        </div>
+  <!-- VIEW 1: LOGIN FORM -->
+  <div id="loginContainer">
+    <div class="login-card">
+      <h2>DigitAll Sign In</h2>
+      <form id="loginForm">
         <div class="input-group">
           <label>Email Address</label>
-          <input type="text" id="profileEmailInput" disabled style="opacity: 0.6; cursor: not-allowed;">
+          <input type="email" id="emailInput" placeholder="user@example.com" required>
         </div>
-        <button type="submit" class="btn-primary">Update Profile</button>
-      </form>
-
-      <hr style="border-color: var(--border-color); margin-bottom: 20px;">
-
-      <form id="changePasswordForm">
-        <h3 style="font-size: 15px; margin-bottom: 12px;">Change Password</h3>
         <div class="input-group">
-          <label>New Password</label>
-          <input type="password" id="newPasswordInput" placeholder="••••••••" required minlength="6">
+          <label>Password</label>
+          <input type="password" id="passwordInput" placeholder="••••••••" required>
         </div>
-        <button type="submit" class="btn-primary" style="background: var(--border-color);">Update Password</button>
+        <button type="submit" id="loginBtn" class="btn-primary">Sign In</button>
+        <div id="errorMessage"></div>
       </form>
-    </section>
+    </div>
+  </div>
 
-    <section class="card">
-      <h2>Your Plans</h2>
-      <p class="card-desc">Manage your active subscription tiers and transport analytics access.</p>
+  <!-- VIEW 2: USER DASHBOARD -->
+  <div id="dashboardContainer">
+    <header>
+      <h1>Welcome, <span id="welcomeName">User</span></h1>
+      <button class="btn-secondary" id="logoutBtn">Sign Out</button>
+    </header>
 
-      <div class="plan-box active">
-        <div class="plan-title">
-          <span>Starter Plan</span>
-          <span class="badge-active">CURRENT PLAN</span>
+    <main class="dashboard-grid">
+      <!-- SECTION 1: Accounts & Profile -->
+      <section class="card">
+        <h2>Account Settings</h2>
+        <p class="card-desc">Update your personal profile, email, and security password.</p>
+        
+        <form id="updateProfileForm" style="margin-bottom: 24px;">
+          <div class="input-group">
+            <label>Display Name</label>
+            <input type="text" id="profileNameInput" placeholder="Enter full name" required>
+          </div>
+          <div class="input-group">
+            <label>Age (Used for AI Transport Insights)</label>
+            <input type="number" id="profileAgeInput" placeholder="e.g. 25" min="13" max="120" required>
+          </div>
+          <div class="input-group">
+            <label>Email Address</label>
+            <input type="text" id="profileEmailInput" disabled style="opacity: 0.6; cursor: not-allowed;">
+          </div>
+          <button type="submit" class="btn-primary">Update Profile</button>
+        </form>
+
+        <hr style="border-color: var(--border-color); margin-bottom: 20px;">
+
+        <form id="changePasswordForm">
+          <h3 style="font-size: 15px; margin-bottom: 12px;">Change Password</h3>
+          <div class="input-group">
+            <label>New Password</label>
+            <input type="password" id="newPasswordInput" placeholder="••••••••" required minlength="6">
+          </div>
+          <button type="submit" class="btn-primary" style="background: var(--border-color);">Update Password</button>
+        </form>
+      </section>
+
+      <!-- SECTION 2: Plans & Subscriptions -->
+      <section class="card">
+        <h2>Your Plans</h2>
+        <p class="card-desc">Manage your active subscription tiers and transport analytics access.</p>
+
+        <div class="plan-box active">
+          <div class="plan-title">
+            <span>Starter Plan</span>
+            <span class="badge-active">CURRENT PLAN</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted);">Includes basic transport tracking and standard AI insights.</p>
         </div>
-        <p style="font-size: 12px; color: var(--text-muted);">Includes basic transport tracking and standard AI insights.</p>
-      </div>
 
-      <div class="plan-box">
-        <div class="plan-title">
-          <span>Pro Commuter Plan</span>
-          <span style="font-size: 12px; color: var(--text-muted);">$9.99/mo</span>
+        <div class="plan-box">
+          <div class="plan-title">
+            <span>Pro Commuter Plan</span>
+            <span style="font-size: 12px; color: var(--text-muted);">$9.99/mo</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Advanced route optimization, spending breakdown, and personalized age-based AI budget tools.</p>
+          <button type="button" class="btn-secondary" style="width: 100%; font-size: 12px;" onclick="alert('Upgrade functionality coming soon!')">Upgrade to Pro</button>
         </div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Advanced route optimization, spending breakdown, and personalized age-based AI budget tools.</p>
-        <button type="button" class="btn-secondary" style="width: 100%; font-size: 12px;" onclick="alert('Upgrade functionality coming soon!')">Upgrade to Pro</button>
-      </div>
-    </section>
+      </section>
+    </main>
+  </div>
 
-  </main>
-
+  <!-- First Time Onboarding Modal (Asks for Age) -->
   <div id="onboardingModal">
     <div class="modal-content">
       <h3>One quick question! 👋</h3>
@@ -147,6 +199,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getAuth, 
+      signInWithEmailAndPassword,
       onAuthStateChanged, 
       updateProfile, 
       updatePassword, 
@@ -156,8 +209,7 @@
       getFirestore, 
       doc, 
       getDoc, 
-      setDoc, 
-      updateDoc 
+      setDoc 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -173,15 +225,22 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    const loginContainer = document.getElementById("loginContainer");
+    const dashboardContainer = document.getElementById("dashboardContainer");
+    const loginBtn = document.getElementById("loginBtn");
+    const errorDiv = document.getElementById("errorMessage");
+
     let currentUser = null;
 
-    // Check Auth Status & Fetch User Profile Data
+    // Monitor Auth State Changes
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
+        loginContainer.style.display = "none";
+        dashboardContainer.style.display = "block";
         document.getElementById("profileEmailInput").value = user.email;
 
-        // Fetch user metadata from Firestore
+        // Fetch user data from Firestore
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
 
@@ -194,22 +253,58 @@
           if (data.name) userName = data.name;
         }
 
-        // Populate Form Fields
         document.getElementById("profileNameInput").value = userName;
         document.getElementById("welcomeName").innerText = userName || user.email.split('@')[0];
         if (userAge) document.getElementById("profileAgeInput").value = userAge;
 
-        // If age is missing (First Login), trigger onboarding popup
+        // Open Age modal on first login if age missing
         if (!userAge) {
           document.getElementById("onboardingModal").style.display = "flex";
         }
       } else {
-        // Redirect to index page if unauthenticated
-        window.location.href = "index.html";
+        currentUser = null;
+        loginContainer.style.display = "flex";
+        dashboardContainer.style.display = "none";
       }
     });
 
-    // Handle First-Time Age Onboarding Submission
+    // Handle Login Form Submission
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
+
+      errorDiv.style.display = "none";
+      loginBtn.innerText = "Signing in...";
+      loginBtn.disabled = true;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        console.error("Login Error:", error);
+        loginBtn.innerText = "Sign In";
+        loginBtn.disabled = false;
+        errorDiv.style.display = "block";
+
+        switch (error.code) {
+          case 'auth/invalid-credential':
+          case 'auth/wrong-password':
+          case 'auth/user-not-found':
+            errorDiv.innerText = "Invalid email or password.";
+            break;
+          case 'auth/invalid-email':
+            errorDiv.innerText = "Invalid email address format.";
+            break;
+          case 'auth/too-many-requests':
+            errorDiv.innerText = "Too many failed attempts. Try again later.";
+            break;
+          default:
+            errorDiv.innerText = error.message;
+        }
+      }
+    });
+
+    // Handle Onboarding Age Submission
     document.getElementById("onboardingForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const ageVal = Number(document.getElementById("onboardingAgeInput").value);
@@ -238,10 +333,7 @@
       const newAge = Number(document.getElementById("profileAgeInput").value);
 
       try {
-        // 1. Update Auth Profile
         await updateProfile(currentUser, { displayName: newName });
-
-        // 2. Update Firestore Document
         await setDoc(doc(db, "users", currentUser.uid), {
           name: newName,
           age: newAge,
@@ -255,7 +347,7 @@
       }
     });
 
-    // Handle Password Updates
+    // Handle Password Change
     document.getElementById("changePasswordForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const newPass = document.getElementById("newPasswordInput").value;
@@ -265,13 +357,13 @@
         alert("Password updated successfully!");
         document.getElementById("changePasswordForm").reset();
       } catch (err) {
-        alert("Failed to update password. You may need to re-login: " + err.message);
+        alert("Failed to update password: " + err.message);
       }
     });
 
     // Sign Out Handler
     document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => window.location.href = "index.html");
+      signOut(auth);
     });
   </script>
 </body>
