@@ -9,6 +9,76 @@
 <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="base.css">
 <style>
+  :root {
+    --bg-dark: #0D0F12;
+    --card-bg: #161920;
+    --card-border: #262B36;
+    --text-main: #FFFFFF;
+    --text-muted: #9CA3AF;
+    --teal: #00F5A4;
+    --purple: #7B3FF2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Stack Sans Notch', sans-serif;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    background: #11141A;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .logo-block {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-mark { height: 32px; width: auto; }
+
+  .logo-text .word {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .logo-text .word span { color: var(--teal); }
+  .logo-text .tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+  }
+
+  .toggle-group {
+    display: flex;
+    background: #1C212C;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 2px;
+  }
+  .toggle-group button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .toggle-group button.active {
+    background: var(--purple);
+    color: #FFF;
+  }
+
   .auth-wrapper {
     min-height: calc(100vh - 80px);
     display: flex;
@@ -104,6 +174,10 @@
     cursor: pointer;
     border: none;
   }
+  .btn-teal {
+    background: var(--teal);
+    color: #0D0F12;
+  }
   .auth-footer {
     text-align: center;
     margin-top: 24px;
@@ -117,6 +191,17 @@
   }
   .auth-footer a:hover {
     text-decoration: underline;
+  }
+  .error-msg {
+    background: rgba(255, 75, 75, 0.15);
+    border: 1px solid rgba(255, 75, 75, 0.3);
+    color: #FF6B6B;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    display: none;
+    text-align: center;
   }
 </style>
 </head>
@@ -141,21 +226,23 @@
 </header>
 
 <div class="auth-wrapper">
-  <div class="auth-card">
+  <div class="auth-card" id="loginCard">
     <div class="auth-header">
       <h1 class="auth-title" data-i18n="login_title">Welcome Back</h1>
       <p class="auth-subtitle" data-i18n="login_subtitle">Sign in to access your financial control center.</p>
     </div>
 
+    <div id="errorBanner" class="error-msg" data-i18n="error_invalid">Invalid email or password. Please try again.</div>
+
     <form onsubmit="handleLogin(event)">
       <div class="form-group">
         <label data-i18n="lbl_email">Email Address</label>
-        <input type="email" class="form-control" data-i18n-ph="ph_email" placeholder="name@example.com" required>
+        <input type="email" id="emailInput" class="form-control" data-i18n-ph="ph_email" placeholder="name@example.com" required>
       </div>
 
       <div class="form-group">
         <label data-i18n="lbl_password">Password</label>
-        <input type="password" class="form-control" data-i18n-ph="ph_password" placeholder="••••••••" required>
+        <input type="password" id="passInput" class="form-control" data-i18n-ph="ph_password" placeholder="••••••••" required>
       </div>
 
       <div class="form-actions">
@@ -182,6 +269,7 @@
       logo_tag: "LE NUMÉRIQUE POUR TOUS",
       login_title: "Bon retour",
       login_subtitle: "Connectez-vous pour accéder à votre centre de contrôle financier.",
+      error_invalid: "Email ou mot de passe invalide. Veuillez réessayer.",
       lbl_email: "Adresse Email",
       ph_email: "nom@exemple.com",
       lbl_password: "Mot de passe",
@@ -196,6 +284,7 @@
       logo_tag: "DIGITAL HO AN'NY REHETRA",
       login_title: "Tonga soa indray",
       login_subtitle: "Tidiro ny kaontinao hidirana amin'ny ivom-pifehezana ara-bola.",
+      error_invalid: "Tsy mitovy ny adiresy na ny tenypahatsiarovana. Andramo indray.",
       lbl_email: "Adiresy Email",
       ph_email: "anarana@ohatra.com",
       lbl_password: "Tenypahatsiarovana",
@@ -250,7 +339,21 @@
 
   function handleLogin(event) {
     event.preventDefault();
-    alert(currentLang === 'fr' ? 'Connexion en cours...' : (currentLang === 'mg' ? 'Mampiditra...' : 'Logging in...'));
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passInput').value;
+    const errorBanner = document.getElementById('errorBanner');
+
+    // Validates login credentials and redirects to dashboard.html
+    if (email && password.length >= 6) {
+      errorBanner.style.display = 'none';
+      sessionStorage.setItem('digitall_logged_in', 'true');
+      sessionStorage.setItem('digitall_user_email', email);
+      
+      // Redirects user to dashboard page
+      window.location.href = 'dashboard.html';
+    } else {
+      errorBanner.style.display = 'block';
+    }
   }
 </script>
 </body>
