@@ -1,671 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DigitAll | Digital For All</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="base.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigitAll - User Dashboard</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #10b981;
+      --accent-hover: #059669;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --input-bg: #0f172a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding: 24px; }
+
+    header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 32px auto; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
+    header h1 { font-size: 24px; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .card h2 { margin-bottom: 8px; font-size: 20px; color: var(--accent-color); }
+    .card-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="text"], input[type="password"], input[type="number"] {
+      width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s;
+    }
+    input:focus { border-color: var(--accent-color); }
+
+    .btn-primary { width: 100%; padding: 10px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+    .btn-secondary:hover { color: var(--text-main); border-color: var(--text-muted); }
+
+    /* Plans Grid */
+    .plan-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.02); }
+    .plan-box.active { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.05); }
+    .plan-title { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
+    .badge-active { background: rgba(16, 185, 129, 0.15); color: var(--accent-color); font-size: 11px; padding: 2px 8px; border-radius: 12px; }
+
+    /* Onboarding Modal */
+    #onboardingModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 2000; }
+    .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; text-align: center; }
+    .modal-content h3 { font-size: 20px; margin-bottom: 10px; color: var(--accent-color); }
+    .modal-content p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+  </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="logo-block">
-    <a href="index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
-      <img src="digitall-logo-mark.png" class="logo-mark" alt="DigitAll logo">
-      <div class="logo-text">
-        <div class="word">Digit<span>All</span></div>
-        <div class="tag" data-i18n="logo_tag">DIGITAL FOR ALL</div>
-      </div>
-    </a>
-  </div>
+  <header>
+    <h1>Welcome, <span id="welcomeName">User</span></h1>
+    <button class="btn-secondary" id="logoutBtn">Sign Out</button>
+  </header>
 
-  <div class="toggle-group currency" role="group" aria-label="Currency Toggle">
-    <button id="btn-usd" onclick="setCurrency('usd')">USD ($)</button>
-    <button id="btn-mga" class="active" onclick="setCurrency('mga')">MGA (Ar)</button>
-  </div>
-
-  <!-- Language Toggle Buttons -->
-  <div class="toggle-group lang" role="group" aria-label="Language Toggle">
-    <button id="lang-en" class="active" onclick="setLanguage('en')">EN</button>
-    <button id="lang-fr" onclick="setLanguage('fr')">FR</button>
-    <button id="lang-mg" onclick="setLanguage('mg')">MG</button>
-  </div>
-
-  <div class="auth-buttons">
-    <a href="login.html" class="btn btn-ghost" data-i18n="nav_signin">Sign In</a>
-    <a href="signup.html" class="btn btn-teal" data-i18n="nav_signup">Sign Up</a>
-  </div>
-</header>
-
-<nav class="tabs" id="tabs">
-  <button class="active" data-target="why" data-i18n="tab_why">Why DigitAll Matters</button>
-  <button data-target="control" data-i18n="tab_control">Financial Control Center</button>
-  <button data-target="trajectory" data-i18n="tab_trajectory">Spending Trajectory</button>
-  <button data-target="ai" data-i18n="tab_ai">Financial AI</button>
-</nav>
-
-<main>
-
-  <!-- Section 1: Why DigitAll Matters -->
-  <section id="why">
-    <div class="manifesto-card">
-      <span class="eyebrow" data-i18n="manifesto_eyebrow">THE DIGITALL MANIFESTO</span>
-      <h1 class="hero-title" data-i18n="hero_title">Why Tracking Every Payment Matters</h1>
-      <p class="lead" data-i18n="hero_lead">Silent money leaks erode your wealth over time. DigitAll turns chaotic transactions into complete clarity.</p>
-
-      <div class="split-two">
-        <div class="info-card digital">
-          <h3 style="color: var(--teal);" data-i18n="card_digital_title">DIGITAL</h3>
-          <p data-i18n="card_digital_desc">Seamless, cloud-first, accessible anytime and anywhere across all your devices.</p>
+  <main class="dashboard-grid">
+    
+    <section class="card">
+      <h2>Account Settings</h2>
+      <p class="card-desc">Update your personal profile, email, and security password.</p>
+      
+      <form id="updateProfileForm" style="margin-bottom: 24px;">
+        <div class="input-group">
+          <label>Display Name</label>
+          <input type="text" id="profileNameInput" placeholder="Enter full name" required>
         </div>
-        <div class="info-card all">
-          <h3 style="color: var(--purple-light);" data-i18n="card_all_title">ALL</h3>
-          <p data-i18n="card_all_desc">Built for EVERYONE. Affordable for students, families, and local businesses in both USD and Ariary.</p>
+        <div class="input-group">
+          <label>Age (Used for AI Transport Insights)</label>
+          <input type="number" id="profileAgeInput" placeholder="e.g. 25" min="13" max="120" required>
         </div>
-      </div>
-
-      <div class="cta-row">
-        <button class="btn btn-teal" onclick="scrollToSection('control')" data-i18n="btn_control">Explore Control Center</button>
-        <a href="signup.html" class="btn btn-purple" data-i18n="btn_signup">Sign Up</a>
-      </div>
-    </div>
-
-    <div class="pillars" style="margin-top:48px;">
-      <div class="pillar-card">
-        <span class="pillar-badge" data-i18n="pillar1_badge">PILLAR 01</span>
-        <h3 data-i18n="pillar1_title">1. Stop Silent Cash Leaks</h3>
-        <p data-i18n="pillar1_desc">Daily snacks, forgotten $4 subscriptions, and hidden transfer fees can secretly drain over $1,800 (8,500,000 Ar) annually.</p>
-      </div>
-      <div class="pillar-card">
-        <span class="pillar-badge" data-i18n="pillar2_badge">PILLAR 02</span>
-        <h3 data-i18n="pillar2_title">2. Crystal-Clear Decisions</h3>
-        <p data-i18n="pillar2_desc">When you know food accounts for 34% of income and utilities take 18%, you regain total control over your monthly budget.</p>
-      </div>
-      <div class="pillar-card">
-        <span class="pillar-badge" data-i18n="pillar3_badge">PILLAR 03</span>
-        <h3 data-i18n="pillar3_title">3. Forward Projection</h3>
-        <p data-i18n="pillar3_desc">It is not just about yesterday's spending — it is about forecasting whether you are heading toward debt or building lasting savings.</p>
-      </div>
-    </div>
-
-    <!-- Interactive Leak Simulator -->
-    <div class="simulator" style="margin-top:32px;">
-      <div class="sim-head">
-        <div>
-          <h3 data-i18n="sim_title">Interactive Leak Simulator</h3>
-          <p data-i18n="sim_subtitle">Adjust the sliders to see how small daily habits compound into massive long-term savings with DigitAll.</p>
+        <div class="input-group">
+          <label>Email Address</label>
+          <input type="text" id="profileEmailInput" disabled style="opacity: 0.6; cursor: not-allowed;">
         </div>
-        <span class="sim-tag" data-i18n="sim_tag">Leak Detection Engine</span>
-      </div>
+        <button type="submit" class="btn-primary">Update Profile</button>
+      </form>
 
-      <div class="sim-body">
-        <div>
-          <div class="slider-row">
-            <label><span data-i18n="label_snacks">Daily Snacks & Drinks</span>: <span class="val" id="val-snacks">14,996 Ar / day</span></label>
-            <input type="range" id="sl-snacks" min="0" max="30000" value="14996" step="1">
-          </div>
-          <div class="slider-row">
-            <label><span data-i18n="label_subs">Unused Subscriptions</span>: <span class="val" id="val-subs">64,268 Ar / month</span></label>
-            <input type="range" id="sl-subs" min="0" max="200000" value="64268" step="1">
-          </div>
-          <div class="slider-row">
-            <label><span data-i18n="label_fees">Mobile Money & ATM Fees</span>: <span class="val" id="val-fees">25,707 Ar / month</span></label>
-            <input type="range" id="sl-fees" min="0" max="100000" value="25707" step="1">
-          </div>
+      <hr style="border-color: var(--border-color); margin-bottom: 20px;">
+
+      <form id="changePasswordForm">
+        <h3 style="font-size: 15px; margin-bottom: 12px;">Change Password</h3>
+        <div class="input-group">
+          <label>New Password</label>
+          <input type="password" id="newPasswordInput" placeholder="••••••••" required minlength="6">
         </div>
+        <button type="submit" class="btn-primary" style="background: var(--border-color);">Update Password</button>
+      </form>
+    </section>
 
-        <div class="drain-panel">
-          <div class="label" data-i18n="annual_leak_label">ANNUAL CASH LEAK</div>
-          <div class="amount" id="annual-drain">6,553,189 Ar</div>
-          <div class="note" data-i18n="annual_leak_note">Money lost purely from untracked daily spending habits.</div>
-          <div class="sub-label" data-i18n="five_year_label">5-YEAR COMPOUNDED LOSS</div>
-          <div class="sub-amount" id="five-year">32,765,945 Ar</div>
+    <section class="card">
+      <h2>Your Plans</h2>
+      <p class="card-desc">Manage your active subscription tiers and transport analytics access.</p>
+
+      <div class="plan-box active">
+        <div class="plan-title">
+          <span>Starter Plan</span>
+          <span class="badge-active">CURRENT PLAN</span>
         </div>
+        <p style="font-size: 12px; color: var(--text-muted);">Includes basic transport tracking and standard AI insights.</p>
       </div>
+
+      <div class="plan-box">
+        <div class="plan-title">
+          <span>Pro Commuter Plan</span>
+          <span style="font-size: 12px; color: var(--text-muted);">$9.99/mo</span>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Advanced route optimization, spending breakdown, and personalized age-based AI budget tools.</p>
+        <button type="button" class="btn-secondary" style="width: 100%; font-size: 12px;" onclick="alert('Upgrade functionality coming soon!')">Upgrade to Pro</button>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="onboardingModal">
+    <div class="modal-content">
+      <h3>One quick question! 👋</h3>
+      <p>Please enter your age so our AI can personalize your dashboard and better analyze your transport spending habits.</p>
+      <form id="onboardingForm">
+        <div class="input-group">
+          <input type="number" id="onboardingAgeInput" placeholder="Enter your age" min="13" max="120" required autofocus>
+        </div>
+        <button type="submit" class="btn-primary">Save & Continue</button>
+      </form>
     </div>
-  </section>
-
-  <!-- Section 2: Financial Control Center -->
-  <section id="control">
-    <div class="section-head">
-      <h2 class="section-title" data-i18n="control_title">Financial Control Center</h2>
-      <p class="section-sub" data-i18n="control_sub">All your accounts, categories, and targets on a single unified dashboard — updated in real time.</p>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3 data-i18n="feat_balance_title">Live Balance Overview</h3>
-        <p data-i18n="feat_balance_desc">Monitor your consolidated net worth across all cash, bank, and wallet accounts instantly.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_cat_title">Smart Categorization</h3>
-        <p data-i18n="feat_cat_desc">Automatically group every single transaction with granular precision and custom rules.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_targets_title">Custom Spending Targets</h3>
-        <p data-i18n="feat_targets_desc">Set dynamic thresholds per category and receive instant alerts before you overspend.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_sync_title">Multi-Account Sync</h3>
-        <p data-i18n="feat_sync_desc">Keep Mobile Money, bank balances, and physical cash in total harmony within one app.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 3: Spending Trajectory -->
-  <section id="trajectory">
-    <div class="section-head">
-      <h2 class="section-title" data-i18n="trajectory_title">Spending Trajectory</h2>
-      <p class="section-sub" data-i18n="trajectory_sub">Visual projections of your cash flow across days, weeks, months, or years with precise percentages.</p>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3 data-i18n="feat_tf_title">Timeframe Switching</h3>
-        <p data-i18n="feat_tf_desc">Seamlessly toggle between daily micro-views and multi-year macroeconomic projections.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_delta_title">Percentage Delta Indicators</h3>
-        <p data-i18n="feat_delta_desc">Spot variations immediately compared to previous periods with smart trend tags.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_exp_title">Category Expansion</h3>
-        <p data-i18n="feat_exp_desc">Identify which specific category is spiking before it impacts your overall financial health.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_reports_title">Exportable Reports</h3>
-        <p data-i18n="feat_reports_desc">Download clean, structured summaries for any custom timeframe for tax or accounting needs.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 4: AI Financial Intelligence -->
-  <section id="ai">
-    <div class="section-head">
-      <h2 class="section-title" data-i18n="ai_title">Financial AI Intelligence</h2>
-      <p class="section-sub" data-i18n="ai_sub">Personalized analysis of your spending habits, written in simple and direct language.</p>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3 data-i18n="feat_pattern_title">Pattern Recognition</h3>
-        <p data-i18n="feat_pattern_desc">DigitAll's AI uncovers hidden recurring expense patterns that usually go unnoticed.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_insights_title">Personalized Insights</h3>
-        <p data-i18n="feat_insights_desc">Receive clear explanations regarding what changed in your spending and why.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_advice_title">Actionable Advice</h3>
-        <p data-i18n="feat_advice_desc">Get practical recommendations tailored specifically to your income and targets.</p>
-      </div>
-      <div class="feature-card">
-        <h3 data-i18n="feat_learn_title">Continuous Learning</h3>
-        <p data-i18n="feat_learn_desc">Insights grow richer and more accurate the more you record your daily payments.</p>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <span data-i18n="footer_text">© 2026 DigitAll — Digital For All. Crafted for Madagascar and the global community.</span>
-</footer>
-
-<!-- Floating Chatbot Widget -->
-<style>
-  #digitall-chat-bubble {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: #00F5A4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0,245,164,0.4);
-    z-index: 9999;
-    border: none;
-    transition: transform 0.2s ease;
-  }
-  #digitall-chat-bubble:hover { transform: scale(1.08); }
-  #digitall-chat-bubble svg { width: 28px; height: 28px; }
-
-  #digitall-chat-panel {
-    position: fixed;
-    bottom: 96px;
-    right: 24px;
-    width: 340px;
-    max-width: calc(100vw - 48px);
-    height: 460px;
-    max-height: calc(100vh - 140px);
-    background: #160b38;
-    border: 1px solid #580CEB;
-    border-radius: 20px;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    z-index: 9999;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  }
-  #digitall-chat-panel.open { display: flex; }
-
-  #digitall-chat-header {
-    background: #580CEB;
-    color: white;
-    padding: 16px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: 800;
-    font-size: 15px;
-  }
-  #digitall-chat-close {
-    background: none; border: none; color: white; font-size: 20px; cursor: pointer; line-height: 1;
-  }
-
-  #digitall-chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .digitall-msg {
-    max-width: 80%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  .digitall-msg.bot {
-    background: rgba(255,255,255,0.06);
-    color: #FFFFFF;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-  }
-  .digitall-msg.user {
-    background: #00F5A4;
-    color: #04160f;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-  }
-  .digitall-msg.typing {
-    background: rgba(255,255,255,0.06);
-    color: #B9AFDA;
-    align-self: flex-start;
-    font-style: italic;
-  }
-
-  #digitall-chat-input-row {
-    display: flex;
-    gap: 8px;
-    padding: 12px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-  #digitall-chat-input {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: white;
-    border-radius: 999px;
-    padding: 10px 14px;
-    font-size: 14px;
-    outline: none;
-  }
-  #digitall-chat-input:focus { border-color: #00F5A4; }
-  #digitall-chat-send {
-    background: #00F5A4;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-</style>
-
-<button id="digitall-chat-bubble" onclick="digitallToggleChat()" aria-label="Open chat">
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 4h16v12H7l-3 3V4z" stroke="#04160f" stroke-width="2" stroke-linejoin="round" fill="none"/>
-  </svg>
-</button>
-
-<div id="digitall-chat-panel">
-  <div id="digitall-chat-header">
-    <span data-i18n="chat_header">DigitAll Assistant</span>
-    <button id="digitall-chat-close" onclick="digitallToggleChat()">×</button>
   </div>
-  <div id="digitall-chat-messages">
-    <div class="digitall-msg bot" data-i18n="chat_welcome">Hi! I'm the DigitAll assistant. Ask me anything about tracking your spending, currencies, or plans.</div>
-  </div>
-  <div id="digitall-chat-input-row">
-    <input type="text" id="digitall-chat-input" data-i18n-ph="chat_placeholder" placeholder="Type a message..." onkeydown="if(event.key==='Enter') digitallSendMessage()">
-    <button id="digitall-chat-send" onclick="digitallSendMessage()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12L20 4L13 20L11 13L4 12Z" fill="#04160f"/></svg>
-    </button>
-  </div>
-</div>
 
-<script>
-  /* ===== Inline Translation Dictionary ===== */
-  const translations = {
-    fr: {
-      logo_tag: "LE NUMÉRIQUE POUR TOUS",
-      nav_signin: "Se connecter",
-      nav_signup: "S'inscrire",
-      tab_why: "Pourquoi DigitAll ?",
-      tab_control: "Centre de contrôle",
-      tab_trajectory: "Trajectoire des dépenses",
-      tab_ai: "IA Financière",
-      manifesto_eyebrow: "LE MANIFESTE DIGITALL",
-      hero_title: "Pourquoi chaque paiement compte",
-      hero_lead: "Les fuites d'argent invisibles érodent votre richesse. DigitAll transforme la confusion en clarté totale.",
-      card_digital_title: "NUMÉRIQUE",
-      card_digital_desc: "Fluide, axé sur le cloud, accessible partout et à tout moment sur tous vos appareils.",
-      card_all_title: "POUR TOUS",
-      card_all_desc: "Conçu pour TOUT LE MONDE. Accessible aux étudiants, familles et entreprises en USD et Ariary.",
-      btn_control: "Explorer le centre de contrôle",
-      btn_signup: "S'inscrire",
-      pillar1_badge: "PILIER 01",
-      pillar1_title: "1. Stoppez les fuites d'argent",
-      pillar1_desc: "Snacks quotidiens, abonnements oubliés et frais cachés érodent secrètement plus de 8 500 000 Ar par an.",
-      pillar2_badge: "PILIER 02",
-      pillar2_title: "2. Décisions claires",
-      pillar2_desc: "Quand vous savez que l'alimentation représente 34% de vos revenus, vous reprenez le contrôle de votre budget.",
-      pillar3_badge: "PILIER 03",
-      pillar3_title: "3. Projections futures",
-      pillar3_desc: "Anticipez si vous vous dirigez vers des dettes ou si vous construisez une épargne durable.",
-      sim_title: "Simulateur de fuites d'argent",
-      sim_subtitle: "Ajustez les curseurs pour voir l'impact des petites habitudes quotidiennes à long terme.",
-      sim_tag: "Moteur de détection",
-      label_snacks: "Snacks & boissons par jour",
-      label_subs: "Abonnements inutilisés",
-      label_fees: "Frais Mobile Money / DAB",
-      annual_leak_label: "FUITE D'ARGENT ANNUELLE",
-      annual_leak_note: "Argent perdu uniquement en raison d'habitudes quotidiennes non suivies.",
-      five_year_label: "PERTE CUMULÉE SUR 5 ANS",
-      control_title: "Centre de contrôle financier",
-      control_sub: "Tous vos comptes, catégories et objectifs sur un tableau de bord unique.",
-      feat_balance_title: "Aperçu du solde en direct",
-      feat_balance_desc: "Suivez instantanément votre valeur nette globale sur tous vos comptes.",
-      feat_cat_title: "Catégorisation intelligente",
-      feat_cat_desc: "Regroupez automatiquement chaque transaction avec une précision granulaire.",
-      feat_targets_title: "Objectifs personnalisés",
-      feat_targets_desc: "Définissez des seuils par catégorie et recevez des alertes avant de dépasser votre budget.",
-      feat_sync_title: "Synchronisation multi-comptes",
-      feat_sync_desc: "Harmonisez Mobile Money, comptes bancaires et espèces physiques au même endroit.",
-      trajectory_title: "Trajectoire des dépenses",
-      trajectory_sub: "Projections visuelles de votre trésorerie sur des jours, semaines, mois ou années.",
-      feat_tf_title: "Changement d'échelle",
-      feat_tf_desc: "Passez de vues quotidiennes à des projections pluriannuelles en un instant.",
-      feat_delta_title: "Indicateurs de variation",
-      feat_delta_desc: "Repérez les variations immédiatement par rapport aux périodes précédentes.",
-      feat_exp_title: "Expansion par catégorie",
-      feat_exp_desc: "Identifiez les catégories en hausse avant qu'elles n'affectent votre santé financière.",
-      feat_reports_title: "Rapports exportables",
-      feat_reports_desc: "Téléchargez des résumés structurés pour votre comptabilité.",
-      ai_title: "Intelligence Artificielle Financière",
-      ai_sub: "Analyse personnalisée de vos habitudes de dépense en langage simple.",
-      feat_pattern_title: "Détection de schémas",
-      feat_pattern_desc: "L'IA de DigitAll détecte les dépenses récurrentes cachées.",
-      feat_insights_title: "Analyses personnalisées",
-      feat_insights_desc: "Obtenez des explications claires sur l'évolution de vos dépenses.",
-      feat_advice_title: "Conseils pratiques",
-      feat_advice_desc: "Recevez des recommandations adaptées à vos revenus et objectifs.",
-      feat_learn_title: "Apprentissage continu",
-      feat_learn_desc: "Les analyses s'améliorent à mesure que vous enregistrez vos paiements.",
-      footer_text: "© 2026 DigitAll — Le numérique pour tous. Conçu pour Madagascar et le monde entier.",
-      chat_header: "Assistant DigitAll",
-      chat_welcome: "Bonjour ! Je suis l'assistant DigitAll. Posez-moi des questions sur vos dépenses, devises ou plans.",
-      chat_placeholder: "Écrivez un message..."
-    },
-    mg: {
-      logo_tag: "DIGITAL HO AN'NY REHETRA",
-      nav_signin: "Hiditra",
-      nav_signup: "Hisoratra anarana",
-      tab_why: "Nahoana no DigitAll?",
-      tab_control: "Ivom-pifehezana",
-      tab_trajectory: "Taratry ny fandaniana",
-      tab_ai: "AI Ara-bola",
-      manifesto_eyebrow: "NY MANIFESTO DIGITALL",
-      hero_title: "Nahoana no zava-dehibe ny fanaraha-maso ny fandoavam-bola",
-      hero_lead: "Ny fahaverezam-bola kely isan'andro dia manimba ny hafalianao. DigitAll dia manova ny korontana ho mazava tsara.",
-      card_digital_title: "DIGITAL",
-      card_digital_desc: "Azo idirana amin'ny fotoana rehetra sy amin'ny fitaovana rehetra amin'ny alalan'ny Cloud.",
-      card_all_title: "AN'NY REHETRA",
-      card_all_desc: "Natao ho an'ny REHETRA. Takatry ny mpianatra, fianakaviana ary fandraharahana amin'ny USD sy Ariary.",
-      btn_control: "Hijery ny Ivom-pifehezana",
-      btn_signup: "Hisoratra anarana",
-      pillar1_badge: "ANDRY 01",
-      pillar1_title: "1. Atsatopy ny fahaverezam-bola",
-      pillar1_desc: "Ny sakafo kely isan'andro sy ny sarany affeno dia mety hahalany mihoatra ny 8 500 000 Ar isan-taona.",
-      pillar2_badge: "ANDRY 02",
-      pillar2_title: "2. Decision mazava tsara",
-      pillar2_desc: "Rehefa fantatrao fa 34% amin'ny fidiran'ny vola ny sakafo, dia miverina aminao ny fifehezana ny tetibola.",
-      pillar3_badge: "ANDRY 03",
-      pillar3_title: "3. Vinavinan'ny ho avy",
-      pillar3_desc: "Tsy momba ny omaly ihany — momba ny vinavina na ho any amin'ny trosa na ho amin'ny tahiry ianao.",
-      sim_title: "Mpanao sarisary ny fahaverezam-bola",
-      sim_subtitle: "Ovay ny sliding mba hahitana ny vokatry ny fahazarana kely isan'andro amin'ny ho avy.",
-      sim_tag: "Masinina mpanamarina",
-      label_snacks: "Sakafo & zava-pisotro isan'andro",
-      label_subs: "Abonnement tsy ampiasaina",
-      label_fees: "Saran'ny Mobile Money / ATM",
-      annual_leak_label: "FAHAVEREZAM-BOLA ISAN-TAONA",
-      annual_leak_note: "Vola lost vokatry ny fandaniana kely tsy voasoratra.",
-      five_year_label: "FAHAVEREZANA AMIN'NY TAONA 5",
-      control_title: "Ivom-pifehezana ara-bola",
-      control_sub: "Ny kontonao, sokajy ary tanjona rehetra amin'ny takelaka iray.",
-      feat_balance_title: "Paseho ny ambim-bika",
-      feat_balance_desc: "Araho avy hatrany ny sandan'ny volanao amin'ny kaonty rehetra.",
-      feat_cat_title: "Sokajy manan-tsaina",
-      feat_cat_desc: "Andaharo ho azy ny fifanakalozana rehetra amin'ny antsipiriany.",
-      feat_targets_title: "Tanjona manokana",
-      feat_targets_desc: "Mametraha fetra isaky ny sokajy ary mahazo fampitandremana alohan'ny hahaverezana vola.",
-      feat_sync_title: "Fampiarahana kaonty maro",
-      feat_sync_desc: "Ampifanaraho ny Mobile Money, banky ary vola tanana amin'ny fampiharana iray.",
-      trajectory_title: "Taratry ny fandaniana",
-      trajectory_sub: "Fanehoana ny fikorianan'ny vola amin'ny andro, herinandro, mois na taona.",
-      feat_tf_title: "Fiovan'ny fotoana",
-      feat_tf_desc: "Mifamadiha mora foana amin'ny fahitana isan'andro sy ny vinavina mandritra ny taona maro.",
-      feat_delta_title: "Mpanondro ny fiovana",
-      feat_delta_desc: "Hitoera amin'ny fiovana avy hatrany mihoatra amin'ny fotoana lasa.",
-      feat_exp_title: "Fivelaran'ny sokajy",
-      feat_exp_desc: "Fantaro ny sokajy misy fiakarana alohan'ny hisiansa amin'ny ara-bolanao.",
-      feat_reports_title: "Rapor azo avoaka",
-      feat_reports_desc: "Ampidino ny famintinana nodiovina ho an'ny kontability.",
-      ai_title: "AI Ara-bola Manan-tsaina",
-      ai_sub: "Famakafakana manokana ny fahazarana mandany vola amin'ny fiteny tsotra.",
-      feat_pattern_title: "Fahafantarana ny fahazarana",
-      feat_pattern_desc: "Mamoaka ny fandaniana miverimberina miafina ny AI-n'ny DigitAll.",
-      feat_insights_title: "Fijery manokana",
-      feat_insights_desc: "Mahazo fanazavana mazava momba ny niova amin'ny fandanianao.",
-      feat_advice_title: "Torohevitra azo ampiharina",
-      feat_advice_desc: "Mahazo torohevitra mifanaraka amin'ny fidiran'ny volanao sy ny tanjonao.",
-      feat_learn_title: "Fianarana mitohy",
-      feat_learn_desc: "Lasa tsara kokoa ny fanadihadiana rehefa manoratra ny fandoavam-bola ianao.",
-      footer_text: "© 2026 DigitAll — Digital ho an'ny rehetra. Natao ho an'i Madagasikara sy ny tontolo rolled.",
-      chat_header: "Mpanampy DigitAll",
-      chat_welcome: "Manao ahoana! Izaho no mpanampy DigitAll. Anontanio ahy ny momba ny fandaniana, vola, na drafitra.",
-      chat_placeholder: "Manorata hafatra..."
-    }
-  };
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      updateProfile, 
+      updatePassword, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      getDoc, 
+      setDoc, 
+      updateDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  let currentLang = 'en';
-  const originalEnglish = {};
-  const originalPlaceholders = {};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
+      authDomain: "digitall-c77d8.firebaseapp.com",
+      projectId: "digitall-c77d8",
+      storageBucket: "digitall-c77d8.firebasestorage.app",
+      messagingSenderId: "922798712588",
+      appId: "1:922798712588:web:43235136b5b1bf58168b29"
+    };
 
-  /* ===== 1. Scroll-Spy Navigation ===== */
-  const tabButtons = document.querySelectorAll('nav.tabs button');
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const targetId = button.getAttribute('data-target');
-      scrollToSection(targetId);
-    });
-  });
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  function scrollToSection(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-  }
+    let currentUser = null;
 
-  /* ===== 2. Currency & Calculator State ===== */
-  const RATE = 4284.53;
-  let currency = 'mga';
+    // Check Auth Status & Fetch User Profile Data
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById("profileEmailInput").value = user.email;
 
-  function setCurrency(newCurrency) {
-    currency = newCurrency;
-    document.getElementById('btn-usd').classList.toggle('active', newCurrency === 'usd');
-    document.getElementById('btn-mga').classList.toggle('active', newCurrency === 'mga');
-    updateSimulator();
-  }
+        // Fetch user metadata from Firestore
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
 
-  function formatNumber(num) {
-    return Math.round(num).toLocaleString('en-US').replace(/,/g, ' ');
-  }
+        let userAge = null;
+        let userName = user.displayName || "";
 
-  function getDynamicUnits() {
-    if (currentLang === 'fr') {
-      return { day: '/ jour', month: '/ mois' };
-    } else if (currentLang === 'mg') {
-      return { day: '/ andro', month: '/ volana' };
-    }
-    return { day: '/ day', month: '/ month' };
-  }
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          userAge = data.age || null;
+          if (data.name) userName = data.name;
+        }
 
-  function updateSimulator() {
-    const snacksDay = Number(document.getElementById('sl-snacks').value);
-    const subsMonth = Number(document.getElementById('sl-subs').value);
-    const feesMonth = Number(document.getElementById('sl-fees').value);
+        // Populate Form Fields
+        document.getElementById("profileNameInput").value = userName;
+        document.getElementById("welcomeName").innerText = userName || user.email.split('@')[0];
+        if (userAge) document.getElementById("profileAgeInput").value = userAge;
 
-    ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
-      const slider = document.getElementById(id);
-      const percent = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
-      slider.style.setProperty('--fill', percent + '%');
-    });
-
-    const symbol = currency === 'usd' ? '$' : 'Ar';
-    const convert = value => currency === 'usd' ? value / RATE : value;
-    const units = getDynamicUnits();
-
-    document.getElementById('val-snacks').textContent = `${formatNumber(convert(snacksDay))} ${symbol} ${units.day}`;
-    document.getElementById('val-subs').textContent = `${formatNumber(convert(subsMonth))} ${symbol} ${units.month}`;
-    document.getElementById('val-fees').textContent = `${formatNumber(convert(feesMonth))} ${symbol} ${units.month}`;
-
-    const totalAnnual = (snacksDay * 365) + (subsMonth * 12) + (feesMonth * 12);
-    document.getElementById('annual-drain').textContent = `${formatNumber(convert(totalAnnual))} ${symbol}`;
-    document.getElementById('five-year').textContent = `${formatNumber(convert(totalAnnual * 5))} ${symbol}`;
-  }
-
-  ['sl-snacks', 'sl-subs', 'sl-fees'].forEach(id => {
-    document.getElementById(id).addEventListener('input', updateSimulator);
-  });
-
-  /* ===== 3. Complete Universal Translation Engine ===== */
-  document.addEventListener('DOMContentLoaded', () => {
-    // Cache original English values
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      originalEnglish[el.getAttribute('data-i18n')] = el.textContent.trim();
-    });
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      originalPlaceholders[el.getAttribute('data-i18n-ph')] = el.getAttribute('placeholder');
-    });
-
-    updateSimulator();
-  });
-
-  function setLanguage(lang) {
-    currentLang = lang;
-
-    ['en', 'fr', 'mg'].forEach(l => {
-      const btn = document.getElementById(`lang-${l}`);
-      if (btn) btn.classList.toggle('active', l === lang);
-    });
-
-    // Translate standard text content
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (lang === 'en') {
-        el.textContent = originalEnglish[key];
-      } else if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
+        // If age is missing (First Login), trigger onboarding popup
+        if (!userAge) {
+          document.getElementById("onboardingModal").style.display = "flex";
+        }
+      } else {
+        // Redirect to index page if unauthenticated
+        window.location.href = "index.html";
       }
     });
 
-    // Translate input placeholders
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      const key = el.getAttribute('data-i18n-ph');
-      if (lang === 'en') {
-        el.setAttribute('placeholder', originalPlaceholders[key]);
-      } else if (translations[lang] && translations[lang][key]) {
-        el.setAttribute('placeholder', translations[lang][key]);
+    // Handle First-Time Age Onboarding Submission
+    document.getElementById("onboardingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const ageVal = Number(document.getElementById("onboardingAgeInput").value);
+      
+      if (currentUser && ageVal) {
+        try {
+          await setDoc(doc(db, "users", currentUser.uid), {
+            email: currentUser.email,
+            age: ageVal,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+
+          document.getElementById("profileAgeInput").value = ageVal;
+          document.getElementById("onboardingModal").style.display = "none";
+          alert("Age saved successfully!");
+        } catch (err) {
+          alert("Error saving age: " + err.message);
+        }
       }
     });
 
-    // Force updates to simulator values & units
-    updateSimulator();
-  }
+    // Handle Name & Age Updates
+    document.getElementById("updateProfileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const newName = document.getElementById("profileNameInput").value.trim();
+      const newAge = Number(document.getElementById("profileAgeInput").value);
 
-  /* ===== 4. Worker Chatbot Integration ===== */
-  const DIGITALL_CHAT_URL = "https://digitall-chat.abbasmithani6.workers.dev";
+      try {
+        // 1. Update Auth Profile
+        await updateProfile(currentUser, { displayName: newName });
 
-  function digitallToggleChat() {
-    document.getElementById('digitall-chat-panel').classList.toggle('open');
-  }
+        // 2. Update Firestore Document
+        await setDoc(doc(db, "users", currentUser.uid), {
+          name: newName,
+          age: newAge,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
 
-  async function digitallSendMessage() {
-    const input = document.getElementById('digitall-chat-input');
-    const message = input.value.trim();
-    if (!message) return;
+        document.getElementById("welcomeName").innerText = newName || currentUser.email.split('@')[0];
+        alert("Profile updated successfully!");
+      } catch (err) {
+        alert("Failed to update profile: " + err.message);
+      }
+    });
 
-    const messagesEl = document.getElementById('digitall-chat-messages');
+    // Handle Password Updates
+    document.getElementById("changePasswordForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const newPass = document.getElementById("newPasswordInput").value;
 
-    const userBubble = document.createElement('div');
-    userBubble.className = 'digitall-msg user';
-    userBubble.textContent = message;
-    messagesEl.appendChild(userBubble);
+      try {
+        await updatePassword(currentUser, newPass);
+        alert("Password updated successfully!");
+        document.getElementById("changePasswordForm").reset();
+      } catch (err) {
+        alert("Failed to update password. You may need to re-login: " + err.message);
+      }
+    });
 
-    input.value = '';
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-
-    const typingBubble = document.createElement('div');
-    typingBubble.className = 'digitall-msg typing';
-    typingBubble.textContent = currentLang === 'fr' ? 'Saisie...' : (currentLang === 'mg' ? 'Manoratra...' : 'Typing...');
-    messagesEl.appendChild(typingBubble);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-
-    try {
-      const res = await fetch(DIGITALL_CHAT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, lang: currentLang })
-      });
-      const data = await res.json();
-
-      typingBubble.remove();
-
-      const botBubble = document.createElement('div');
-      botBubble.className = 'digitall-msg bot';
-      botBubble.textContent = data.reply || (currentLang === 'fr' ? 'Désolé, une erreur est survenue.' : (currentLang === 'mg' ? 'Mampahafantatra fa nisy olana kely.' : 'Sorry, something went wrong.'));
-      messagesEl.appendChild(botBubble);
-    } catch (err) {
-      typingBubble.remove();
-      const errorBubble = document.createElement('div');
-      errorBubble.className = 'digitall-msg bot';
-      errorBubble.textContent = currentLang === 'fr' ? 'Désolé, connexion impossible pour le moment.' : (currentLang === 'mg' ? 'Tsy afaka mifandray amin\'izao fotoana izao.' : 'Sorry, I couldn\'t connect just now. Please try again.');
-      messagesEl.appendChild(errorBubble);
-    }
-
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-</script>
+    // Sign Out Handler
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => window.location.href = "index.html");
+    });
+  </script>
 </body>
 </html>
