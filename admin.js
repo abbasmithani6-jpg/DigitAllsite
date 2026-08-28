@@ -5,7 +5,70 @@
   }
 })();
 
-// Delegated click listener guarantees the button click is caught on hosted sites
+// Autocomplete Search Logic (Outlook Style)
+document.addEventListener('DOMContentLoaded', function() {
+  const nameInput = document.getElementById('admin-user-name');
+  const emailInput = document.getElementById('admin-user-email');
+  const nameList = document.getElementById('name-suggestions');
+  const emailList = document.getElementById('email-suggestions');
+
+  function setupAutocomplete(inputElem, listElem) {
+    if (!inputElem || !listElem) return;
+
+    inputElem.addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+      listElem.innerHTML = '';
+
+      if (!query || !window.allUsers || window.allUsers.length === 0) {
+        listElem.classList.remove('active');
+        return;
+      }
+
+      // Filter database users matching name or email
+      const matches = window.allUsers.filter(u => {
+        const nameMatch = u.name && u.name.toLowerCase().includes(query);
+        const emailMatch = u.email && u.email.toLowerCase().includes(query);
+        return nameMatch || emailMatch;
+      });
+
+      if (matches.length === 0) {
+        listElem.classList.remove('active');
+        return;
+      }
+
+      // Limit results to top 5
+      matches.slice(0, 5).forEach(user => {
+        const li = document.createElement('li');
+        li.className = 'autocomplete-item';
+        li.innerHTML = `<strong>${user.name || 'No Name'}</strong><span>${user.email || 'No Email'}</span>`;
+        
+        li.addEventListener('click', function() {
+          if (nameInput) nameInput.value = user.name || '';
+          if (emailInput) emailInput.value = user.email || '';
+          if (nameList) nameList.classList.remove('active');
+          if (emailList) emailList.classList.remove('active');
+        });
+
+        listElem.appendChild(li);
+      });
+
+      listElem.classList.add('active');
+    });
+  }
+
+  setupAutocomplete(nameInput, nameList);
+  setupAutocomplete(emailInput, emailList);
+
+  // Close lists when clicking anywhere outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#emailTab')) {
+      if (nameList) nameList.classList.remove('active');
+      if (emailList) emailList.classList.remove('active');
+    }
+  });
+});
+
+// Global delegated click listener for sending emails
 document.addEventListener('click', function(event) {
   if (event.target && event.target.id === 'send-promo-btn') {
     event.preventDefault();
@@ -25,6 +88,7 @@ document.addEventListener('click', function(event) {
     btn.disabled = true;
 
     const templateParams = {
+      email: recipientEmail,
       to_email: recipientEmail,
       to_name: recipientName,
       promo_code: promoCode
@@ -34,6 +98,7 @@ document.addEventListener('click', function(event) {
       .then(function(response) {
         alert("Promo code email sent successfully to " + recipientEmail + "!");
         document.getElementById('admin-user-email').value = "";
+        document.getElementById('admin-user-name').value = "";
       })
       .catch(function(error) {
         console.error("EmailJS Error details:", error);
