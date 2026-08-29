@@ -292,8 +292,56 @@
   }
 </script>
 <!-- Firebase App (required) -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<!-- Firebase Authentication -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<!-- 1. Firebase SDK Libraries (Must be loaded first) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <!-- 2. Your Signup Logic Script -->
+  <script>
+    // 1. Initialize Firebase using your public config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU", // Public Web Key
+      authDomain: "digitall-xxxx.firebaseapp.com",
+      projectId: "digitall-xxxx"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    // 2. Handle Form Submission
+    function handleSignup(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passInput').value;
+      const signupBtn = document.querySelector('button[type="submit"]');
+
+      // Change button text to show active progress
+      signupBtn.disabled = true;
+      signupBtn.textContent = "Creating Account...";
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Store local session indicators
+          localStorage.setItem('digitall_logged_in', 'true');
+          localStorage.setItem('digitall_user_email', email);
+
+          // Redirect directly to dashboard
+          window.location.href = 'dashboard.html';
+        })
+        .catch((error) => {
+          // Re-enable button on error so it doesn't stay stuck forever
+          signupBtn.disabled = false;
+          signupBtn.textContent = "Sign Up";
+
+          // Display error message to user
+          alert("Signup Failed: " + error.message);
+          console.error("Firebase Auth Error:", error.code, error.message);
+        });
+    }
+  </script>
+</body>
+</html>
 </body>
 </html>
