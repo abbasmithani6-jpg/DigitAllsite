@@ -1,360 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign In | DigitAll</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="base.css">
-<style>
-  :root {
-    --bg-dark: #0D0F12;
-    --card-bg: #161920;
-    --card-border: #262B36;
-    --text-main: #FFFFFF;
-    --text-muted: #9CA3AF;
-    --teal: #00F5A4;
-    --purple: #7B3FF2;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | DigitAll</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    font-family: 'Stack Sans Notch', sans-serif;
-  }
+  <style>
+    :root {
+      --bg-dark: #070614;
+      --card-bg: #100c2a;
+      --card-border: rgba(124, 58, 237, 0.25);
+      --accent-green: #00ff87;
+      --accent-purple: #7c3aed;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
 
-  .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 32px;
-    background: #11141A;
-    border-bottom: 1px solid var(--card-border);
-  }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .logo-block {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .logo-mark { height: 32px; width: auto; }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      width: 100%;
+    }
 
-  .logo-text .word {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
-  .logo-text .word span { color: var(--teal); }
-  .logo-text .tag {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-  }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
 
-  .toggle-group {
-    display: flex;
-    background: #1C212C;
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 2px;
-  }
-  .toggle-group button {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    padding: 6px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-  }
-  .toggle-group button.active {
-    background: var(--purple);
-    color: #FFF;
-  }
+    .brand-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+    }
 
-  .auth-wrapper {
-    min-height: calc(100vh - 80px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-  }
-  .auth-card {
-    background: rgba(22, 11, 56, 0.8);
-    border: 1px solid rgba(88, 12, 235, 0.4);
-    border-radius: 24px;
-    padding: 40px;
-    width: 100%;
-    max-width: 440px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-  }
-  .auth-header {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .auth-title {
-    font-size: 28px;
-    font-weight: 800;
-    color: #FFFFFF;
-    margin-bottom: 8px;
-  }
-  .auth-subtitle {
-    font-size: 14px;
-    color: #B9AFDA;
-  }
-  .form-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .form-group label {
-    font-size: 13px;
-    font-weight: 700;
-    color: #D3CEE8;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  .form-control {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: 15px;
-    color: #FFFFFF;
-    outline: none;
-    transition: all 0.2s ease;
-  }
-  .form-control:focus {
-    border-color: #00F5A4;
-    box-shadow: 0 0 12px rgba(0, 245, 164, 0.2);
-  }
-  .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-  }
-  .form-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    font-size: 13px;
-  }
-  .remember-me {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #B9AFDA;
-    cursor: pointer;
-  }
-  .remember-me input {
-    accent-color: #00F5A4;
-  }
-  .forgot-link {
-    color: #00F5A4;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .forgot-link:hover {
-    text-decoration: underline;
-  }
-  .btn-auth {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
-  }
-  .btn-teal {
-    background: var(--teal);
-    color: #0D0F12;
-  }
-  .auth-footer {
-    text-align: center;
-    margin-top: 24px;
-    font-size: 14px;
-    color: #B9AFDA;
-  }
-  .auth-footer a {
-    color: #00F5A4;
-    font-weight: 700;
-    text-decoration: none;
-  }
-  .auth-footer a:hover {
-    text-decoration: underline;
-  }
-  .error-msg {
-    background: rgba(255, 75, 75, 0.15);
-    border: 1px solid rgba(255, 75, 75, 0.3);
-    color: #FF6B6B;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    margin-bottom: 20px;
-    display: none;
-    text-align: center;
-  }
-</style>
+    .brand-name span { color: var(--accent-green); }
+
+    .brand-tagline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent-green);
+      margin-top: 3px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 4px;
+      gap: 2px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
+
+    .login-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 44px 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .card-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .card-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-group { margin-bottom: 20px; }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-main);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      margin-top: 10px;
+      background-color: var(--accent-green);
+      color: #070614;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-footer a {
+      color: var(--accent-green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="logo-block">
-    <a href="index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
-      <img src="digitall-logo-mark.png" class="logo-mark" alt="DigitAll logo">
-      <div class="logo-text">
-        <div class="word">Digit<span>All</span></div>
-        <div class="tag" data-i18n="logo_tag">DIGITAL FOR ALL</div>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-text">
+        <div class="brand-name">Digit<span>All</span></div>
+        <div class="brand-tagline">DIGITAL FOR ALL</div>
       </div>
     </a>
-  </div>
 
-  <div class="toggle-group lang" role="group" aria-label="Language Toggle">
-    <button id="lang-en" class="active" onclick="setLanguage('en')">EN</button>
-    <button id="lang-fr" onclick="setLanguage('fr')">FR</button>
-    <button id="lang-mg" onclick="setLanguage('mg')">MG</button>
-  </div>
-</header>
-
-<div class="auth-wrapper">
-  <div class="auth-card" id="loginCard">
-    <div class="auth-header">
-      <h1 class="auth-title" data-i18n="login_title">Welcome Back</h1>
-      <p class="auth-subtitle" data-i18n="login_subtitle">Sign in to access your financial control center.</p>
+    <div class="lang-switcher">
+      <button type="button" class="lang-btn active" data-lang="EN">EN</button>
+      <button type="button" class="lang-btn" data-lang="FR">FR</button>
+      <button type="button" class="lang-btn" data-lang="MG">MG</button>
     </div>
+  </header>
 
-    <div id="errorBanner" class="error-msg" data-i18n="error_invalid">Invalid email or password. Please try again.</div>
-
-    <form onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label data-i18n="lbl_email">Email Address</label>
-        <input type="email" id="emailInput" class="form-control" data-i18n-ph="ph_email" placeholder="name@example.com" required>
+  <!-- Main Section -->
+  <main class="login-wrapper">
+    <div class="login-card">
+      <div class="card-header">
+        <h1 id="txt-title">Welcome Back</h1>
+        <p id="txt-subtitle">Sign in to access your financial dashboard.</p>
       </div>
 
-      <div class="form-group">
-        <label data-i18n="lbl_password">Password</label>
-        <input type="password" id="passInput" class="form-control" data-i18n-ph="ph_password" placeholder="••••••••" required>
+      <form id="loginForm">
+        <div class="form-group">
+          <label id="lbl-email" for="loginEmail" class="form-label">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="name@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <label id="lbl-password" for="loginPassword" class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-submit">Sign In</button>
+      </form>
+
+      <div class="form-footer">
+        <span id="txt-footer">Don't have an account?</span> <a href="signup.html" id="link-footer">Sign Up</a>
       </div>
-
-      <div class="form-actions">
-        <label class="remember-me">
-          <input type="checkbox">
-          <span data-i18n="lbl_remember">Remember me</span>
-        </label>
-        <a href="#" class="forgot-link" data-i18n="link_forgot">Forgot password?</a>
-      </div>
-
-      <button type="submit" class="btn btn-teal btn-auth" data-i18n="btn_login">Sign In</button>
-    </form>
-
-    <div class="auth-footer">
-      <span data-i18n="no_account">Don't have an account?</span> 
-      <a href="signup.html" data-i18n="link_signup">Sign Up</a>
     </div>
-  </div>
-</div>
+  </main>
 
-<script>
-  const translations = {
-    fr: {
-      logo_tag: "LE NUMÉRIQUE POUR TOUS",
-      login_title: "Bon retour",
-      login_subtitle: "Connectez-vous pour accéder à votre centre de contrôle financier.",
-      error_invalid: "Email ou mot de passe invalide. Veuillez réessayer.",
-      lbl_email: "Adresse Email",
-      ph_email: "nom@exemple.com",
-      lbl_password: "Mot de passe",
-      ph_password: "••••••••",
-      lbl_remember: "Se souvenir de moi",
-      link_forgot: "Mot de passe oublié ?",
-      btn_login: "Se Connecter",
-      no_account: "Vous n'avez pas de compte ?",
-      link_signup: "S'inscrire"
-    },
-    mg: {
-      logo_tag: "DIGITAL HO AN'NY REHETRA",
-      login_title: "Tonga soa indray",
-      login_subtitle: "Tidiro ny kaontinao hidirana amin'ny ivom-pifehezana ara-bola.",
-      error_invalid: "Tsy mitovy ny adiresy na ny tenypahatsiarovana. Andramo indray.",
-      lbl_email: "Adiresy Email",
-      ph_email: "anarana@ohatra.com",
-      lbl_password: "Tenypahatsiarovana",
-      ph_password: "••••••••",
-      lbl_remember: "Tsarovy izaho",
-      link_forgot: "Adino ny tenypahatsiarovana?",
-      btn_login: "Hiditra",
-      no_account: "Mbola tsy manana kaonty?",
-      link_signup: "Hisoratra anarana"
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
+      authDomain: "digitall-c77d8.firebaseapp.com",
+      projectId: "digitall-c77d8",
+      storageBucket: "digitall-c77d8.firebasestorage.app",
+      messagingSenderId: "922798712588",
+      appId: "1:922798712588:web:43235136b5b1bf58168b29"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Multilingual Translations
+    const dictionary = {
+      EN: {
+        title: "Welcome Back",
+        subtitle: "Sign in to access your financial dashboard.",
+        email: "EMAIL ADDRESS",
+        password: "PASSWORD",
+        submit: "Sign In",
+        footer: "Don't have an account?",
+        link: "Sign Up"
+      },
+      FR: {
+        title: "Bon retour",
+        subtitle: "Connectez-vous pour accéder à votre tableau de bord financier.",
+        email: "ADRESSE EMAIL",
+        password: "MOT DE PASSE",
+        submit: "Se connecter",
+        footer: "Vous n'avez pas de compte ?",
+        link: "S'inscrire"
+      },
+      MG: {
+        title: "Tonga soa indray",
+        subtitle: "Midira mba hidirana amin'ny solaitrabe ara-bolanao.",
+        email: "ADRESY EMAIL",
+        password: "TENY PAHATSIAROVANA",
+        submit: "Midira",
+        footer: "Tsy mbola manana kaonty?",
+        link: "Mamorona Kaonty"
+      }
+    };
+
+    let currentLang = 'EN';
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      const t = dictionary[lang];
+      if (!t) return;
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+
+      document.getElementById('txt-title').textContent = t.title;
+      document.getElementById('txt-subtitle').textContent = t.subtitle;
+      document.getElementById('lbl-email').textContent = t.email;
+      document.getElementById('lbl-password').textContent = t.password;
+      document.getElementById('submitBtn').textContent = t.submit;
+      document.getElementById('txt-footer').textContent = t.footer;
+      document.getElementById('link-footer').textContent = t.link;
     }
-  };
 
-  let currentLang = 'en';
-  const originalEnglish = {};
-  const originalPlaceholders = {};
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      originalEnglish[el.getAttribute('data-i18n')] = el.textContent.trim();
-    });
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      originalPlaceholders[el.getAttribute('data-i18n-ph')] = el.getAttribute('placeholder');
-    });
-  });
-
-  function setLanguage(lang) {
-    currentLang = lang;
-
-    ['en', 'fr', 'mg'].forEach(l => {
-      const btn = document.getElementById(`lang-${l}`);
-      if (btn) btn.classList.toggle('active', l === lang);
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        updateLanguage(this.getAttribute('data-lang'));
+      });
     });
 
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (lang === 'en') {
-        el.textContent = originalEnglish[key];
-      } else if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
+    // Form Sign-In Handler
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const submitBtn = document.getElementById('submitBtn');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "...";
+
+      try {
+        // 1. Attempt Sign In with Firebase Auth
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Force explicit token reload to confirm latest emailVerified status
+        await user.reload();
+
+        // 2. Strict Check: If email is NOT verified, block entry immediately
+        if (!auth.currentUser.emailVerified) {
+          alert("Access Denied: Please verify your email address before logging in. Check your inbox for the confirmation link.");
+          await signOut(auth);
+          submitBtn.disabled = false;
+          submitBtn.textContent = dictionary[currentLang].submit;
+          return;
+        }
+
+        // 3. Email IS verified -> Redirect to Dashboard
+        window.location.href = "dashboard.html";
+
+      } catch (error) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = dictionary[currentLang].submit;
+        alert("Sign In Failed: " + error.message);
+        console.error("Login Error:", error);
       }
     });
-
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      const key = el.getAttribute('data-i18n-ph');
-      if (lang === 'en') {
-        el.setAttribute('placeholder', originalPlaceholders[key]);
-      } else if (translations[lang] && translations[lang][key]) {
-        el.setAttribute('placeholder', translations[lang][key]);
-      }
-    });
-  }
-
-  function handleLogin(event) {
-    event.preventDefault();
-    const email = document.getElementById('emailInput').value;
-    const password = document.getElementById('passInput').value;
-    const errorBanner = document.getElementById('errorBanner');
-
-    // Validates login credentials and redirects to dashboard.html
-    if (email && password.length >= 6) {
-      errorBanner.style.display = 'none';
-      sessionStorage.setItem('digitall_logged_in', 'true');
-      sessionStorage.setItem('digitall_user_email', email);
-      
-      // Redirects user to dashboard page
-      window.location.href = 'dashboard.html';
-    } else {
-      errorBanner.style.display = 'block';
-    }
-  }
-</script>
+  </script>
 </body>
 </html>
