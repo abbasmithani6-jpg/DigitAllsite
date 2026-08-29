@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up | DigitAll</title>
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -22,11 +23,7 @@
       --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: var(--font-family);
@@ -37,7 +34,6 @@
       flex-direction: column;
     }
 
-    /* Navbar styling matching homepage */
     .navbar {
       display: flex;
       align-items: center;
@@ -53,16 +49,6 @@
       text-decoration: none;
     }
 
-    .brand-logo img {
-      height: 38px;
-      width: auto;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
-
     .brand-name {
       font-size: 22px;
       font-weight: 800;
@@ -70,9 +56,7 @@
       line-height: 1;
     }
 
-    .brand-name span {
-      color: var(--accent-green);
-    }
+    .brand-name span { color: var(--accent-green); }
 
     .brand-tagline {
       font-size: 9px;
@@ -108,7 +92,6 @@
       color: #ffffff;
     }
 
-    /* Main Container */
     .signup-wrapper {
       flex: 1;
       display: flex;
@@ -150,9 +133,7 @@
       gap: 16px;
     }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+    .form-group { margin-bottom: 20px; }
 
     .form-label {
       display: block;
@@ -173,15 +154,6 @@
       font-size: 14px;
       font-family: inherit;
       color: var(--text-main);
-      transition: all 0.2s;
-    }
-
-    .form-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      cursor: pointer;
     }
 
     .form-select option {
@@ -206,15 +178,6 @@
       font-size: 15px;
       font-weight: 800;
       cursor: pointer;
-      transition: transform 0.1s, filter 0.2s;
-    }
-
-    .btn-submit:hover {
-      filter: brightness(1.1);
-    }
-
-    .btn-submit:active {
-      transform: scale(0.99);
     }
 
     .btn-submit:disabled {
@@ -235,16 +198,35 @@
       text-decoration: none;
     }
 
-    .form-footer a:hover {
-      text-decoration: underline;
+    /* Verification Screen (Hidden by default) */
+    #verifyView {
+      display: none;
+      text-align: center;
+    }
+
+    .verify-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .sent-email-badge {
+      display: inline-block;
+      background: rgba(0, 255, 135, 0.1);
+      color: var(--accent-green);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+      margin: 16px 0 24px 0;
+      word-break: break-all;
     }
   </style>
 </head>
 <body>
 
+  <!-- Navigation Bar -->
   <header class="navbar">
     <a href="index.html" class="brand-logo">
-      <img src="digitall-logo-mark.png" alt="DigitAll Logo">
       <div class="brand-text">
         <div class="brand-name">Digit<span>All</span></div>
         <div class="brand-tagline">DIGITAL FOR ALL</div>
@@ -258,57 +240,101 @@
     </div>
   </header>
 
+  <!-- Main Section -->
   <main class="signup-wrapper">
     <div class="signup-card">
-      <div class="card-header">
-        <h1 id="txt-title">Create Account</h1>
-        <p id="txt-subtitle">Start tracking money leaks and master your budget today.</p>
+      
+      <!-- 1. SIGNUP FORM VIEW -->
+      <div id="signupView">
+        <div class="card-header">
+          <h1 id="txt-title">Create Account</h1>
+          <p id="txt-subtitle">Start tracking money leaks and master your budget today.</p>
+        </div>
+
+        <form id="signupForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label id="lbl-fname" for="firstName" class="form-label">First Name</label>
+              <input type="text" id="firstName" class="form-input" placeholder="Jean" required />
+            </div>
+            <div class="form-group">
+              <label id="lbl-lname" for="lastName" class="form-label">Last Name</label>
+              <input type="text" id="lastName" class="form-input" placeholder="Rakoto" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label id="lbl-email" for="emailInput" class="form-label">Email Address</label>
+            <input type="email" id="emailInput" class="form-input" placeholder="name@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label id="lbl-currency" for="currencySelect" class="form-label">Preferred Primary Currency</label>
+            <select id="currencySelect" class="form-select">
+              <option value="MGA">Malagasy Ariary (Ar)</option>
+              <option value="USD">US Dollar ($)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label id="lbl-password" for="passInput" class="form-label">Password</label>
+            <input type="password" id="passInput" class="form-input" placeholder="••••••••" minlength="6" required />
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-submit">Create Account</button>
+        </form>
+
+        <div class="form-footer">
+          <span id="txt-footer">Already have an account?</span> <a href="login.html" id="link-footer">Sign In</a>
+        </div>
       </div>
 
-      <form id="signupForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label id="lbl-fname" for="firstName" class="form-label">First Name</label>
-            <input type="text" id="firstName" class="form-input" placeholder="Jean" required />
-          </div>
-          <div class="form-group">
-            <label id="lbl-lname" for="lastName" class="form-label">Last Name</label>
-            <input type="text" id="lastName" class="form-input" placeholder="Rakoto" required />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label id="lbl-email" for="emailInput" class="form-label">Email Address</label>
-          <input type="email" id="emailInput" class="form-input" placeholder="name@example.com" required />
-        </div>
-
-        <div class="form-group">
-          <label id="lbl-currency" for="currencySelect" class="form-label">Preferred Primary Currency</label>
-          <select id="currencySelect" class="form-select">
-            <option value="MGA">Malagasy Ariary (Ar)</option>
-            <option value="USD">US Dollar ($)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label id="lbl-password" for="passInput" class="form-label">Password</label>
-          <input type="password" id="passInput" class="form-input" placeholder="••••••••" minlength="6" required />
-        </div>
-
-        <button type="submit" id="submitBtn" class="btn-submit">Create Account</button>
-      </form>
-
-      <div class="form-footer">
-        <span id="txt-footer">Already have an account?</span> <a href="login.html" id="link-footer">Sign In</a>
+      <!-- 2. VERIFICATION SENT SCREEN -->
+      <div id="verifyView">
+        <div class="verify-icon">✉️</div>
+        <h1 id="txt-vtitle" style="font-size: 26px; font-weight: 800; margin-bottom: 12px;">Verification Email Sent</h1>
+        <p id="txt-vmsg" style="color: var(--text-muted); font-size: 14px; line-height: 1.6;">
+          We sent a verification link to your email address:
+        </p>
+        <div id="userEmailSent" class="sent-email-badge">user@example.com</div>
+        <p id="txt-vinstruction" style="color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-bottom: 24px;">
+          Please open your inbox and click the verification link. <strong>You cannot sign in or access your dashboard until your email is verified.</strong>
+        </p>
+        <button type="button" class="btn-submit" onclick="window.location.href='login.html'" id="btn-goto-login">Go to Sign In</button>
       </div>
+
     </div>
   </main>
 
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      sendEmailVerification, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  <script>
-    // Language dictionary
+    // Matching project configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
+      authDomain: "digitall-c77d8.firebaseapp.com",
+      projectId: "digitall-c77d8",
+      storageBucket: "digitall-c77d8.firebasestorage.app",
+      messagingSenderId: "922798712588",
+      appId: "1:922798712588:web:43235136b5b1bf58168b29"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Multilingual Translations
     const dictionary = {
       EN: {
         title: "Create Account",
@@ -321,9 +347,10 @@
         submit: "Create Account",
         footer: "Already have an account?",
         link: "Sign In",
-        ph_fname: "Jean",
-        ph_lname: "Rakoto",
-        ph_email: "name@example.com"
+        vtitle: "Verification Email Sent",
+        vmsg: "We sent a verification link to your email address:",
+        vinstruction: "Please open your inbox and click the link. You will not be able to sign in until your email is verified.",
+        gotologin: "Go to Sign In"
       },
       FR: {
         title: "Créer un compte",
@@ -336,9 +363,10 @@
         submit: "Créer un compte",
         footer: "Vous avez déjà un compte ?",
         link: "Se connecter",
-        ph_fname: "Jean",
-        ph_lname: "Rakoto",
-        ph_email: "nom@exemple.com"
+        vtitle: "E-mail de vérification envoyé",
+        vmsg: "Nous avons envoyé un lien de vérification à votre adresse e-mail :",
+        vinstruction: "Veuillez ouvrir votre boîte de réception et cliquer sur le lien. Vous ne pourrez pas vous connecter avant la vérification.",
+        gotologin: "Se connecter"
       },
       MG: {
         title: "Mamorona Kaonty",
@@ -351,9 +379,10 @@
         submit: "Mamorona Kaonty",
         footer: "Efa manana kaonty ve ianao?",
         link: "Midira",
-        ph_fname: "Jean",
-        ph_lname: "Rakoto",
-        ph_email: "anarana@ohatra.com"
+        vtitle: "Latsaka ny imailaka fanamarinana",
+        vmsg: "Nalainay rohy fanamarinana amin'ny adiresy imailakao:",
+        vinstruction: "Sokafy ny boaty fidirana ary tsindrio ny rohy. Tsy afaka miditra ianao raha tsy efa voamarina ny imailakao.",
+        gotologin: "Midira"
       }
     };
 
@@ -364,16 +393,10 @@
       const t = dictionary[lang];
       if (!t) return;
 
-      // Update button visual state
       document.querySelectorAll('.lang-btn').forEach(btn => {
-        if (btn.getAttribute('data-lang') === lang) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
       });
 
-      // Update labels and static text
       document.getElementById('txt-title').textContent = t.title;
       document.getElementById('txt-subtitle').textContent = t.subtitle;
       document.getElementById('lbl-fname').textContent = t.fname;
@@ -385,57 +408,66 @@
       document.getElementById('txt-footer').textContent = t.footer;
       document.getElementById('link-footer').textContent = t.link;
 
-      // Update placeholders
-      document.getElementById('firstName').placeholder = t.ph_fname;
-      document.getElementById('lastName').placeholder = t.ph_lname;
-      document.getElementById('emailInput').placeholder = t.ph_email;
+      document.getElementById('txt-vtitle').textContent = t.vtitle;
+      document.getElementById('txt-vmsg').textContent = t.vmsg;
+      document.getElementById('txt-vinstruction').textContent = t.vinstruction;
+      document.getElementById('btn-goto-login').textContent = t.gotologin;
     }
 
-    // Attach click listeners to language buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', function() {
-        const lang = this.getAttribute('data-lang');
-        updateLanguage(lang);
+        updateLanguage(this.getAttribute('data-lang'));
       });
     });
 
-    // Firebase Initialization
-    const firebaseConfig = {
-      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
-      authDomain: "digitall-c77d8.firebaseapp.com",
-      projectId: "digitall-c77d8"
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    // Signup form handler
-    document.getElementById('signupForm').addEventListener('submit', function(e) {
+    // Form Registration Handler
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      const email = document.getElementById('emailInput').value;
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
       const password = document.getElementById('passInput').value;
+      const currency = document.getElementById('currencySelect').value;
       const submitBtn = document.getElementById('submitBtn');
 
       submitBtn.disabled = true;
       submitBtn.textContent = "...";
 
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          return userCredential.user.sendEmailVerification().then(() => {
-            alert("Account created! Verification email sent to " + email);
-            localStorage.setItem('digitall_logged_in', 'true');
-            localStorage.setItem('digitall_user_email', email);
-            window.location.href = 'dashboard.html';
-          });
-        })
-        .catch((error) => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = dictionary[currentLang].submit;
-          alert("Firebase Error (" + error.code + "): " + error.message);
-          console.error("Firebase Error:", error);
+      try {
+        // 1. Create User Account in Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 2. Save user metadata to Firestore database
+        await setDoc(doc(db, "users", user.uid), {
+          firstName: firstName,
+          lastName: lastName,
+          name: `${firstName} ${lastName}`.trim(),
+          email: email,
+          currency: currency,
+          createdAt: new Date().toISOString()
         });
+
+        // 3. Send Verification Email
+        await sendEmailVerification(user);
+
+        // 4. Force Sign Out immediately so unverified sessions cannot persist
+        await signOut(auth);
+        localStorage.removeItem('digitall_logged_in');
+        localStorage.removeItem('digitall_user_email');
+
+        // 5. Hide signup form & display Verification Sent Page
+        document.getElementById('signupView').style.display = 'none';
+        document.getElementById('userEmailSent').textContent = email;
+        document.getElementById('verifyView').style.display = 'block';
+
+      } catch (error) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = dictionary[currentLang].submit;
+        alert("Sign Up Failed: " + error.message);
+        console.error("Firebase Auth Error:", error);
+      }
     });
   </script>
 </body>
