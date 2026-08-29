@@ -66,7 +66,6 @@
   </style>
 </head>
 <body>
-  
 
   <header>
     <h1>Welcome, <span id="welcomeName">User</span></h1>
@@ -157,8 +156,7 @@
       getFirestore, 
       doc, 
       getDoc, 
-      setDoc, 
-      updateDoc 
+      setDoc 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -176,13 +174,34 @@
 
     let currentUser = null;
 
-    // Check Auth Status & Fetch User Profile Data
+    // Unified Auth & Email Verification Guard
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        document.getElementById("profileEmailInput").value = user.email;
+      if (!user) {
+        // 1. Not logged in -> Redirect to signup
+        localStorage.removeItem('digitall_logged_in');
+        localStorage.removeItem('digitall_user_email');
+        window.location.href = "signup.html";
+        return;
+      }
 
-        // Fetch user metadata from Firestore
+      if (!user.emailVerified) {
+        // 2. Logged in BUT email not verified -> Alert, Sign Out & Redirect
+        alert("Please verify your email address before accessing the dashboard. Check your inbox for the confirmation link.");
+        await signOut(auth);
+        localStorage.removeItem('digitall_logged_in');
+        localStorage.removeItem('digitall_user_email');
+        window.location.href = "signup.html";
+        return;
+      }
+
+      // 3. Authenticated & Email Verified
+      currentUser = user;
+      localStorage.setItem('digitall_logged_in', 'true');
+      localStorage.setItem('digitall_user_email', user.email);
+      document.getElementById("profileEmailInput").value = user.email;
+
+      // Fetch user profile metadata from Firestore
+      try {
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
 
@@ -195,22 +214,20 @@
           if (data.name) userName = data.name;
         }
 
-        // Populate Form Fields
         document.getElementById("profileNameInput").value = userName;
         document.getElementById("welcomeName").innerText = userName || user.email.split('@')[0];
         if (userAge) document.getElementById("profileAgeInput").value = userAge;
 
-        // If age is missing (First Login), trigger onboarding popup
+        // If age is missing (First Login), show onboarding modal
         if (!userAge) {
           document.getElementById("onboardingModal").style.display = "flex";
         }
-      } else {
-        // Redirect to index page if unauthenticated
-        window.location.href = "index.html";
+      } catch (err) {
+        console.error("Firestore read error:", err);
       }
     });
 
-    // Handle First-Time Age Onboarding Submission
+    // Handle Onboarding Age Submission
     document.getElementById("onboardingForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const ageVal = Number(document.getElementById("onboardingAgeInput").value);
@@ -232,17 +249,14 @@
       }
     });
 
-    // Handle Name & Age Updates
+    // Handle Profile Name & Age Updates
     document.getElementById("updateProfileForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const newName = document.getElementById("profileNameInput").value.trim();
       const newAge = Number(document.getElementById("profileAgeInput").value);
 
       try {
-        // 1. Update Auth Profile
         await updateProfile(currentUser, { displayName: newName });
-
-        // 2. Update Firestore Document
         await setDoc(doc(db, "users", currentUser.uid), {
           name: newName,
           age: newAge,
@@ -270,71 +284,14 @@
       }
     });
 
-    // Sign Out Handler
+    // Handle Sign Out
     document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => window.location.href = "index.html");
-    });
-  </script>
-  <!-- 1. Firebase SDK Libraries (Must be loaded first) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
-  <!-- 2. Dashboard Auth Protection Script -->
-<!-- 1. Firebase SDK Libraries -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
-  <!-- 2. Strict Verification & Auth Protection Script -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
-      authDomain: "digitallsite.firebaseapp.com",
-      projectId: "digitallsite"
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (!user) {
-        // 1. Not logged in at all -> redirect to signup
-        window.location.href = 'signup.html';
-      } else if (!user.emailVerified) {
-        // 2. Logged in BUT email is not verified -> alert and block access
-        alert("Please verify your email address before accessing the dashboard. Check your inbox for the confirmation link.");
-        
-        // Sign out to prevent unverified local session
-        firebase.auth().signOut().then(() => {
-          localStorage.removeItem('digitall_logged_in');
-          localStorage.removeItem('digitall_user_email');
-          window.location.href = 'signup.html';
-        });
-      } else {
-        // 3. User is logged in AND verified -> allow dashboard access
-        console.log("Access granted for verified user:", user.email);
-        
-        localStorage.setItem('digitall_logged_in', 'true');
-        localStorage.setItem('digitall_user_email', user.email);
-
-        const displayElement = document.getElementById('userEmailDisplay');
-        if (displayElement) {
-          displayElement.textContent = user.email;
-        }
-      }
-    });
-
-    function handleLogout() {
-      firebase.auth().signOut().then(() => {
+      signOut(auth).then(() => {
         localStorage.removeItem('digitall_logged_in');
         localStorage.removeItem('digitall_user_email');
-        window.location.href = 'signup.html';
+        window.location.href = "signup.html";
       });
-    }
+    });
   </script>
-</body>
-</html>
-</body>
-</html>
 </body>
 </html>
