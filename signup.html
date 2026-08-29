@@ -1,306 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up | DigitAll</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="base.css">
-<style>
-  .auth-wrapper {
-    min-height: calc(100vh - 80px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-  }
-  .auth-card {
-    background: rgba(22, 11, 56, 0.8);
-    border: 1px solid rgba(88, 12, 235, 0.4);
-    border-radius: 24px;
-    padding: 40px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-  }
-  .auth-header {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .auth-title {
-    font-size: 28px;
-    font-weight: 800;
-    color: #FFFFFF;
-    margin-bottom: 8px;
-  }
-  .auth-subtitle {
-    font-size: 14px;
-    color: #B9AFDA;
-  }
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .form-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .form-group label {
-    font-size: 13px;
-    font-weight: 700;
-    color: #D3CEE8;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  .form-control, .form-select {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: 15px;
-    color: #FFFFFF;
-    outline: none;
-    transition: all 0.2s ease;
-  }
-  .form-select option {
-    background: #160b38;
-    color: #FFFFFF;
-  }
-  .form-control:focus, .form-select:focus {
-    border-color: #00F5A4;
-    box-shadow: 0 0 12px rgba(0, 245, 164, 0.2);
-  }
-  .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-  }
-  .terms-check {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 13px;
-    color: #B9AFDA;
-    margin-bottom: 24px;
-    line-height: 1.4;
-  }
-  .terms-check input {
-    margin-top: 2px;
-    accent-color: #00F5A4;
-  }
-  .terms-check a {
-    color: #00F5A4;
-    text-decoration: none;
-  }
-  .terms-check a:hover {
-    text-decoration: underline;
-  }
-  .btn-auth {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
-  }
-  .auth-footer {
-    text-align: center;
-    margin-top: 24px;
-    font-size: 14px;
-    color: #B9AFDA;
-  }
-  .auth-footer a {
-    color: #00F5A4;
-    font-weight: 700;
-    text-decoration: none;
-  }
-  .auth-footer a:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | DigitAll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #070614;
+      --card-bg: #100c2a;
+      --card-border: rgba(124, 58, 237, 0.25);
+      --accent-green: #00ff87;
+      --accent-purple: #7c3aed;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar styling matching homepage */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      width: 100%;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-logo img {
+      height: 38px;
+      width: auto;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .brand-name span {
+      color: var(--accent-green);
+    }
+
+    .brand-tagline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent-green);
+      margin-top: 3px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 4px;
+      gap: 2px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
+
+    /* Main Container */
+    .signup-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .signup-card {
+      width: 100%;
+      max-width: 520px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 44px 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .card-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .card-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background-color: var(--card-bg);
+      color: var(--text-main);
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      margin-top: 10px;
+      background-color: var(--accent-green);
+      color: #070614;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s, filter 0.2s;
+    }
+
+    .btn-submit:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-footer a {
+      color: var(--accent-green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="logo-block">
-    <a href="index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
-      <img src="digitall-logo-mark.png" class="logo-mark" alt="DigitAll logo">
-      <div class="logo-text">
-        <div class="word">Digit<span>All</span></div>
-        <div class="tag" data-i18n="logo_tag">DIGITAL FOR ALL</div>
+  <header class="navbar">
+    <a href="index.html" class="brand-logo">
+      <img src="DigitAll-logo-mark.png" alt="DigitAll Logo">
+      <div class="brand-text">
+        <div class="brand-name">Digit<span>All</span></div>
+        <div class="brand-tagline">DIGITAL FOR ALL</div>
       </div>
     </a>
-  </div>
 
-  <div class="toggle-group lang" role="group" aria-label="Language Toggle">
-    <button id="lang-en" class="active" onclick="setLanguage('en')">EN</button>
-    <button id="lang-fr" onclick="setLanguage('fr')">FR</button>
-    <button id="lang-mg" onclick="setLanguage('mg')">MG</button>
-  </div>
-</header>
-
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h1 class="auth-title" data-i18n="signup_title">Create Account</h1>
-      <p class="auth-subtitle" data-i18n="signup_subtitle">Start tracking money leaks and master your budget today.</p>
+    <div class="lang-switcher">
+      <button type="button" class="lang-btn active" data-lang="EN">EN</button>
+      <button type="button" class="lang-btn" data-lang="FR">FR</button>
+      <button type="button" class="lang-btn" data-lang="MG">MG</button>
     </div>
+  </header>
 
-    <form onsubmit="handleSignup(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label data-i18n="lbl_firstname">First Name</label>
-          <input type="text" class="form-control" data-i18n-ph="ph_firstname" placeholder="Jean" required>
+  <main class="signup-wrapper">
+    <div class="signup-card">
+      <div class="card-header">
+        <h1 id="txt-title">Create Account</h1>
+        <p id="txt-subtitle">Start tracking money leaks and master your budget today.</p>
+      </div>
+
+      <form id="signupForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label id="lbl-fname" for="firstName" class="form-label">First Name</label>
+            <input type="text" id="firstName" class="form-input" placeholder="Jean" required />
+          </div>
+          <div class="form-group">
+            <label id="lbl-lname" for="lastName" class="form-label">Last Name</label>
+            <input type="text" id="lastName" class="form-input" placeholder="Rakoto" required />
+          </div>
         </div>
+
         <div class="form-group">
-          <label data-i18n="lbl_lastname">Last Name</label>
-          <input type="text" class="form-control" data-i18n-ph="ph_lastname" placeholder="Rakoto" required>
+          <label id="lbl-email" for="emailInput" class="form-label">Email Address</label>
+          <input type="email" id="emailInput" class="form-input" placeholder="name@example.com" required />
         </div>
+
+        <div class="form-group">
+          <label id="lbl-currency" for="currencySelect" class="form-label">Preferred Primary Currency</label>
+          <select id="currencySelect" class="form-select">
+            <option value="MGA">Malagasy Ariary (Ar)</option>
+            <option value="USD">US Dollar ($)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label id="lbl-password" for="passInput" class="form-label">Password</label>
+          <input type="password" id="passInput" class="form-input" placeholder="••••••••" minlength="6" required />
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-submit">Create Account</button>
+      </form>
+
+      <div class="form-footer">
+        <span id="txt-footer">Already have an account?</span> <a href="login.html" id="link-footer">Sign In</a>
       </div>
-
-      <div class="form-group">
-        <label data-i18n="lbl_email">Email Address</label>
-        <input type="email" class="form-control" data-i18n-ph="ph_email" placeholder="name@example.com" required>
-      </div>
-
-      <div class="form-group">
-        <label data-i18n="lbl_currency">Preferred Primary Currency</label>
-        <select class="form-select" id="pref-currency">
-          <option value="mga" data-i18n="opt_mga">Malagasy Ariary (Ar)</option>
-          <option value="usd" data-i18n="opt_usd">US Dollar ($)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label data-i18n="lbl_password">Password</label>
-        <input type="password" class="form-control" data-i18n-ph="ph_password" placeholder="••••••••" required>
-      </div>
-
-      <label class="terms-check">
-        <input type="checkbox" required>
-        <span><span data-i18n="lbl_terms_pre">I agree to the</span> <a href="#" data-i18n="link_terms">Terms of Service</a> <span data-i18n="lbl_terms_mid">and</span> <a href="#" data-i18n="link_privacy">Privacy Policy</a>.</span>
-      </label>
-
-      <button type="submit" class="btn btn-teal btn-auth" data-i18n="btn_signup">Create Free Account</button>
-    </form>
-
-    <div class="auth-footer">
-      <span data-i18n="has_account">Already have an account?</span> 
-      <a href="login.html" data-i18n="link_login">Sign In</a>
     </div>
-  </div>
-</div>
+  </main>
 
-<script>
-  const translations = {
-    fr: {
-      logo_tag: "LE NUMÉRIQUE POUR TOUS",
-      signup_title: "Créer un compte",
-      signup_subtitle: "Commencez à suivre vos fuites d'argent et maîtrisez votre budget dès aujourd'hui.",
-      lbl_firstname: "Prénom",
-      ph_firstname: "Jean",
-      lbl_lastname: "Nom",
-      ph_lastname: "Rakoto",
-      lbl_email: "Adresse Email",
-      ph_email: "nom@exemple.com",
-      lbl_currency: "Devise principale préférée",
-      opt_mga: "Ariary Malgache (Ar)",
-      opt_usd: "Dollar Américain ($)",
-      lbl_password: "Mot de passe",
-      ph_password: "••••••••",
-      lbl_terms_pre: "J'accepte les",
-      link_terms: "Conditions d'utilisation",
-      lbl_terms_mid: "et la",
-      link_privacy: "Politique de confidentialité",
-      btn_signup: "Créer un compte gratuit",
-      has_account: "Vous avez déjà un compte ?",
-      link_login: "Se Connecter"
-    },
-    mg: {
-      logo_tag: "DIGITAL HO AN'NY REHETRA",
-      signup_title: "Hanoina Kaonty",
-      signup_subtitle: "Anombohy ny fanaraha-maso ny fahaverezam-bola ary fehezo ny tetibolanao androany.",
-      lbl_firstname: "Anarana voalohany",
-      ph_firstname: "Jean",
-      lbl_lastname: "Fanametrahana",
-      ph_lastname: "Rakoto",
-      lbl_email: "Adiresy Email",
-      ph_email: "anarana@ohatra.com",
-      lbl_currency: "Vola fototra tiana ampiasaina",
-      opt_mga: "Ariary Malagasy (Ar)",
-      opt_usd: "Dollar Americanina ($)",
-      lbl_password: "Tenypahatsiarovana",
-      ph_password: "••••••••",
-      lbl_terms_pre: "Manaiky ny",
-      link_terms: "Fepetra fampiasana",
-      lbl_terms_mid: "sy ny",
-      link_privacy: "Fitsipiky ny fiainana manokana",
-      btn_signup: "Hanaotany kaonty maimaimpoana",
-      has_account: "Efa manana kaonty ve ianao?",
-      link_login: "Hiditra"
-    }
-  };
-
-  let currentLang = 'en';
-  const originalEnglish = {};
-  const originalPlaceholders = {};
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      originalEnglish[el.getAttribute('data-i18n')] = el.textContent.trim();
-    });
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      originalPlaceholders[el.getAttribute('data-i18n-ph')] = el.getAttribute('placeholder');
-    });
-  });
-
-  function setLanguage(lang) {
-    currentLang = lang;
-
-    ['en', 'fr', 'mg'].forEach(l => {
-      const btn = document.getElementById(`lang-${l}`);
-      if (btn) btn.classList.toggle('active', l === lang);
-    });
-
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (lang === 'en') {
-        el.textContent = originalEnglish[key];
-      } else if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
-      }
-    });
-
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      const key = el.getAttribute('data-i18n-ph');
-      if (lang === 'en') {
-        el.setAttribute('placeholder', originalPlaceholders[key]);
-      } else if (translations[lang] && translations[lang][key]) {
-        el.setAttribute('placeholder', translations[lang][key]);
-      }
-    });
-  }
-
-  function handleSignup(event) {
-    event.preventDefault();
-    alert(currentLang === 'fr' ? 'Création du compte en cours...' : (currentLang === 'mg' ? 'Mamorona kaonty...' : 'Creating account...'));
-  }
-</script>
-<!-- Firebase App (required) -->
-<!-- 1. Firebase SDK Libraries (Must be loaded first) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-  <!-- 2. Your Signup Logic Script -->
   <script>
-    // 1. Initialize Firebase using your public config
+    // Language dictionary
+    const dictionary = {
+      EN: {
+        title: "Create Account",
+        subtitle: "Start tracking money leaks and master your budget today.",
+        fname: "FIRST NAME",
+        lname: "LAST NAME",
+        email: "EMAIL ADDRESS",
+        currency: "PREFERRED PRIMARY CURRENCY",
+        password: "PASSWORD",
+        submit: "Create Account",
+        footer: "Already have an account?",
+        link: "Sign In",
+        ph_fname: "Jean",
+        ph_lname: "Rakoto",
+        ph_email: "name@example.com"
+      },
+      FR: {
+        title: "Créer un compte",
+        subtitle: "Commencez à suivre vos dépenses et maîtrisez votre budget dès aujourd'hui.",
+        fname: "PRÉNOM",
+        lname: "NOM",
+        email: "ADRESSE EMAIL",
+        currency: "DEVISE PRINCIPALE PRÉFÉRÉE",
+        password: "MOT DE PASSE",
+        submit: "Créer un compte",
+        footer: "Vous avez déjà un compte ?",
+        link: "Se connecter",
+        ph_fname: "Jean",
+        ph_lname: "Rakoto",
+        ph_email: "nom@exemple.com"
+      },
+      MG: {
+        title: "Mamorona Kaonty",
+        subtitle: "Atombohy ny fanaraha-maso ny fandanianao ary fehezo ny teti-bolanao androany.",
+        fname: "ANARANA",
+        lname: "FANAMPINY",
+        email: "ADRESY EMAIL",
+        currency: "VOLA FAMPIASAINA WAISINY",
+        password: "TENY PAHATSIAROVANA",
+        submit: "Mamorona Kaonty",
+        footer: "Efa manana kaonty ve ianao?",
+        link: "Midira",
+        ph_fname: "Jean",
+        ph_lname: "Rakoto",
+        ph_email: "anarana@ohatra.com"
+      }
+    };
+
+    let currentLang = 'EN';
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      const t = dictionary[lang];
+      if (!t) return;
+
+      // Update button visual state
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.getAttribute('data-lang') === lang) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Update labels and static text
+      document.getElementById('txt-title').textContent = t.title;
+      document.getElementById('txt-subtitle').textContent = t.subtitle;
+      document.getElementById('lbl-fname').textContent = t.fname;
+      document.getElementById('lbl-lname').textContent = t.lname;
+      document.getElementById('lbl-email').textContent = t.email;
+      document.getElementById('lbl-currency').textContent = t.currency;
+      document.getElementById('lbl-password').textContent = t.password;
+      document.getElementById('submitBtn').textContent = t.submit;
+      document.getElementById('txt-footer').textContent = t.footer;
+      document.getElementById('link-footer').textContent = t.link;
+
+      // Update placeholders
+      document.getElementById('firstName').placeholder = t.ph_fname;
+      document.getElementById('lastName').placeholder = t.ph_lname;
+      document.getElementById('emailInput').placeholder = t.ph_email;
+    }
+
+    // Attach click listeners to language buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const lang = this.getAttribute('data-lang');
+        updateLanguage(lang);
+      });
+    });
+
+    // Firebase Initialization
     const firebaseConfig = {
-      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU", // Public Web Key
+      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
       authDomain: "digitall-c77d8.firebaseapp.com",
       projectId: "digitall-c77d8"
     };
@@ -309,39 +410,33 @@
       firebase.initializeApp(firebaseConfig);
     }
 
-    // 2. Handle Form Submission
-    function handleSignup(event) {
-      event.preventDefault();
-      
+    // Signup form handler
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
       const email = document.getElementById('emailInput').value;
       const password = document.getElementById('passInput').value;
-      const signupBtn = document.querySelector('button[type="submit"]');
+      const submitBtn = document.getElementById('submitBtn');
 
-      // Change button text to show active progress
-      signupBtn.disabled = true;
-      signupBtn.textContent = "Creating Account...";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "...";
 
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Store local session indicators
-          localStorage.setItem('digitall_logged_in', 'true');
-          localStorage.setItem('digitall_user_email', email);
-
-          // Redirect directly to dashboard
-          window.location.href = 'dashboard.html';
+          return userCredential.user.sendEmailVerification().then(() => {
+            alert("Account created! Verification email sent to " + email);
+            localStorage.setItem('digitall_logged_in', 'true');
+            localStorage.setItem('digitall_user_email', email);
+            window.location.href = 'dashboard.html';
+          });
         })
         .catch((error) => {
-          // Re-enable button on error so it doesn't stay stuck forever
-          signupBtn.disabled = false;
-          signupBtn.textContent = "Sign Up";
-
-          // Display error message to user
-          alert("Signup Failed: " + error.message);
-          console.error("Firebase Auth Error:", error.code, error.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = dictionary[currentLang].submit;
+          alert("Firebase Error (" + error.code + "): " + error.message);
+          console.error("Firebase Error:", error);
         });
-    }
+    });
   </script>
-</body>
-</html>
 </body>
 </html>
