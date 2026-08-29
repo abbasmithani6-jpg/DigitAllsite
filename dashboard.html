@@ -174,18 +174,20 @@
 
     let currentUser = null;
 
-    // Unified Auth & Email Verification Guard
+    // Unified Auth Check with Graceful Session Fallback
     onAuthStateChanged(auth, async (user) => {
+      const storedLoggedIn = localStorage.getItem('digitall_logged_in');
+
       if (!user) {
-        // 1. Not logged in -> Redirect to signup
-        localStorage.removeItem('digitall_logged_in');
-        localStorage.removeItem('digitall_user_email');
-        window.location.href = "signup.html";
+        // Only redirect to signup if LocalStorage ALSO confirms no active session flag
+        if (!storedLoggedIn) {
+          window.location.href = "signup.html";
+        }
         return;
       }
 
       if (!user.emailVerified) {
-        // 2. Logged in BUT email not verified -> Alert, Sign Out & Redirect
+        // Logged in BUT email not verified -> Alert, Sign Out & Redirect to Signup
         alert("Please verify your email address before accessing the dashboard. Check your inbox for the confirmation link.");
         await signOut(auth);
         localStorage.removeItem('digitall_logged_in');
@@ -194,7 +196,7 @@
         return;
       }
 
-      // 3. Authenticated & Email Verified
+      // User is logged in AND verified
       currentUser = user;
       localStorage.setItem('digitall_logged_in', 'true');
       localStorage.setItem('digitall_user_email', user.email);
@@ -218,7 +220,6 @@
         document.getElementById("welcomeName").innerText = userName || user.email.split('@')[0];
         if (userAge) document.getElementById("profileAgeInput").value = userAge;
 
-        // If age is missing (First Login), show onboarding modal
         if (!userAge) {
           document.getElementById("onboardingModal").style.display = "flex";
         }
