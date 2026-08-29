@@ -280,8 +280,12 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
   <!-- 2. Dashboard Auth Protection Script -->
+<!-- 1. Firebase SDK Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <!-- 2. Strict Verification & Auth Protection Script -->
   <script>
-    // Initialize Firebase using your project config
     const firebaseConfig = {
       apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
       authDomain: "digitallsite.firebaseapp.com",
@@ -292,26 +296,34 @@
       firebase.initializeApp(firebaseConfig);
     }
 
-    // Check session status on page load
-    const isLoggedIn = localStorage.getItem('digitall_logged_in');
-
     firebase.auth().onAuthStateChanged((user) => {
-      if (!user && !isLoggedIn) {
-        // Only redirect back to signup if BOTH Firebase and LocalStorage confirm no session
+      if (!user) {
+        // 1. Not logged in at all -> redirect to signup
         window.location.href = 'signup.html';
+      } else if (!user.emailVerified) {
+        // 2. Logged in BUT email is not verified -> alert and block access
+        alert("Please verify your email address before accessing the dashboard. Check your inbox for the confirmation link.");
+        
+        // Sign out to prevent unverified local session
+        firebase.auth().signOut().then(() => {
+          localStorage.removeItem('digitall_logged_in');
+          localStorage.removeItem('digitall_user_email');
+          window.location.href = 'signup.html';
+        });
       } else {
-        console.log("Welcome to Dashboard!", user);
+        // 3. User is logged in AND verified -> allow dashboard access
+        console.log("Access granted for verified user:", user.email);
+        
+        localStorage.setItem('digitall_logged_in', 'true');
+        localStorage.setItem('digitall_user_email', user.email);
 
-        // Display user email if available
-        const userEmail = (user && user.email) || localStorage.getItem('digitall_user_email');
         const displayElement = document.getElementById('userEmailDisplay');
-        if (displayElement && userEmail) {
-          displayElement.textContent = userEmail;
+        if (displayElement) {
+          displayElement.textContent = user.email;
         }
       }
     });
 
-    // Optional: Logout function to bind to your Logout button
     function handleLogout() {
       firebase.auth().signOut().then(() => {
         localStorage.removeItem('digitall_logged_in');
@@ -320,6 +332,8 @@
       });
     }
   </script>
+</body>
+</html>
 </body>
 </html>
 </body>
