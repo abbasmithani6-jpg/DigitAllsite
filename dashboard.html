@@ -23,6 +23,18 @@
       --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     }
 
+    /* Light Theme Support */
+    body.light-theme {
+      --bg-dark: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: rgba(124, 58, 237, 0.15);
+      --accent-purple: #6d28d9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --input-bg: rgba(0, 0, 0, 0.03);
+      --input-border: rgba(0, 0, 0, 0.1);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -32,6 +44,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* Header Navigation */
@@ -55,7 +68,7 @@
     .brand-name {
       font-size: 22px;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--text-main);
       line-height: 1;
     }
 
@@ -146,7 +159,7 @@
       background: rgba(239, 68, 68, 0.2);
     }
 
-    /* Main Content Layout */
+    /* Dashboard Layout */
     .dashboard-container {
       flex: 1;
       max-width: 1200px;
@@ -164,7 +177,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
 
     .welcome-text h1 {
@@ -189,14 +202,8 @@
       font-weight: 700;
     }
 
-    /* Tab Section Content */
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
     .grid-cards {
       display: grid;
@@ -209,6 +216,7 @@
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 28px;
+      margin-bottom: 24px;
     }
 
     .card-title {
@@ -226,33 +234,157 @@
       color: var(--accent-green);
     }
 
-    /* Pricing Plans Layout */
+    /* Section Headers */
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Plans Section */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
     .plan-box {
       border: 1px solid var(--input-border);
       border-radius: 16px;
       padding: 24px;
       background: rgba(255, 255, 255, 0.02);
-      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .plan-box.featured {
+    .plan-box h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .plan-price {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent-green);
+      margin: 12px 0;
+    }
+
+    .plan-price sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn-select-plan {
+      width: 100%;
+      padding: 12px;
+      margin-top: 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-main);
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-select-plan:hover {
       border-color: var(--accent-purple);
-      background: rgba(124, 58, 237, 0.08);
+      background: rgba(124, 58, 237, 0.15);
     }
 
+    /* Family Code & Actions Box */
+    .family-manager-card {
+      background: rgba(124, 58, 237, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .styled-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-family: inherit;
+    }
+
+    .styled-input:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+    }
+
+    .btn-action {
+      padding: 12px 20px;
+      background: var(--accent-purple);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Settings Options */
     .setting-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 0;
+      padding: 18px 0;
       border-bottom: 1px solid var(--input-border);
     }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--input-border);
+      transition: .4s;
+      border-radius: 26px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px; width: 18px;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider { background-color: var(--accent-purple); }
+    input:checked + .slider:before { transform: translateX(22px); }
 
     /* AI Chat Component */
     .chat-container {
       display: flex;
       flex-direction: column;
-      height: 500px;
+      height: 480px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 20px;
@@ -280,7 +412,7 @@
       align-self: flex-start;
       background: rgba(124, 58, 237, 0.2);
       border: 1px solid var(--accent-purple);
-      color: #ffffff;
+      color: var(--text-main);
       border-bottom-left-radius: 4px;
     }
 
@@ -296,36 +428,10 @@
       display: flex;
       gap: 10px;
       padding: 16px;
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.1);
       border-top: 1px solid var(--input-border);
     }
 
-    .chat-input {
-      flex: 1;
-      padding: 12px 16px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 12px;
-      color: var(--text-main);
-      font-family: inherit;
-    }
-
-    .chat-input:focus {
-      outline: none;
-      border-color: var(--accent-purple);
-    }
-
-    .btn-send {
-      padding: 12px 24px;
-      background: var(--accent-purple);
-      color: #ffffff;
-      border: none;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    /* Floating Widget Button */
     .floating-chat-toggle {
       position: fixed;
       bottom: 24px;
@@ -392,15 +498,25 @@
       <div class="grid-cards">
         <div class="dashboard-card">
           <div class="card-title" id="lbl-balance">Total Balance</div>
-          <div class="card-value">$0.00</div>
+          <div class="card-value">0 Ar</div>
         </div>
         <div class="dashboard-card">
           <div class="card-title" id="lbl-activity">Active Services</div>
-          <div class="card-value">1 Plan</div>
+          <div class="card-value" id="activePlanDisplay">No Active Plan</div>
         </div>
         <div class="dashboard-card">
-          <div class="card-title" id="lbl-tickets">Support Tickets</div>
-          <div class="card-value">0 Open</div>
+          <div class="card-title" id="lbl-tickets">Family Group</div>
+          <div class="card-value" id="familyStatusDisplay">Not Joined</div>
+        </div>
+      </div>
+
+      <!-- Activity Tracking Section for Kids Accounts -->
+      <div class="dashboard-card" id="parentalControlBox" style="display: none;">
+        <h3 class="section-title">👨‍👩‍👧 Parental Monitoring (Kid's Account Log)</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">Parent View: Activity history of registered family members.</p>
+        <div style="background: var(--input-bg); padding: 12px 16px; border-radius: 8px; font-size: 13px;">
+          • Kid Account logged in today at 14:20<br>
+          • Modernized script practice session completed
         </div>
       </div>
     </section>
@@ -408,19 +524,86 @@
     <!-- TAB 2: PLANS -->
     <section id="tab-plans" class="tab-content">
       <div class="dashboard-card">
-        <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Plans</h2>
-        
-        <div class="plan-box">
-          <h3>Starter Plan</h3>
-          <p style="color: var(--text-muted); margin: 8px 0;">Essential tools for personal digital management.</p>
-          <div class="card-value" style="font-size: 24px;">Free</div>
+        <h2 style="margin-bottom: 24px;" id="txt-plans-header">Select Your Plan</h2>
+
+        <!-- Individual Plans Section -->
+        <h3 class="section-title">👤 Individual Plans</h3>
+        <div class="plans-grid">
+          <div class="plan-box">
+            <div>
+              <h3>Standard</h3>
+              <p style="color: var(--text-muted); font-size: 13px;">Basic access for individuals.</p>
+            </div>
+            <div class="plan-price">50 Ar <sub>/ mo</sub></div>
+            <button class="btn-select-plan">Choose Standard</button>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3>Plus</h3>
+              <p style="color: var(--text-muted); font-size: 13px;">Faster response & extended storage.</p>
+            </div>
+            <div class="plan-price">100 Ar <sub>/ mo</sub></div>
+            <button class="btn-select-plan">Choose Plus</button>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3>Pro</h3>
+              <p style="color: var(--text-muted); font-size: 13px;">Full tool suite and high priority support.</p>
+            </div>
+            <div class="plan-price">150 Ar <sub>/ mo</sub></div>
+            <button class="btn-select-plan">Choose Pro</button>
+          </div>
         </div>
 
-        <div class="plan-box featured">
-          <h3>Pro Business Plan</h3>
-          <p style="color: var(--text-muted); margin: 8px 0;">Full analytics, priority ticket support, and custom options.</p>
-          <div class="card-value" style="font-size: 24px;">$19 / mo</div>
+        <!-- Family Plans Section -->
+        <h3 class="section-title">👨‍👩‍👧‍👦 Family Plans</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
+          Includes a one-time setup fee of <strong>200 Ar</strong>. Adding extra family members is significantly cheaper than buying individual plans!
+        </p>
+
+        <div class="plans-grid">
+          <div class="plan-box">
+            <div>
+              <h3>Family Standard</h3>
+              <p style="color: var(--text-muted); font-size: 13px;">Initial 200 Ar + low per-person add-on price.</p>
+            </div>
+            <div class="plan-price">200 Ar <sub>setup + 20 Ar/member</sub></div>
+            <button class="btn-select-plan">Choose Family Standard</button>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3>Family Premium</h3>
+              <p style="color: var(--text-muted); font-size: 13px;">Initial 200 Ar + unlimited kids monitoring & maximum speeds.</p>
+            </div>
+            <div class="plan-price">200 Ar <sub>setup + 35 Ar/member</sub></div>
+            <button class="btn-select-plan">Choose Family Premium</button>
+          </div>
         </div>
+
+        <!-- Family Code Management -->
+        <div class="family-manager-card">
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Family Group Access</h3>
+          <p style="color: var(--text-muted); font-size: 13px;">Generate a unique code to share with family members or enter a code to join an existing group.</p>
+          
+          <div style="margin-top: 16px;">
+            <label style="font-size: 12px; font-weight: 700;">Join a Family</label>
+            <div class="input-group">
+              <input type="text" id="familyCodeInput" class="styled-input" placeholder="Enter Family Code (e.g. FAM-9821)" />
+              <button id="btnJoinFamily" class="btn-action">Join Group</button>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <button id="btnGenCode" class="btn-action" style="background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main);">
+              Generate Unique Family Code
+            </button>
+            <span id="generatedCodeDisplay" style="margin-left: 12px; font-weight: 800; color: var(--accent-green);"></span>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -429,20 +612,50 @@
       <div class="dashboard-card">
         <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
         
+        <!-- Dark Mode Toggle -->
+        <div class="setting-row">
+          <div>
+            <strong>Dark Mode</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Toggle dark and light visual themes</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="themeToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Kids Family Account Switcher -->
+        <div class="setting-row">
+          <div>
+            <strong>Kids Family Account</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Enable parental activity monitoring for this profile</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="kidsAccountToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Redeem Promo Code -->
+        <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+          <div>
+            <strong>Redeem Promo Code</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Enter your gift or discount code</p>
+          </div>
+          <div class="input-group" style="width: 100%;">
+            <input type="text" id="promoInput" class="styled-input" placeholder="PROMO CODE" />
+            <button id="btnRedeem" class="btn-action">Redeem</button>
+          </div>
+          <span id="promoStatusMsg" style="font-size: 12px; font-weight: 700;"></span>
+        </div>
+
+        <!-- Email Status -->
         <div class="setting-row">
           <div>
             <strong>Email Verification</strong>
-            <p style="font-size: 13px; color: var(--text-muted);">Your email address status in Firebase</p>
+            <p style="font-size: 13px; color: var(--text-muted);">Your email status in Firebase</p>
           </div>
           <span style="color: var(--accent-green); font-weight: 700;">Verified</span>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong>Interface Language</strong>
-            <p style="font-size: 13px; color: var(--text-muted);">Adjust preferred display language</p>
-          </div>
-          <span id="currentLangDisplay" style="font-weight: 700;">English</span>
         </div>
       </div>
     </section>
@@ -456,8 +669,8 @@
             <div class="chat-msg bot">Hello! I am your DigitAll Assistant. How can I help you today?</div>
           </div>
           <form class="chat-input-row" id="aiForm">
-            <input type="text" class="chat-input" id="aiInput" placeholder="Ask a question..." required />
-            <button type="submit" class="btn-send" id="btn-send-msg">Send</button>
+            <input type="text" class="chat-input styled-input" id="aiInput" placeholder="Ask a question..." required />
+            <button type="submit" class="btn-action" id="btn-send-msg">Send</button>
           </form>
         </div>
       </div>
@@ -488,7 +701,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Multilingual Translations
+    // Multilingual Dictionary
     const dictionary = {
       EN: {
         welcome: "Welcome Back",
@@ -498,8 +711,7 @@
         aiTab: "AI Assistant",
         balance: "Total Balance",
         activity: "Active Services",
-        tickets: "Support Tickets",
-        plansHeader: "Available Plans",
+        plansHeader: "Select Your Plan",
         settingsHeader: "Account Settings",
         aiHeader: "DigitAll AI Assistant",
         logout: "Sign Out",
@@ -513,8 +725,7 @@
         aiTab: "Assistant IA",
         balance: "Solde Total",
         activity: "Services Actifs",
-        tickets: "Tickets de Support",
-        plansHeader: "Offres Disponibles",
+        plansHeader: "Choisissez votre offre",
         settingsHeader: "Paramètres du Compte",
         aiHeader: "Assistant IA DigitAll",
         logout: "Se déconnecter",
@@ -528,8 +739,7 @@
         aiTab: "Mpanampy AI",
         balance: "Teti-bola Samy hafa",
         activity: "Tolotra Mandeha",
-        tickets: "Hafatra Support",
-        plansHeader: "Fidio ny Tolotra",
+        plansHeader: "Zafio ny Tolotrao",
         settingsHeader: "Kajikajin'ny Kaonty",
         aiHeader: "Mpanampy IA DigitAll",
         logout: "Hivoaka",
@@ -577,9 +787,70 @@
       });
     });
 
-    // Floating Button Shortcut to AI Tab
     document.getElementById('floatingAiBtn').addEventListener('click', () => {
       switchTab('aichat');
+    });
+
+    // Dark Mode Toggle Logic
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      themeToggle.checked = false;
+    }
+
+    themeToggle.addEventListener('change', (e) => {
+      if (!e.target.checked) {
+        document.body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.body.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Kids Account Parental Toggle Logic
+    const kidsToggle = document.getElementById('kidsAccountToggle');
+    const parentalBox = document.getElementById('parentalControlBox');
+
+    kidsToggle.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        parentalBox.style.display = 'block';
+        alert("Kids Family Account mode activated. Parental monitoring logs enabled.");
+      } else {
+        parentalBox.style.display = 'none';
+      }
+    });
+
+    // Family Code Generator
+    document.getElementById('btnGenCode').addEventListener('click', () => {
+      const code = "FAM-" + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('generatedCodeDisplay').textContent = "Your Code: " + code;
+    });
+
+    // Join Family Logic
+    document.getElementById('btnJoinFamily').addEventListener('click', () => {
+      const input = document.getElementById('familyCodeInput').value.trim();
+      if (input) {
+        document.getElementById('familyStatusDisplay').textContent = "Group: " + input.toUpperCase();
+        alert("Successfully joined family group " + input.toUpperCase());
+      } else {
+        alert("Please enter a valid family code.");
+      }
+    });
+
+    // Redeem Promo Code Logic
+    document.getElementById('btnRedeem').addEventListener('click', () => {
+      const promo = document.getElementById('promoInput').value.trim();
+      const msg = document.getElementById('promoStatusMsg');
+      if (promo.toLowerCase() === 'digitall2026') {
+        msg.style.color = "var(--accent-green)";
+        msg.textContent = "Promo applied! 50 Ar credit added to account balance.";
+      } else if (promo) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Invalid promo code.";
+      }
     });
 
     // Language Switcher
@@ -599,15 +870,11 @@
       document.getElementById('btn-tab-ai').textContent = t.aiTab;
       document.getElementById('lbl-balance').textContent = t.balance;
       document.getElementById('lbl-activity').textContent = t.activity;
-      document.getElementById('lbl-tickets').textContent = t.tickets;
       document.getElementById('txt-plans-header').textContent = t.plansHeader;
       document.getElementById('txt-settings-header').textContent = t.settingsHeader;
       document.getElementById('txt-ai-header').textContent = t.aiHeader;
       document.getElementById('logoutBtn').textContent = t.logout;
       document.getElementById('btn-send-msg').textContent = t.sendMsg;
-      
-      const langNames = { EN: "English", FR: "Français", MG: "Malagasy" };
-      document.getElementById('currentLangDisplay').textContent = langNames[lang];
     }
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -626,7 +893,6 @@
       const text = aiInput.value.trim();
       if (!text) return;
 
-      // Add user message
       const userDiv = document.createElement('div');
       userDiv.className = 'chat-msg user';
       userDiv.textContent = text;
@@ -635,19 +901,17 @@
 
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Automated AI Response
       setTimeout(() => {
         const botDiv = document.createElement('div');
         botDiv.className = 'chat-msg bot';
         
-        // Simple response generator based on query keywords
         const lower = text.toLowerCase();
-        if (lower.includes('plan') || lower.includes('pricing')) {
-          botDiv.textContent = "We offer a Free Starter Plan and a Pro Business Plan at $19/mo. Check the 'Plans' tab for details!";
-        } else if (lower.includes('setting') || lower.includes('account')) {
-          botDiv.textContent = "You can view your account verification status and system settings in the 'Settings' tab.";
+        if (lower.includes('family') || lower.includes('code')) {
+          botDiv.textContent = "Family plans cost an initial setup of 200 Ar. You can generate or join family groups under the 'Plans' tab!";
+        } else if (lower.includes('dark') || lower.includes('setting')) {
+          botDiv.textContent = "You can toggle Dark Mode and redeem promo codes directly inside the 'Settings' tab.";
         } else {
-          botDiv.textContent = "Thank you for reaching out! Our team is processing your request: \"" + text + "\"";
+          botDiv.textContent = "Thank you for reaching out! DigitAll AI is here to help with your request.";
         }
 
         chatBox.appendChild(botDiv);
