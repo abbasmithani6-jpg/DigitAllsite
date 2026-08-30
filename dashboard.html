@@ -280,10 +280,36 @@
       font-size: 26px;
       font-weight: 800;
       color: var(--accent-green);
-      margin: 16px 0 4px 0;
+      margin: 16px 0 2px 0;
     }
 
     .price-tag.gold { color: var(--accent-gold); }
+
+    .feature-list {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feature-list li {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--accent-green);
+      font-weight: 800;
+    }
+
+    .plan-box.featured .feature-list li::before {
+      color: var(--accent-gold);
+    }
 
     .counter-row {
       display: flex;
@@ -417,6 +443,7 @@
       border-radius: 16px;
       font-size: 14px;
       line-height: 1.4;
+      white-space: pre-wrap;
     }
 
     .chat-msg.bot {
@@ -520,8 +547,8 @@
           <div class="card-value">1 Plan</div>
         </div>
         <div class="dashboard-card">
-          <div class="card-title" id="lbl-tickets">Support Tickets</div>
-          <div class="card-value">0 Open</div>
+          <div class="card-title" id="lbl-status">Automated System</div>
+          <div class="card-value" style="color: var(--accent-purple);">Online</div>
         </div>
       </div>
     </section>
@@ -537,9 +564,9 @@
         <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
 
         <div class="billing-toggle-container">
-          <button class="cycle-btn" data-cycle="weekly" id="btn-cycle-weekly">Weekly (+15%)</button>
+          <button class="cycle-btn" data-cycle="weekly" id="btn-cycle-weekly">Weekly</button>
           <button class="cycle-btn active" data-cycle="monthly" id="btn-cycle-monthly">Monthly</button>
-          <button class="cycle-btn" data-cycle="yearly" id="btn-cycle-yearly">Yearly (-10%)</button>
+          <button class="cycle-btn" data-cycle="yearly" id="btn-cycle-yearly">Yearly</button>
         </div>
 
         <div class="plans-grid">
@@ -547,7 +574,13 @@
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-std">Standard</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-std">Basic individual tier.</p>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-std">Basic individual access.</p>
+              
+              <ul class="feature-list">
+                <li id="feat-std-1">Single account access</li>
+                <li id="feat-std-2">Standard cloud bandwidth</li>
+                <li id="feat-std-3">Automated daily sync</li>
+              </ul>
             </div>
             <div>
               <div class="price-tag" id="price-standard">200 AR</div>
@@ -558,7 +591,13 @@
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-plus">Plus</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-plus">Intermediate access tier.</p>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-plus">Intermediate performance tier.</p>
+
+              <ul class="feature-list">
+                <li id="feat-plus-1">High-speed data routes</li>
+                <li id="feat-plus-2">Real-time sync automation</li>
+                <li id="feat-plus-3">Auto-backup storage</li>
+              </ul>
             </div>
             <div>
               <div class="price-tag" id="price-plus">500 AR</div>
@@ -569,7 +608,13 @@
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-pro">Pro</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-pro">Advanced power access.</p>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-pro">Maximum individual speed.</p>
+
+              <ul class="feature-list">
+                <li id="feat-pro-1">Priority engine server allocation</li>
+                <li id="feat-pro-2">Unlimited cloud throughput</li>
+                <li id="feat-pro-3">Automated recovery tools</li>
+              </ul>
             </div>
             <div>
               <div class="price-tag" id="price-pro">1200 AR</div>
@@ -580,9 +625,14 @@
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-fam">Family</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-fam">Custom household plan.</p>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-fam">Custom shared household plan.</p>
+
+              <ul class="feature-list" style="margin-bottom: 12px;">
+                <li id="feat-fam-1">Centralized billing profile</li>
+                <li id="feat-fam-2">Separate account spaces</li>
+              </ul>
               
-              <div style="margin-top: 14px;">
+              <div>
                 <div class="counter-row">
                   <label for="family-adults" id="lbl-adults-fam">Adults (120 AR ea):</label>
                   <input type="number" id="family-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPrice()">
@@ -602,9 +652,14 @@
           <div class="plan-box featured">
             <div>
               <h3 style="color: var(--accent-gold);" id="lbl-plan-famprem">Family Premium</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-famprem">Complete family tier.</p>
-              
-              <div style="margin-top: 14px;">
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-famprem">Complete household performance tier.</p>
+
+              <ul class="feature-list" style="margin-bottom: 12px;">
+                <li id="feat-prem-1">High-speed allocation for all profiles</li>
+                <li id="feat-prem-2">Automated child protection settings</li>
+              </ul>
+
+              <div>
                 <div class="counter-row">
                   <label for="fam-prem-adults" id="lbl-adults-prem">Adults (400 AR ea):</label>
                   <input type="number" id="fam-prem-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPremiumPrice()">
@@ -663,7 +718,7 @@
         <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
         <div class="chat-container">
           <div class="chat-messages" id="chatBox">
-            <div class="chat-msg bot" id="txt-ai-welcome">Hello! I am your DigitAll Assistant. How can I help you with your plans today?</div>
+            <div class="chat-msg bot" id="txt-ai-welcome">Hello! I am your DigitAll Assistant powered by Gemini AI. How can I help you today?</div>
           </div>
           <form class="chat-input-row" id="aiForm">
             <input type="text" class="chat-input" id="aiInput" placeholder="Ask a question..." required />
@@ -703,8 +758,11 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
     let activeDiscount = 0;
-    let selectedCycle = 'monthly'; // 'weekly' | 'monthly' | 'yearly'
+    let selectedCycle = 'monthly';
     let currentLang = 'EN';
     let initialAuthChecked = false;
 
@@ -727,11 +785,11 @@
 
     function getAdjustedMonthlyBase(baseMonthly) {
       if (selectedCycle === 'weekly') {
-        return (baseMonthly / 4) * 1.15; // Weekly: base/4 + 15% surcharge
+        return (baseMonthly / 4) * 1.15;
       } else if (selectedCycle === 'yearly') {
-        return (baseMonthly * 12) * 0.90; // Yearly: base*12 - 10% discount
+        return (baseMonthly * 12) * 0.90;
       }
-      return baseMonthly; // Monthly default
+      return baseMonthly;
     }
 
     window.calculateFamilyPrice = function() {
@@ -753,10 +811,18 @@
       const finalPrice = activeDiscount > 0 ? cyclePrice * (1 - activeDiscount / 100) : cyclePrice;
       const target = document.getElementById(elementId);
       
+      const roundedPrice = Math.round(finalPrice);
+      const roundedOriginal = Math.round(cyclePrice);
+
+      let priceDisplay = `${roundedPrice} AR`;
+      if (selectedCycle === 'yearly') {
+        priceDisplay += ` (${roundedPrice} AR per year)`;
+      }
+
       if (activeDiscount > 0) {
-        target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 16px; margin-right: 6px;">${Math.round(cyclePrice)} AR</span>${Math.round(finalPrice)} AR`;
+        target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 16px; margin-right: 6px;">${roundedOriginal} AR</span>${priceDisplay}`;
       } else {
-        target.textContent = `${Math.round(finalPrice)} AR`;
+        target.textContent = priceDisplay;
       }
     }
 
@@ -837,7 +903,6 @@
       }
     });
 
-    // DARK THEME FIX: Correct toggle orientation logic
     window.toggleTheme = function() {
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle.checked) {
@@ -866,24 +931,37 @@
         aiTab: "AI Assistant",
         balance: "Total Balance",
         activity: "Active Services",
-        tickets: "Support Tickets",
+        status: "Automated System",
         plansHeader: "Available Subscription Plans",
         settingsHeader: "Account Settings",
         aiHeader: "DigitAll AI Assistant",
         logout: "Sign Out",
-        cycleWeekly: "Weekly (+15%)",
+        cycleWeekly: "Weekly",
         cycleMonthly: "Monthly",
-        cycleYearly: "Yearly (-10%)",
+        cycleYearly: "Yearly",
         planStd: "Standard",
         planPlus: "Plus",
         planPro: "Pro",
         planFam: "Family",
         planFamPrem: "Family Premium",
-        descStd: "Basic individual tier.",
-        descPlus: "Intermediate access tier.",
-        descPro: "Advanced power access.",
-        descFam: "Custom household plan.",
-        descFamPrem: "Complete family tier.",
+        descStd: "Basic individual access.",
+        descPlus: "Intermediate performance tier.",
+        descPro: "Maximum individual speed.",
+        descFam: "Custom shared household plan.",
+        descFamPrem: "Complete household performance tier.",
+        featStd1: "Single account access",
+        featStd2: "Standard cloud bandwidth",
+        featStd3: "Automated daily sync",
+        featPlus1: "High-speed data routes",
+        featPlus2: "Real-time sync automation",
+        featPlus3: "Auto-backup storage",
+        featPro1: "Priority engine server allocation",
+        featPro2: "Unlimited cloud throughput",
+        featPro3: "Automated recovery tools",
+        featFam1: "Centralized billing profile",
+        featFam2: "Separate account spaces",
+        featPrem1: "High-speed allocation for all profiles",
+        featPrem2: "Automated child protection settings",
         lblAdultsFam: "Adults (120 AR ea):",
         lblKidsFam: "Kids (75 AR ea):",
         lblAdultsPrem: "Adults (400 AR ea):",
@@ -897,7 +975,7 @@
         verified: "Verified",
         interfaceLang: "Interface Language",
         descInterfaceLang: "Selected system display language",
-        aiWelcome: "Hello! I am your DigitAll Assistant. How can I help you with your plans today?",
+        aiWelcome: "Hello! I am your DigitAll Assistant powered by Gemini AI. How can I help you today?",
         placeholderPromo: "ENTER PROMO CODE",
         btnApply: "Apply Code",
         promoSuccess: "Promo code applied! Discount:",
@@ -913,24 +991,37 @@
         aiTab: "Assistant IA",
         balance: "Solde Total",
         activity: "Services Actifs",
-        tickets: "Tickets de Support",
+        status: "Système Automatisé",
         plansHeader: "Offres d'Abonnement",
         settingsHeader: "Paramètres du Compte",
         aiHeader: "Assistant IA DigitAll",
         logout: "Se déconnecter",
-        cycleWeekly: "Hebdomadaire (+15%)",
+        cycleWeekly: "Hebdomadaire",
         cycleMonthly: "Mensuel",
-        cycleYearly: "Annuel (-10%)",
+        cycleYearly: "Annuel",
         planStd: "Standard",
         planPlus: "Plus",
         planPro: "Pro",
         planFam: "Famille",
         planFamPrem: "Famille Premium",
-        descStd: "Offre individuelle de base.",
-        descPlus: "Offre d'accès intermédiaire.",
-        descPro: "Accès avancé haute performance.",
-        descFam: "Plan familial personnalisable.",
-        descFamPrem: "Offre familiale complète.",
+        descStd: "Accès individuel de base.",
+        descPlus: "Niveau de performance intermédiaire.",
+        descPro: "Vitesse individuelle maximale.",
+        descFam: "Offre partagée sur mesure.",
+        descFamPrem: "Performance complète pour le foyer.",
+        featStd1: "Accès pour un seul compte",
+        featStd2: "Bande passante cloud standard",
+        featStd3: "Synchronisation quotidienne automatique",
+        featPlus1: "Routes de données haute vitesse",
+        featPlus2: "Synchronisation automatique en temps réel",
+        featPlus3: "Stockage de sauvegarde automatique",
+        featPro1: "Allocation serveur prioritaire",
+        featPro2: "Débit cloud illimité",
+        featPro3: "Outils de récupération automatisés",
+        featFam1: "Profil de facturation centralisé",
+        featFam2: "Espaces de compte séparés",
+        featPrem1: "Allocation haute vitesse pour tous les profils",
+        featPrem2: "Paramètres de protection des enfants automatisés",
         lblAdultsFam: "Adultes (120 AR ch.):",
         lblKidsFam: "Enfants (75 AR ch.):",
         lblAdultsPrem: "Adultes (400 AR ch.):",
@@ -944,7 +1035,7 @@
         verified: "Vérifié",
         interfaceLang: "Langue de l'interface",
         descInterfaceLang: "Langue d'affichage sélectionnée",
-        aiWelcome: "Bonjour! Je suis votre assistant DigitAll. Comment puis-je vous aider aujourd'hui?",
+        aiWelcome: "Bonjour! Je suis votre assistant DigitAll propulsé par Gemini AI. Comment puis-je vous aider aujourd'hui?",
         placeholderPromo: "ENTRER CODE PROMO",
         btnApply: "Appliquer",
         promoSuccess: "Code promo appliqué! Remise:",
@@ -960,14 +1051,14 @@
         aiTab: "Mpanampy AI",
         balance: "Teti-bola Samy hafa",
         activity: "Tolotra Mandeha",
-        tickets: "Hafatra Support",
+        status: "Rafitra Mandeha Ho Azy",
         plansHeader: "Tolotra Misy",
         settingsHeader: "Kajikajin'ny Kaonty",
         aiHeader: "Mpanampy IA DigitAll",
         logout: "Hivoaka",
-        cycleWeekly: "Kerinandro (+15%)",
+        cycleWeekly: "Kerinandro",
         cycleMonthly: "Isam-bolana",
-        cycleYearly: "Taona (-10%)",
+        cycleYearly: "Taona",
         planStd: "Tsotra",
         planPlus: "Manoatra",
         planPro: "Pro",
@@ -975,9 +1066,22 @@
         planFamPrem: "Karakara Premium",
         descStd: "Tolotra tsotra ho an'ny olon-tokana.",
         descPlus: "Tolotra antonony ho an'olona.",
-        descPro: "Tolotra ho an'ny mpampiasa lehibe.",
-        descFam: "Tolotra azo ovaina ho an'ny fianakaviana.",
-        descFamPrem: "Tolotra feno ho an'ny fianakaviana.",
+        descPro: "Hafainganam-pandeha ambony indrindra.",
+        descFam: "Tolotra zaraina ho an'ny fianakaviana.",
+        descFamPrem: "Fahombiazana feno ho an'ny trano iray.",
+        featStd1: "Fidirana kaonty tokana",
+        featStd2: "Bande passante cloud tsotra",
+        featStd3: "Fampirindrana isan'andro ho azy",
+        featPlus1: "Lalam-pifandraisana mahery vaika",
+        featPlus2: "Fampirindrana amin'ny fotoana tena izy",
+        featPlus3: "Tahiry famerenana ho azy",
+        featPro1: "Laharana voalohany amin'ny serviera",
+        featPro2: "Fandehanana cloud tsy misy fetra",
+        featPro3: "Fitaovana famerenana rakitra ho azy",
+        featFam1: "Kaonty fandoavam-bola iray ihany",
+        featFam2: "Toerana mitokana ho an'ny tsirairay",
+        featPrem1: "Hafainganam-pandeha ho an'ny rehetra",
+        featPrem2: "Fiarovana ny ankizy mandeha ho azy",
         lblAdultsFam: "Mbe (120 AR isany):",
         lblKidsFam: "Ankizy (75 AR isany):",
         lblAdultsPrem: "Mbe (400 AR isany):",
@@ -991,7 +1095,7 @@
         verified: "Voamarina",
         interfaceLang: "Teny ampiasaina",
         descInterfaceLang: "Teny nosafidiana hiseho",
-        aiWelcome: "Manao ahoana! Izaho no mpanampy DigitAll. Ahoana no azoko anampiana anao ambonin'ny tolotra?",
+        aiWelcome: "Manao ahoana! Izaho no mpanampy DigitAll mampiasa Gemini AI. Ahoana no azoko anampiana anao indray?",
         placeholderPromo: "AMPIRATRO CODE PROMO",
         btnApply: "Hanamarina",
         promoSuccess: "Lasa ny code promo! Afototra:",
@@ -1014,7 +1118,7 @@
       document.getElementById('btn-tab-ai').textContent = t.aiTab;
       document.getElementById('lbl-balance').textContent = t.balance;
       document.getElementById('lbl-activity').textContent = t.activity;
-      document.getElementById('lbl-tickets').textContent = t.tickets;
+      document.getElementById('lbl-status').textContent = t.status;
       document.getElementById('txt-plans-header').textContent = t.plansHeader;
       document.getElementById('txt-settings-header').textContent = t.settingsHeader;
       document.getElementById('txt-ai-header').textContent = t.aiHeader;
@@ -1035,6 +1139,24 @@
       document.getElementById('desc-pro').textContent = t.descPro;
       document.getElementById('desc-fam').textContent = t.descFam;
       document.getElementById('desc-famprem').textContent = t.descFamPrem;
+
+      document.getElementById('feat-std-1').textContent = t.featStd1;
+      document.getElementById('feat-std-2').textContent = t.featStd2;
+      document.getElementById('feat-std-3').textContent = t.featStd3;
+
+      document.getElementById('feat-plus-1').textContent = t.featPlus1;
+      document.getElementById('feat-plus-2').textContent = t.featPlus2;
+      document.getElementById('feat-plus-3').textContent = t.featPlus3;
+
+      document.getElementById('feat-pro-1').textContent = t.featPro1;
+      document.getElementById('feat-pro-2').textContent = t.featPro2;
+      document.getElementById('feat-pro-3').textContent = t.featPro3;
+
+      document.getElementById('feat-fam-1').textContent = t.featFam1;
+      document.getElementById('feat-fam-2').textContent = t.featFam2;
+
+      document.getElementById('feat-prem-1').textContent = t.featPrem1;
+      document.getElementById('feat-prem-2').textContent = t.featPrem2;
 
       document.getElementById('lbl-adults-fam').textContent = t.lblAdultsFam;
       document.getElementById('lbl-kids-fam').textContent = t.lblKidsFam;
@@ -1070,7 +1192,7 @@
     const aiInput = document.getElementById('aiInput');
     const chatBox = document.getElementById('chatBox');
 
-    aiForm.addEventListener('submit', (e) => {
+    aiForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = aiInput.value.trim();
       if (!text) return;
@@ -1082,13 +1204,39 @@
       aiInput.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      setTimeout(() => {
-        const botDiv = document.createElement('div');
-        botDiv.className = 'chat-msg bot';
-        botDiv.textContent = "Thank you for reaching out! Our team is processing your request: \"" + text + "\"";
-        chatBox.appendChild(botDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
+      const botDiv = document.createElement('div');
+      botDiv.className = 'chat-msg bot';
+      botDiv.textContent = "...";
+      chatBox.appendChild(botDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const response = await fetch(GEMINI_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: `You are the AI Assistant for DigitAll, a digital service platform. Be concise and friendly. User query: ${text}` }]
+              }
+            ]
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          botDiv.textContent = data.candidates[0].content.parts[0].text;
+        } else {
+          botDiv.textContent = "Sorry, I couldn't generate a proper response.";
+        }
+      } catch (err) {
+        console.error("Gemini API Error:", err);
+        botDiv.textContent = "Unable to connect to AI Assistant. Please check your API key.";
+      }
+
+      chatBox.scrollTop = chatBox.scrollHeight;
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
