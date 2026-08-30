@@ -1,785 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | DigitAll</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
-    :root {
-      --bg-dark: #070614;
-      --card-bg: #100c2a;
-      --card-border: rgba(124, 58, 237, 0.25);
-      --accent-green: #00ff87;
-      --accent-purple: #7c3aed;
-      --accent-gold: #ffb703;
-      --text-main: #ffffff;
-      --text-muted: #94a3b8;
-      --input-bg: rgba(255, 255, 255, 0.04);
-      --input-border: rgba(255, 255, 255, 0.1);
-      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    body.light-mode {
-      --bg-dark: #f1f5f9;
-      --card-bg: #ffffff;
-      --card-border: rgba(124, 58, 237, 0.15);
-      --accent-green: #10b981;
-      --accent-purple: #6d28d9;
-      --accent-gold: #d97706;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --input-bg: rgba(0, 0, 0, 0.03);
-      --input-border: rgba(0, 0, 0, 0.12);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-family) !important;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 40px;
-      border-bottom: 1px solid var(--card-border);
-      background: rgba(16, 12, 42, 0.7);
-      backdrop-filter: blur(12px);
-    }
-
-    body.light-mode .navbar {
-      background: rgba(255, 255, 255, 0.8);
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
-    .brand-logo img { height: 38px; width: auto; }
-
-    .brand-name {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text-main);
-      line-height: 1;
-    }
-
-    .brand-name span { color: var(--accent-green); }
-
-    .brand-tagline {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: var(--accent-green);
-      margin-top: 3px;
-    }
-
-    .nav-center { display: flex; align-items: center; gap: 10px; }
-
-    .nav-btn {
-      font-family: var(--font-family);
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--input-border);
-      color: var(--text-main);
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .nav-btn:hover {
-      background: rgba(124, 58, 237, 0.2);
-      border-color: var(--accent-purple);
-    }
-
-    .nav-btn.active {
-      background: var(--accent-purple);
-      border-color: var(--accent-purple);
-      color: #ffffff;
-    }
-
-    .nav-right { display: flex; align-items: center; gap: 16px; }
-
-    .lang-switcher {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--input-border);
-      border-radius: 20px;
-      padding: 4px;
-      gap: 2px;
-    }
-
-    .lang-btn {
-      font-family: var(--font-family);
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 14px;
-      cursor: pointer;
-    }
-
-    .lang-btn.active {
-      background: var(--accent-purple);
-      color: #ffffff;
-    }
-
-    .btn-logout {
-      font-family: var(--font-family);
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #ef4444;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .dashboard-container {
-      flex: 1;
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-
-    .welcome-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 32px;
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .welcome-text h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
-    .welcome-text p { color: var(--text-muted); font-size: 14px; }
-
-    .user-badge {
-      display: inline-block;
-      padding: 6px 14px;
-      background: rgba(0, 255, 135, 0.1);
-      border: 1px solid var(--accent-green);
-      color: var(--accent-green);
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .grid-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    .dashboard-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 28px;
-    }
-
-    .card-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 12px;
-    }
-
-    .card-value {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--accent-green);
-    }
-
-    .billing-toggle-container {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 24px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 6px;
-      border-radius: 16px;
-      width: fit-content;
-    }
-
-    .cycle-btn {
-      font-family: var(--font-family);
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .cycle-btn.active {
-      background: var(--accent-purple);
-      color: #ffffff;
-    }
-
-    .plans-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .plan-box {
-      border: 1px solid var(--input-border);
-      border-radius: 20px;
-      padding: 24px;
-      background: rgba(255, 255, 255, 0.02);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: border-color 0.2s;
-    }
-
-    .plan-box:hover { border-color: var(--accent-purple); }
-
-    .plan-box.featured {
-      border-color: var(--accent-gold);
-      background: rgba(255, 183, 3, 0.04);
-    }
-
-    .price-tag {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--accent-green);
-      margin: 16px 0 2px 0;
-    }
-
-    .price-tag.gold { color: var(--accent-gold); }
-
-    .feature-list {
-      list-style: none;
-      margin-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .feature-list li {
-      font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .feature-list li::before {
-      content: "✓";
-      color: var(--accent-green);
-      font-weight: 800;
-    }
-
-    .plan-box.featured .feature-list li::before {
-      color: var(--accent-gold);
-    }
-
-    .counter-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .counter-input {
-      font-family: var(--font-family);
-      width: 54px;
-      padding: 4px 8px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 8px;
-      color: var(--text-main);
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .promo-section {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 24px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .promo-input {
-      font-family: var(--font-family);
-      flex: 1;
-      padding: 12px 16px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 12px;
-      color: var(--text-main);
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .btn-send {
-      font-family: var(--font-family);
-      padding: 12px 24px;
-      background: var(--accent-purple);
-      color: #ffffff;
-      border: none;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .btn-send:hover { background-color: #6d28d9; }
-
-    .transfer-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--input-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .transfer-row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--input-border);
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 26px;
-    }
-
-    .switch input { opacity: 0; width: 0; height: 0; }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid var(--input-border);
-      transition: .3s;
-      border-radius: 26px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: var(--text-muted);
-      transition: .3s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--accent-purple);
-      border-color: var(--accent-purple);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(22px);
-      background-color: #ffffff;
-    }
-
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      height: 480px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .chat-messages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .chat-msg {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.4;
-      white-space: pre-wrap;
-    }
-
-    .chat-msg.bot {
-      align-self: flex-start;
-      background: rgba(124, 58, 237, 0.15);
-      border: 1px solid var(--accent-purple);
-      color: var(--text-main);
-    }
-
-    .chat-msg.user {
-      align-self: flex-end;
-      background: var(--accent-green);
-      color: #070614;
-      font-weight: 600;
-    }
-
-    .chat-input-row {
-      display: flex;
-      gap: 10px;
-      padding: 16px;
-      background: rgba(0, 0, 0, 0.2);
-      border-top: 1px solid var(--input-border);
-    }
-
-    .chat-input {
-      font-family: var(--font-family);
-      flex: 1;
-      padding: 12px 16px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 12px;
-      color: var(--text-main);
-    }
-
-    .floating-chat-toggle {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 56px;
-      height: 56px;
-      border-radius: 28px;
-      background: var(--accent-purple);
-      color: #ffffff;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 99;
-    }
-  </style>
-</head>
-<body>
-
-  <header class="navbar">
-    <a href="dashboard.html" class="brand-logo">
-      <img src="digitall-logo-mark.png" alt="DigitAll Logo" />
-      <div class="brand-text">
-        <div class="brand-name">Digit<span>All</span></div>
-        <div class="brand-tagline">DIGITAL FOR ALL</div>
-      </div>
-    </a>
-
-    <nav class="nav-center">
-      <button class="nav-btn active" data-tab="dashboard" id="btn-tab-dash">Dashboard</button>
-      <button class="nav-btn" data-tab="plans" id="btn-tab-plans">Plans</button>
-      <button class="nav-btn" data-tab="settings" id="btn-tab-settings">Settings</button>
-      <button class="nav-btn" data-tab="aichat" id="btn-tab-ai">AI Assistant</button>
-    </nav>
-
-    <div class="nav-right">
-      <div class="lang-switcher">
-        <button type="button" class="lang-btn active" data-lang="EN">EN</button>
-        <button type="button" class="lang-btn" data-lang="FR">FR</button>
-        <button type="button" class="lang-btn" data-lang="MG">MG</button>
-      </div>
-      <button id="logoutBtn" class="btn-logout">Sign Out</button>
-    </div>
-  </header>
-
-  <main class="dashboard-container">
-    
-    <div class="welcome-card">
-      <div class="welcome-text">
-        <h1 id="txt-welcome">Welcome Back</h1>
-        <p id="userEmailDisplay">Loading profile...</p>
-      </div>
-      <span class="user-badge" id="accountStatus">Verified Account</span>
-    </div>
-
-    <!-- TAB 1: DASHBOARD -->
-    <section id="tab-dashboard" class="tab-content active">
-      <div class="grid-cards">
-        <div class="dashboard-card">
-          <div class="card-title" id="lbl-balance">Credit Balance</div>
-          <div class="card-value" id="userCreditDisplay">0 Credits</div>
-        </div>
-        <div class="dashboard-card">
-          <div class="card-title" id="lbl-activity">Monthly Allocation</div>
-          <div class="card-value" id="userIncomeDisplay" style="color: var(--accent-purple);">No Active Plan</div>
-        </div>
-        <div class="dashboard-card">
-          <div class="card-title" id="lbl-status">Current Plan Tier</div>
-          <div class="card-value" id="userPlanTierDisplay" style="color: var(--accent-purple);">None</div>
-        </div>
-      </div>
-
-      <!-- Family Transfer Utility Component -->
-      <div class="transfer-box" id="familyTransferSection" style="display: none;">
-        <h3 id="lbl-transfer-header" style="font-size: 16px;">Transfer Credits to Child Member</h3>
-        <p style="font-size: 13px; color: var(--text-muted);" id="lbl-transfer-desc">Adult household profile credit delegation system.</p>
-        <div class="transfer-row">
-          <input type="text" id="transferTargetInput" class="promo-input" placeholder="CHILD EMAIL OR USER ID" />
-          <input type="number" id="transferAmountInput" class="counter-input" value="5" min="1" style="width: 80px;" />
-          <button id="btnSendTransfer" class="btn-send">Transfer</button>
-        </div>
-        <div id="transferMsg" style="font-size: 13px; font-weight: 700;"></div>
-      </div>
-    </section>
-
-    <!-- TAB 2: PLANS -->
-    <section id="tab-plans" class="tab-content">
-      <div class="dashboard-card">
-        <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
-        
-        <div class="promo-section">
-          <input type="text" id="promoCodeInput" class="promo-input" placeholder="ENTER PROMO CODE" />
-          <button id="btnApplyPromo" class="btn-send">Apply Code</button>
-        </div>
-        <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
-
-        <div class="billing-toggle-container">
-          <button class="cycle-btn" data-cycle="weekly" id="btn-cycle-weekly">Weekly</button>
-          <button class="cycle-btn active" data-cycle="monthly" id="btn-cycle-monthly">Monthly</button>
-          <button class="cycle-btn" data-cycle="yearly" id="btn-cycle-yearly">Yearly</button>
-        </div>
-
-        <div class="plans-grid">
-          
-          <!-- Standard -->
-          <div class="plan-box">
-            <div>
-              <h3 id="lbl-plan-std">Standard</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-std">Basic individual access.</p>
-              
-              <ul class="feature-list">
-                <li id="feat-std-1">Single account access</li>
-                <li id="feat-std-2">Standard cloud bandwidth</li>
-                <li id="feat-std-3">Automated daily sync</li>
-                <li id="feat-std-4">You get 5 Monthly Credits</li>
-              </ul>
-            </div>
-            <div>
-              <div class="price-tag" id="price-standard">200 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
-              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-std">Or 500 Credits</div>
-            </div>
-          </div>
-
-          <!-- Plus -->
-          <div class="plan-box">
-            <div>
-              <h3 id="lbl-plan-plus">Plus</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-plus">Intermediate performance tier.</p>
-
-              <ul class="feature-list">
-                <li id="feat-plus-1">High-speed data routes</li>
-                <li id="feat-plus-2">Real-time sync automation</li>
-                <li id="feat-plus-3">Auto-backup storage</li>
-                <li id="feat-plus-4">You get 15 Monthly Credits</li>
-              </ul>
-            </div>
-            <div>
-              <div class="price-tag" id="price-plus">500 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
-              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-plus">Or 1,250 Credits</div>
-            </div>
-          </div>
-
-          <!-- Pro -->
-          <div class="plan-box">
-            <div>
-              <h3 id="lbl-plan-pro">Pro</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-pro">Maximum individual speed.</p>
-
-              <ul class="feature-list">
-                <li id="feat-pro-1">Advanced AI Data Analysis</li>
-                <li id="feat-pro-2">Unlimited cloud throughput</li>
-                <li id="feat-pro-3">Automated recovery tools</li>
-                <li id="feat-pro-4">You get 40 Monthly Credits</li>
-              </ul>
-            </div>
-            <div>
-              <div class="price-tag" id="price-pro">1200 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
-              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-pro">Or 3,000 Credits</div>
-            </div>
-          </div>
-
-          <!-- Family -->
-          <div class="plan-box">
-            <div>
-              <h3 id="lbl-plan-fam">Family</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-fam">Custom shared household plan.</p>
-
-              <ul class="feature-list" style="margin-bottom: 12px;">
-                <li id="feat-fam-1">Centralized billing profile</li>
-                <li id="feat-fam-2">Adults get credits, transferrable to kids</li>
-                <li id="feat-fam-3">Kids get reduced credit income</li>
-              </ul>
-              
-              <div>
-                <div class="counter-row">
-                  <label for="family-adults" id="lbl-adults-fam">Adults (120 AR ea):</label>
-                  <input type="number" id="family-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPrice()">
-                </div>
-                <div class="counter-row">
-                  <label for="family-kids" id="lbl-kids-fam">Kids (75 AR ea):</label>
-                  <input type="number" id="family-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPrice()">
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="price-tag" id="price-family">395 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;" id="subtext-fam">(200 AR base + members)</p>
-              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-fam">Or 988 Credits</div>
-            </div>
-          </div>
-
-          <!-- Family Premium -->
-          <div class="plan-box featured">
-            <div>
-              <h3 style="color: var(--accent-gold);" id="lbl-plan-famprem">Family Premium</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-famprem">Complete household performance tier.</p>
-
-              <ul class="feature-list" style="margin-bottom: 12px;">
-                <li id="feat-prem-1">Advanced AI Deep Insight Analysis</li>
-                <li id="feat-prem-2">Automated child protection settings</li>
-                <li id="feat-prem-3">High adult income tier + transfer tools</li>
-              </ul>
-
-              <div>
-                <div class="counter-row">
-                  <label for="fam-prem-adults" id="lbl-adults-prem">Adults (400 AR ea):</label>
-                  <input type="number" id="fam-prem-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPremiumPrice()">
-                </div>
-                <div class="counter-row">
-                  <label for="fam-prem-kids" id="lbl-kids-prem">Kids (250 AR ea):</label>
-                  <input type="number" id="fam-prem-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPremiumPrice()">
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="price-tag gold" id="price-family-premium">950 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;" id="subtext-famprem">(300 AR base + members)</p>
-              <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-top: 4px;" id="credit-price-famprem">Or 2,375 Credits</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: SETTINGS -->
-    <section id="tab-settings" class="tab-content">
-      <div class="dashboard-card">
-        <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
-        
-        <div class="setting-row">
-          <div>
-            <strong id="lbl-dark-theme">Dark Theme</strong>
-            <p style="font-size: 13px; color: var(--text-muted);" id="desc-dark-theme">Toggle dark/light background display</p>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="themeToggle" onchange="toggleTheme()" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong id="lbl-email-ver">Email Verification</strong>
-            <p style="font-size: 13px; color: var(--text-muted);" id="desc-email-ver">Your Firebase Auth verification status</p>
-          </div>
-          <span style="color: var(--accent-green); font-weight: 700;" id="txt-verified">Verified</span>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong id="lbl-interface-lang">Interface Language</strong>
-            <p style="font-size: 13px; color: var(--text-muted);" id="desc-interface-lang">Selected system display language</p>
-          </div>
-          <span id="currentLangDisplay" style="font-weight: 700;">English</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: AI CHAT -->
-    <section id="tab-aichat" class="tab-content">
-      <div class="dashboard-card" style="padding: 20px;">
-        <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
-        <div class="chat-container">
-          <div class="chat-messages" id="chatBox">
-            <div class="chat-msg bot" id="txt-ai-welcome">Hello! I am your DigitAll Assistant powered by Gemini AI. How can I help you today?</div>
-          </div>
-          <form class="chat-input-row" id="aiForm">
-            <input type="text" class="chat-input" id="aiInput" placeholder="Ask a question..." required />
-            <button type="submit" class="btn-send" id="btn-send-msg">Send</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <button class="floating-chat-toggle" id="floatingAiBtn" title="Open AI Chat">🤖</button>
-
-  <script type="module">
+     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getAuth, 
@@ -789,9 +9,7 @@
     import { 
       getFirestore, 
       doc, 
-      getDoc,
-      setDoc,
-      collection
+      getDoc 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -813,31 +31,29 @@
     let activeDiscount = 0;
     let selectedCycle = 'monthly';
     let currentLang = 'EN';
-    let initialAuthChecked = false;
 
-    // Secret ratio reference context: 5 credits = approx 2 AR -> 1 AR = 2.5 Credits
     const AR_TO_CREDITS_RATIO = 2.5;
 
     let userCredits = 0; 
-    let userMonthlyAllocation = "No Active Plan"; 
+    let userMonthlyAllocation = "No active plan yet"; 
     let userPlanTier = "None";
     let isAdultFamilyMember = false; 
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDashboardMetrics();
+      updateAllPrices();
+    });
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('userEmailDisplay').textContent = user.email;
-        initialAuthChecked = true;
         updateDashboardMetrics();
       } else {
-        if (initialAuthChecked || document.readyState === "complete") {
-          window.location.href = "login.html";
-        } else {
-          setTimeout(() => {
-            if (!auth.currentUser) {
-              window.location.href = "login.html";
-            }
-          }, 1500);
-        }
+        setTimeout(() => {
+          if (!auth.currentUser) {
+            window.location.href = "login.html";
+          }
+        }, 1200);
       }
     });
 
@@ -960,11 +176,6 @@
     const navButtons = document.querySelectorAll('.nav-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
-    fnSwitchTab(targetTab) {
-      navButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === targetTab));
-      tabContents.forEach(c => c.classList.toggle('active', c.id === `tab-${targetTab}`));
-    }
-
     function switchTab(targetTab) {
       navButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === targetTab));
       tabContents.forEach(c => c.classList.toggle('active', c.id === `tab-${targetTab}`));
@@ -997,10 +208,8 @@
 
           msg.style.color = "#00ff87";
           msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
-
           updateAllPrices();
         } else {
-          // Fallback static codes if Firestore document isn't populated yet
           const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
           if (staticCodes[codeInput] !== undefined) {
             activeDiscount = staticCodes[codeInput];
@@ -1016,7 +225,6 @@
         }
       } catch (err) {
         console.error("Promo code fetch error:", err);
-        // Fallback to static codes on network error
         const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
         if (staticCodes[codeInput] !== undefined) {
           activeDiscount = staticCodes[codeInput];
@@ -1081,21 +289,21 @@
         featStd1: "Single account access",
         featStd2: "Standard cloud bandwidth",
         featStd3: "Automated daily sync",
-        featStd4: "You get 5 Monthly Credits",
+        featStd4: "Credits: 0",
         featPlus1: "High-speed data routes",
         featPlus2: "Real-time sync automation",
         featPlus3: "Auto-backup storage",
-        featPlus4: "You get 15 Monthly Credits",
+        featPlus4: "Credits: 0",
         featPro1: "Advanced AI Data Analysis",
         featPro2: "Unlimited cloud throughput",
         featPro3: "Automated recovery tools",
-        featPro4: "You get 40 Monthly Credits",
+        featPro4: "Credits: 0",
         featFam1: "Centralized billing profile",
-        featFam2: "Adults get credits, transferrable to kids",
+        featFam2: "Credits: 0",
         featFam3: "Kids get reduced credit income",
         featPrem1: "Advanced AI Deep Insight Analysis",
         featPrem2: "Automated child protection settings",
-        featPrem3: "High adult income tier + transfer tools",
+        featPrem3: "Credits: 0",
         lblAdultsFam: "Adults (120 AR ea):",
         lblKidsFam: "Kids (75 AR ea):",
         lblAdultsPrem: "Adults (400 AR ea):",
@@ -1115,7 +323,6 @@
         promoSuccess: "Promo code applied! Discount:",
         promoInvalid: "Invalid promo code.",
         promoErrEmpty: "Please enter a promo code.",
-        promoErrFetch: "Error verifying promo code.",
         transferHeader: "Transfer Credits to Child Member",
         transferDesc: "Adult household profile credit delegation system."
       },
@@ -1147,22 +354,22 @@
         descFamPrem: "Performance complète pour le foyer.",
         featStd1: "Accès pour un seul compte",
         featStd2: "Bande passante cloud standard",
-        featStd3: "Synchronisation quotidienne automatique",
-        featStd4: "Vous obtenez 5 crédits mensuels",
+        featStd3: "Synchronisation quotidienne",
+        featStd4: "Crédits : 0",
         featPlus1: "Routes de données haute vitesse",
-        featPlus2: "Synchronisation automatique en temps réel",
-        featPlus3: "Stockage de sauvegarde automatique",
-        featPlus4: "Vous obtenez 15 crédits mensuels",
+        featPlus2: "Synchronisation en temps réel",
+        featPlus3: "Stockage de sauvegarde",
+        featPlus4: "Crédits : 0",
         featPro1: "Analyse de données IA avancée",
         featPro2: "Débit cloud illimité",
-        featPro3: "Outils de récupération automatisés",
-        featPro4: "Vous obtenez 40 crédits mensuels",
+        featPro3: "Outils de récupération",
+        featPro4: "Crédits : 0",
         featFam1: "Profil de facturation centralisé",
-        featFam2: "Les adultes reçoivent des crédits transférables",
-        featFam3: "Les enfants reçoivent un revenu réduit",
+        featFam2: "Crédits : 0",
+        featFam3: "Revenu de crédit réduit",
         featPrem1: "Analyse IA approfondie avancée",
-        featPrem2: "Paramètres de protection des enfants automatisés",
-        featPrem3: "Niveau de revenu adulte élevé + outils",
+        featPrem2: "Protection des enfants",
+        featPrem3: "Crédits : 0",
         lblAdultsFam: "Adultes (120 AR ch.):",
         lblKidsFam: "Enfants (75 AR ch.):",
         lblAdultsPrem: "Adultes (400 AR ch.):",
@@ -1182,7 +389,6 @@
         promoSuccess: "Code promo appliqué! Remise:",
         promoInvalid: "Code promo invalide.",
         promoErrEmpty: "Veuillez entrer un code promo.",
-        promoErrFetch: "Erreur de vérification du code promo.",
         transferHeader: "Transférer des crédits à un enfant",
         transferDesc: "Système de délégation de crédits pour adultes."
       },
@@ -1214,22 +420,22 @@
         descFamPrem: "Fahombiazana feno ho an'ny trano iray.",
         featStd1: "Fidirana kaonty tokana",
         featStd2: "Bande passante cloud tsotra",
-        featStd3: "Fampirindrana isan'andro ho azy",
-        featStd4: "Mahazo credit 5 isam-bolana ianao",
+        featStd3: "Fampirindrana isan'andro",
+        featStd4: "Credits: 0",
         featPlus1: "Lalam-pifandraisana mahery vaika",
         featPlus2: "Fampirindrana amin'ny fotoana tena izy",
-        featPlus3: "Tahiry famerenana ho azy",
-        featPlus4: "Mahazo credit 15 isam-bolana ianao",
+        featPlus3: "Tahiry famerenana rakitra",
+        featPlus4: "Credits: 0",
         featPro1: "Fanadihadiana AI mandroso",
         featPro2: "Fandehanana cloud tsy misy fetra",
-        featPro3: "Fitaovana famerenana rakitra ho azy",
-        featPro4: "Mahazo credit 40 isam-bolana ianao",
+        featPro3: "Fitaovana famerenana rakitra",
+        featPro4: "Credits: 0",
         featFam1: "Kaonty fandoavam-bola iray ihany",
-        featFam2: "Ny olon-dehibe mahazo credit azo afindra",
+        featFam2: "Credits: 0",
         featFam3: "Kely ny credit ho an'ny ankizy",
         featPrem1: "Fanadihadiana AI lalina kokoa",
-        featPrem2: "Fiarovana ny ankizy mandeha ho azy",
-        featPrem3: "Fidiram-bola ambony ho an'ny olon-dehibe",
+        featPrem2: "Fiarovana ny ankizy",
+        featPrem3: "Credits: 0",
         lblAdultsFam: "Mbe (120 AR isany):",
         lblKidsFam: "Ankizy (75 AR isany):",
         lblAdultsPrem: "Mbe (400 AR isany):",
@@ -1249,7 +455,6 @@
         promoSuccess: "Lasa ny code promo! Afototra:",
         promoInvalid: "Code promo tsy mety.",
         promoErrEmpty: "Mampidira code promo azafady.",
-        promoErrFetch: "Nisy olana tamin'ny fizahana ny code.",
         transferHeader: "Fandefasana Credit ho an'ny Ankizy",
         transferDesc: "Rafitra fandefasana credit avy amin'ny olon-dehibe."
       }
@@ -1403,8 +608,4 @@
       await signOut(auth);
       window.location.href = "login.html";
     });
-
-    updateAllPrices();
   </script>
-</body>
-</html>
