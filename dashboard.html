@@ -3,201 +3,361 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DigitAll - User Dashboard</title>
+  <title>Dashboard | DigitAll</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --accent-color: #10b981;
-      --accent-hover: #059669;
-      --text-main: #f8fafc;
+      --bg-dark: #070614;
+      --card-bg: #100c2a;
+      --card-border: rgba(124, 58, 237, 0.25);
+      --accent-green: #00ff87;
+      --accent-purple: #7c3aed;
+      --text-main: #ffffff;
       --text-muted: #94a3b8;
-      --border-color: #334155;
-      --input-bg: #0f172a;
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    
-    /* Body is hidden by default to prevent flashing before auth verification */
-    body { 
-      background-color: var(--bg-color); 
-      color: var(--text-main); 
-      min-height: 100vh; 
-      padding: 24px;
-      display: none; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Fullscreen auth loader */
-    #authLoader {
-      position: fixed;
-      inset: 0;
-      background: var(--bg-color);
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
     }
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border-color);
-      border-top-color: var(--accent-color);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    /* Header Navigation */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(16, 12, 42, 0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .brand-name span { color: var(--accent-green); }
+
+    .brand-tagline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent-green);
+      margin-top: 3px;
+    }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--input-border);
+      color: var(--text-main);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: var(--accent-purple);
+    }
+
+    .nav-btn.active {
+      background: var(--accent-purple);
+      border-color: var(--accent-purple);
+      color: #ffffff;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 4px;
+      gap: 2px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* Main Content Layout */
+    .dashboard-container {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .welcome-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .welcome-text h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .welcome-text p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .user-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(0, 255, 135, 0.1);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* Tab Section Content */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .dashboard-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent-green);
+    }
+
+    /* Pricing Plans Layout */
+    .plan-box {
+      border: 1px solid var(--input-border);
+      border-radius: 16px;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.02);
       margin-bottom: 16px;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .plan-box.featured {
+      border-color: var(--accent-purple);
+      background: rgba(124, 58, 237, 0.08);
     }
 
-    header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 32px auto; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
-    header h1 { font-size: 24px; }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-      max-width: 1000px;
-      margin: 0 auto;
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--input-border);
     }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-    }
-
-    .card h2 { margin-bottom: 8px; font-size: 20px; color: var(--accent-color); }
-    .card-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
-
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-    input[type="text"], input[type="password"], input[type="number"] {
-      width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s;
-    }
-    input:focus { border-color: var(--accent-color); }
-
-    .btn-primary { width: 100%; padding: 10px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-    .btn-secondary:hover { color: var(--text-main); border-color: var(--text-muted); }
-
-    /* Plans Grid */
-    .plan-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.02); }
-    .plan-box.active { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.05); }
-    .plan-title { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
-    .badge-active { background: rgba(16, 185, 129, 0.15); color: var(--accent-color); font-size: 11px; padding: 2px 8px; border-radius: 12px; }
-
-    /* Onboarding Modal */
-    #onboardingModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 2000; }
-    .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; text-align: center; }
-    .modal-content h3 { font-size: 20px; margin-bottom: 10px; color: var(--accent-color); }
-    .modal-content p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
   </style>
 </head>
 <body>
 
-  <!-- Fullscreen Initial Loader -->
-  <div id="authLoader">
-    <div class="spinner"></div>
-    <p style="color: var(--text-muted); font-size: 14px;">Verifying authentication...</p>
-  </div>
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <a href="dashboard.html" class="brand-logo">
+      <div class="brand-text">
+        <div class="brand-name">Digit<span>All</span></div>
+        <div class="brand-tagline">DIGITAL FOR ALL</div>
+      </div>
+    </a>
 
-  <header>
-    <h1>Welcome, <span id="welcomeName">User</span></h1>
-    <button class="btn-secondary" id="logoutBtn">Sign Out</button>
+    <!-- Navigation Buttons -->
+    <nav class="nav-center">
+      <button class="nav-btn active" data-tab="dashboard" id="btn-tab-dash">Dashboard</button>
+      <button class="nav-btn" data-tab="plans" id="btn-tab-plans">Plans</button>
+      <button class="nav-btn" data-tab="settings" id="btn-tab-settings">Settings</button>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button type="button" class="lang-btn active" data-lang="EN">EN</button>
+        <button type="button" class="lang-btn" data-lang="FR">FR</button>
+        <button type="button" class="lang-btn" data-lang="MG">MG</button>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Sign Out</button>
+    </div>
   </header>
 
-  <main class="dashboard-grid">
+  <!-- Main View -->
+  <main class="dashboard-container">
     
-    <section class="card">
-      <h2>Account Settings</h2>
-      <p class="card-desc">Update your personal profile, email, and security password.</p>
-      
-      <form id="updateProfileForm" style="margin-bottom: 24px;">
-        <div class="input-group">
-          <label>Display Name</label>
-          <input type="text" id="profileNameInput" placeholder="Enter full name" required>
-        </div>
-        <div class="input-group">
-          <label>Age (Used for AI Transport Insights)</label>
-          <input type="number" id="profileAgeInput" placeholder="e.g. 25" min="13" max="120" required>
-        </div>
-        <div class="input-group">
-          <label>Email Address</label>
-          <input type="text" id="profileEmailInput" disabled style="opacity: 0.6; cursor: not-allowed;">
-        </div>
-        <button type="submit" class="btn-primary">Update Profile</button>
-      </form>
+    <!-- User Welcome Banner -->
+    <div class="welcome-card">
+      <div class="welcome-text">
+        <h1 id="txt-welcome">Welcome Back</h1>
+        <p id="userEmailDisplay">Loading profile...</p>
+      </div>
+      <span class="user-badge" id="accountStatus">Verified Account</span>
+    </div>
 
-      <hr style="border-color: var(--border-color); margin-bottom: 20px;">
-
-      <form id="changePasswordForm">
-        <h3 style="font-size: 15px; margin-bottom: 12px;">Change Password</h3>
-        <div class="input-group">
-          <label>New Password</label>
-          <input type="password" id="newPasswordInput" placeholder="••••••••" required minlength="6">
+    <!-- TAB 1: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="grid-cards">
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-balance">Total Balance</div>
+          <div class="card-value">$0.00</div>
         </div>
-        <button type="submit" class="btn-primary" style="background: var(--border-color);">Update Password</button>
-      </form>
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-activity">Active Services</div>
+          <div class="card-value">1 Plan</div>
+        </div>
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-tickets">Support Tickets</div>
+          <div class="card-value">0 Open</div>
+        </div>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>Your Plans</h2>
-      <p class="card-desc">Manage your active subscription tiers and transport analytics access.</p>
-
-      <div class="plan-box active">
-        <div class="plan-title">
-          <span>Starter Plan</span>
-          <span class="badge-active">CURRENT PLAN</span>
+    <!-- TAB 2: PLANS -->
+    <section id="tab-plans" class="tab-content">
+      <div class="dashboard-card">
+        <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Plans</h2>
+        
+        <div class="plan-box">
+          <h3>Starter Plan</h3>
+          <p style="color: var(--text-muted); margin: 8px 0;">Essential tools for personal digital management.</p>
+          <div class="card-value" style="font-size: 24px;">Free</div>
         </div>
-        <p style="font-size: 12px; color: var(--text-muted);">Includes basic transport tracking and standard AI insights.</p>
+
+        <div class="plan-box featured">
+          <h3>Pro Business Plan</h3>
+          <p style="color: var(--text-muted); margin: 8px 0;">Full analytics, priority ticket support, and custom options.</p>
+          <div class="card-value" style="font-size: 24px;">$19 / mo</div>
+        </div>
       </div>
+    </section>
 
-      <div class="plan-box">
-        <div class="plan-title">
-          <span>Pro Commuter Plan</span>
-          <span style="font-size: 12px; color: var(--text-muted);">$9.99/mo</span>
+    <!-- TAB 3: SETTINGS -->
+    <section id="tab-settings" class="tab-content">
+      <div class="dashboard-card">
+        <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
+        
+        <div class="setting-row">
+          <div>
+            <strong>Email Verification</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Your email address status in Firebase</p>
+          </div>
+          <span style="color: var(--accent-green); font-weight: 700;">Verified</span>
         </div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Advanced route optimization, spending breakdown, and personalized age-based AI budget tools.</p>
-        <button type="button" class="btn-secondary" style="width: 100%; font-size: 12px;" onclick="alert('Upgrade functionality coming soon!')">Upgrade to Pro</button>
+
+        <div class="setting-row">
+          <div>
+            <strong>Interface Language</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Adjust preferred display language</p>
+          </div>
+          <span id="currentLangDisplay" style="font-weight: 700;">English</span>
+        </div>
       </div>
     </section>
 
   </main>
-
-  <div id="onboardingModal">
-    <div class="modal-content">
-      <h3>One quick question! 👋</h3>
-      <p>Please enter your age so our AI can personalize your dashboard and better analyze your transport spending habits.</p>
-      <form id="onboardingForm">
-        <div class="input-group">
-          <input type="number" id="onboardingAgeInput" placeholder="Enter your age" min="13" max="120" required autofocus>
-        </div>
-        <button type="submit" class="btn-primary">Save & Continue</button>
-      </form>
-    </div>
-  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getAuth, 
       onAuthStateChanged, 
-      updateProfile, 
-      updatePassword, 
       signOut 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      getDoc, 
-      setDoc 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
@@ -210,130 +370,119 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
 
-    let currentUser = null;
+    // Multilingual Translations
+    const dictionary = {
+      EN: {
+        welcome: "Welcome Back",
+        dashTab: "Dashboard",
+        plansTab: "Plans",
+        settingsTab: "Settings",
+        balance: "Total Balance",
+        activity: "Active Services",
+        tickets: "Support Tickets",
+        plansHeader: "Available Plans",
+        settingsHeader: "Account Settings",
+        logout: "Sign Out"
+      },
+      FR: {
+        welcome: "Bon retour",
+        dashTab: "Tableau de bord",
+        plansTab: "Offres",
+        settingsTab: "Paramètres",
+        balance: "Solde Total",
+        activity: "Services Actifs",
+        tickets: "Tickets de Support",
+        plansHeader: "Offres Disponibles",
+        settingsHeader: "Paramètres du Compte",
+        logout: "Se déconnecter"
+      },
+      MG: {
+        welcome: "Tonga soa indray",
+        dashTab: "Solaitrabe",
+        plansTab: "Fahafohezana",
+        settingsTab: "Kajikajy",
+        balance: "Teti-bola Samy hafa",
+        activity: "Tolotra Mandeha",
+        tickets: "Hafatra Support",
+        plansHeader: "Fidio ny Tolotra",
+        settingsHeader: "Kajikajin'ny Kaonty",
+        logout: "Hivoaka"
+      }
+    };
 
-    // Strict Auth Listener with Live Token Reload
+    let currentLang = 'EN';
+
+    // Verify User Authorization
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        // Not logged in -> Immediately bounce to signup page
-        window.location.href = "signup.html";
+        window.location.href = "login.html";
         return;
       }
 
-      try {
-        // Force refresh user profile to fetch fresh emailVerified status from Firebase
-        await user.reload();
-      } catch (e) {
-        console.error("Token refresh failed:", e);
-      }
+      await user.reload();
 
-      // Re-fetch user reference post-reload
-      const activeUser = auth.currentUser;
-
-      if (!activeUser || !activeUser.emailVerified) {
-        // Logged in BUT email unverified -> Alert, Sign Out & Bounce back to signup
-        alert("Verification required: Please open your email inbox and click the verification link before signing in.");
+      if (!user.emailVerified) {
+        alert("Email not verified. Redirecting to login.");
         await signOut(auth);
-        window.location.href = "signup.html";
+        window.location.href = "login.html";
         return;
       }
 
-      // Account is valid and verified -> Render Dashboard UI
-      currentUser = activeUser;
-      document.body.style.display = "block";
-      document.getElementById("authLoader").style.display = "none";
-      document.getElementById("profileEmailInput").value = currentUser.email;
-
-      // Load Firestore metadata
-      try {
-        const userRef = doc(db, "users", currentUser.uid);
-        const userSnap = await getDoc(userRef);
-
-        let userAge = null;
-        let userName = currentUser.displayName || "";
-
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          userAge = data.age || null;
-          if (data.name) userName = data.name;
-        }
-
-        document.getElementById("profileNameInput").value = userName;
-        document.getElementById("welcomeName").innerText = userName || currentUser.email.split('@')[0];
-        if (userAge) document.getElementById("profileAgeInput").value = userAge;
-
-        if (!userAge) {
-          document.getElementById("onboardingModal").style.display = "flex";
-        }
-      } catch (err) {
-        console.error("Firestore error:", err);
-      }
+      document.getElementById('userEmailDisplay').textContent = user.email;
     });
 
-    // Handle Onboarding Age Form
-    document.getElementById("onboardingForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const ageVal = Number(document.getElementById("onboardingAgeInput").value);
-      
-      if (currentUser && ageVal) {
-        try {
-          await setDoc(doc(db, "users", currentUser.uid), {
-            email: currentUser.email,
-            age: ageVal,
-            updatedAt: new Date().toISOString()
-          }, { merge: true });
+    // Navigation Tab Switcher
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-          document.getElementById("profileAgeInput").value = ageVal;
-          document.getElementById("onboardingModal").style.display = "none";
-          alert("Age saved successfully!");
-        } catch (err) {
-          alert("Error saving age: " + err.message);
-        }
-      }
-    });
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
 
-    // Handle Profile Update Form
-    document.getElementById("updateProfileForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const newName = document.getElementById("profileNameInput").value.trim();
-      const newAge = Number(document.getElementById("profileAgeInput").value);
+        navButtons.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
 
-      try {
-        await updateProfile(currentUser, { displayName: newName });
-        await setDoc(doc(db, "users", currentUser.uid), {
-          name: newName,
-          age: newAge,
-          updatedAt: new Date().toISOString()
-        }, { merge: true });
-
-        document.getElementById("welcomeName").innerText = newName || currentUser.email.split('@')[0];
-        alert("Profile updated successfully!");
-      } catch (err) {
-        alert("Failed to update profile: " + err.message);
-      }
-    });
-
-    // Handle Password Update Form
-    document.getElementById("changePasswordForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const newPass = document.getElementById("newPasswordInput").value;
-
-      try {
-        await updatePassword(currentUser, newPass);
-        alert("Password updated successfully!");
-        document.getElementById("changePasswordForm").reset();
-      } catch (err) {
-        alert("Failed to update password: " + err.message);
-      }
-    });
-
-    // Handle Sign Out
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        window.location.href = "signup.html";
+        btn.classList.add('active');
+        document.getElementById(`tab-${targetTab}`).classList.add('active');
       });
+    });
+
+    // Language Switcher
+    function updateLanguage(lang) {
+      currentLang = lang;
+      const t = dictionary[lang];
+      if (!t) return;
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+
+      document.getElementById('txt-welcome').textContent = t.welcome;
+      document.getElementById('btn-tab-dash').textContent = t.dashTab;
+      document.getElementById('btn-tab-plans').textContent = t.plansTab;
+      document.getElementById('btn-tab-settings').textContent = t.settingsTab;
+      document.getElementById('lbl-balance').textContent = t.balance;
+      document.getElementById('lbl-activity').textContent = t.activity;
+      document.getElementById('lbl-tickets').textContent = t.tickets;
+      document.getElementById('txt-plans-header').textContent = t.plansHeader;
+      document.getElementById('txt-settings-header').textContent = t.settingsHeader;
+      document.getElementById('logoutBtn').textContent = t.logout;
+      
+      const langNames = { EN: "English", FR: "Français", MG: "Malagasy" };
+      document.getElementById('currentLangDisplay').textContent = langNames[lang];
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        updateLanguage(this.getAttribute('data-lang'));
+      });
+    });
+
+    // Sign Out Action
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
     });
   </script>
 </body>
