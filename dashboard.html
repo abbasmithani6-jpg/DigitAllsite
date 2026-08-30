@@ -3,651 +3,328 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | DigitAll</title>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <title>DigitAll - Dashboard</title>
   <style>
     :root {
-      --bg-dark: #070614;
-      --card-bg: #100c2a;
-      --card-border: rgba(124, 58, 237, 0.25);
-      --accent-green: #00ff87;
-      --accent-purple: #7c3aed;
-      --accent-gold: #ffb703;
-      --text-main: #ffffff;
-      --text-muted: #94a3b8;
-      --input-bg: rgba(255, 255, 255, 0.04);
-      --input-border: rgba(255, 255, 255, 0.1);
-      --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --text-muted: #666666;
+      --border-color: #e0e0e0;
+      --primary-color: #007bff;
+      --primary-hover: #0056b3;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body.dark-mode {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --text-muted: #aaaaaa;
+      --border-color: #333333;
+      --primary-color: #3700b3;
+      --primary-hover: #6200ee;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
 
     body {
-      font-family: var(--font-family);
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    /* Navigation Bar */
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 40px;
-      border-bottom: 1px solid var(--card-border);
-      background: rgba(16, 12, 42, 0.6);
-      backdrop-filter: blur(10px);
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
-    .brand-name {
-      font-size: 22px;
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1;
-    }
-
-    .brand-name span { color: var(--accent-green); }
-
-    .brand-tagline {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: var(--accent-green);
-      margin-top: 3px;
-    }
-
-    .nav-center {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .nav-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--input-border);
-      color: var(--text-main);
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .nav-btn:hover {
-      background: rgba(124, 58, 237, 0.2);
-      border-color: var(--accent-purple);
-    }
-
-    .nav-btn.active {
-      background: var(--accent-purple);
-      border-color: var(--accent-purple);
-      color: #ffffff;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .lang-switcher {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 4px;
-      gap: 2px;
-    }
-
-    .lang-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 14px;
-      cursor: pointer;
-    }
-
-    .lang-btn.active {
-      background: var(--accent-purple);
-      color: #ffffff;
-    }
-
-    .btn-logout {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #ef4444;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .dashboard-container {
-      flex: 1;
-      max-width: 1200px;
-      width: 100%;
+    .container {
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 40px 20px;
     }
 
-    .welcome-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 32px;
-      margin-bottom: 32px;
+    .header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-
-    .welcome-text h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
-    .welcome-text p { color: var(--text-muted); font-size: 14px; }
-
-    .user-badge {
-      display: inline-block;
-      padding: 6px 14px;
-      background: rgba(0, 255, 135, 0.1);
-      border: 1px solid var(--accent-green);
-      color: var(--accent-green);
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .grid-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-    }
-
-    .dashboard-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 28px;
-    }
-
-    .card-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .card-value {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--accent-green);
-    }
-
-    /* Promo Code Input Box */
-    .promo-section {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 24px;
-      display: flex;
-      gap: 12px;
       align-items: center;
+      margin-bottom: 30px;
     }
 
-    .promo-input {
-      flex: 1;
-      padding: 12px 16px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 12px;
-      color: #ffffff;
-      font-family: inherit;
-      text-transform: uppercase;
-    }
-
-    .btn-apply {
-      padding: 12px 24px;
-      background: var(--accent-purple);
-      color: #ffffff;
-      border: none;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    /* Plans Layout */
-    .plans-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 20px;
+      margin-bottom: 30px;
     }
 
-    .plan-box {
-      border: 1px solid var(--input-border);
-      border-radius: 20px;
-      padding: 24px;
-      background: rgba(255, 255, 255, 0.02);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .plan-box.enterprise {
-      border-color: var(--accent-gold);
-      background: rgba(255, 183, 3, 0.05);
-    }
-
-    .price-tag {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--accent-green);
-      margin: 16px 0;
-    }
-
-    .price-tag.gold { color: var(--accent-gold); }
-
-    .old-price {
-      text-decoration: line-through;
-      color: var(--text-muted);
-      font-size: 18px;
-      margin-right: 8px;
-    }
-
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--input-border);
-    }
-
-    /* AI Chat */
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      height: 450px;
+    .card {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .chat-messages {
-      flex: 1;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
       padding: 20px;
-      overflow-y: auto;
+      box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: space-between;
     }
 
-    .chat-msg {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 16px;
-      font-size: 14px;
+    .card h3 {
+      margin-top: 0;
     }
 
-    .chat-msg.bot {
-      align-self: flex-start;
-      background: rgba(124, 58, 237, 0.2);
-      border: 1px solid var(--accent-purple);
-      color: #ffffff;
+    .price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin: 15px 0;
     }
 
-    .chat-msg.user {
-      align-self: flex-end;
-      background: var(--accent-green);
-      color: #070614;
-      font-weight: 600;
+    .promo-section, .settings-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
     }
 
-    .chat-input-row {
+    .input-group {
       display: flex;
       gap: 10px;
-      padding: 16px;
-      background: rgba(0, 0, 0, 0.2);
-      border-top: 1px solid var(--input-border);
+      margin-top: 10px;
     }
 
-    .chat-input {
-      flex: 1;
-      padding: 12px 16px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 12px;
-      color: #ffffff;
+    input[type="text"], input[type="number"] {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .counter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0;
+      font-size: 0.9rem;
+    }
+
+    .counter-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .counter-row input {
+      width: 60px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation Bar -->
-  <header class="navbar">
-    <a href="dashboard.html" class="brand-logo">
-      <div class="brand-text">
-        <div class="brand-name">Digit<span>All</span></div>
-        <div class="brand-tagline">DIGITAL FOR ALL</div>
-      </div>
-    </a>
+<div class="container">
+  <div class="header">
+    <h1>Select Your Subscription Plan</h1>
+  </div>
 
-    <nav class="nav-center">
-      <button class="nav-btn active" data-tab="dashboard" id="btn-tab-dash">Dashboard</button>
-      <button class="nav-btn" data-tab="plans" id="btn-tab-plans">Plans</button>
-      <button class="nav-btn" data-tab="settings" id="btn-tab-settings">Settings</button>
-      <button class="nav-btn" data-tab="aichat" id="btn-tab-ai">AI Assistant</button>
-    </nav>
-
-    <div class="nav-right">
-      <div class="lang-switcher">
-        <button type="button" class="lang-btn active" data-lang="EN">EN</button>
-        <button type="button" class="lang-btn" data-lang="FR">FR</button>
-        <button type="button" class="lang-btn" data-lang="MG">MG</button>
+  <!-- Subscription Plans Grid -->
+  <div class="grid">
+    <!-- Standard -->
+    <div class="card">
+      <div>
+        <h3>Standard</h3>
+        <p>Basic access for individual users.</p>
+        <div class="price" id="price-standard">750 AR</div>
+        <small style="color: var(--text-muted);">(200 AR setup + 550 AR/mo)</small>
       </div>
-      <button id="logoutBtn" class="btn-logout">Sign Out</button>
-    </div>
-  </header>
-
-  <main class="dashboard-container">
-    
-    <!-- User Welcome Banner -->
-    <div class="welcome-card">
-      <div class="welcome-text">
-        <h1 id="txt-welcome">Welcome Back</h1>
-        <p id="userEmailDisplay">Loading profile...</p>
-      </div>
-      <span class="user-badge" id="accountStatus">Verified Account</span>
+      <button onclick="selectPlan('Standard')">Subscribe</button>
     </div>
 
-    <!-- TAB 1: DASHBOARD -->
-    <section id="tab-dashboard" class="tab-content active">
-      <div class="grid-cards">
-        <div class="dashboard-card">
-          <div class="card-title" id="lbl-balance">Total Balance</div>
-          <div class="card-value">$0.00</div>
-        </div>
-        <div class="dashboard-card">
-          <div class="card-title" id="lbl-activity">Active Services</div>
-          <div class="card-value">1 Plan</div>
-        </div>
-        <div class="dashboard-card">
-          <div class="card-title" id="lbl-tickets">Support Tickets</div>
-          <div class="card-value">0 Open</div>
-        </div>
+    <!-- Pro -->
+    <div class="card">
+      <div>
+        <h3>Pro</h3>
+        <p>Advanced features for heavy users.</p>
+        <div class="price" id="price-pro">1200 AR</div>
+        <small style="color: var(--text-muted);">Per month</small>
       </div>
-    </section>
+      <button onclick="selectPlan('Pro')">Subscribe</button>
+    </div>
 
-    <!-- TAB 2: PLANS -->
-    <section id="tab-plans" class="tab-content">
-      <div class="dashboard-card">
-        <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
+    <!-- Family -->
+    <div class="card">
+      <div>
+        <h3>Family</h3>
+        <p>Flexible plan for the household.</p>
+        <div class="counter-group">
+          <div class="counter-row">
+            <label for="family-adults">Adults (120 AR ea):</label>
+            <input type="number" id="family-adults" value="1" min="1" onchange="calculateFamilyPrice()">
+          </div>
+          <div class="counter-row">
+            <label for="family-kids">Kids (75 AR ea):</label>
+            <input type="number" id="family-kids" value="1" min="0" onchange="calculateFamilyPrice()">
+          </div>
+        </div>
+        <div class="price" id="price-family">345 AR</div>
+        <small style="color: var(--text-muted);">(150 AR base + members)</small>
+      </div>
+      <button onclick="selectPlan('Family')">Subscribe</button>
+    </div>
+
+    <!-- Family Premium -->
+    <div class="card">
+      <div>
+        <h3>Family Premium</h3>
+        <p>Premium features for the entire family.</p>
+        <div class="counter-group">
+          <div class="counter-row">
+            <label for="fam-prem-adults">Adults (400 AR ea):</label>
+            <input type="number" id="fam-prem-adults" value="1" min="1" onchange="calculateFamilyPremiumPrice()">
+          </div>
+          <div class="counter-row">
+            <label for="fam-prem-kids">Kids (250 AR ea):</label>
+            <input type="number" id="fam-prem-kids" value="1" min="0" onchange="calculateFamilyPremiumPrice()">
+          </div>
+        </div>
+        <div class="price" id="price-family-premium">950 AR</div>
+        <small style="color: var(--text-muted);">(300 AR base + members)</small>
+      </div>
+      <button onclick="selectPlan('Family Premium')">Subscribe</button>
+    </div>
+  </div>
+
+  <!-- Promo Code Section -->
+  <div class="promo-section">
+    <h3>Have a Promo Code?</h3>
+    <div class="input-group">
+      <input type="text" id="promo-input" placeholder="Enter code">
+      <button onclick="applyPromoCode()">Apply</button>
+    </div>
+    <p id="promo-message" style="margin-top: 10px;"></p>
+  </div>
+
+  <!-- Settings Section -->
+  <div class="settings-section">
+    <h3>Settings</h3>
+    <div class="toggle-container">
+      <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+      <label for="dark-mode-toggle">Enable Dark Mode</label>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
+    authDomain: "digitall-c77d8.firebaseapp.com",
+    projectId: "digitall-c77d8",
+    storageBucket: "digitall-c77d8.firebasestorage.app",
+    messagingSenderId: "922798712588",
+    appId: "1:922798712588:web:43235136b5b1bf58168b29"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let activeDiscount = 0;
+
+  window.calculateFamilyPrice = function() {
+    const adults = parseInt(document.getElementById('family-adults').value) || 0;
+    const kids = parseInt(document.getElementById('family-kids').value) || 0;
+    const base = 150;
+    const total = base + (adults * 120) + (kids * 75);
+    renderPrice('price-family', total);
+  };
+
+  window.calculateFamilyPremiumPrice = function() {
+    const adults = parseInt(document.getElementById('fam-prem-adults').value) || 0;
+    const kids = parseInt(document.getElementById('fam-prem-kids').value) || 0;
+    const base = 300;
+    const total = base + (adults * 400) + (kids * 250);
+    renderPrice('price-family-premium', total);
+  };
+
+  function renderPrice(elementId, basePrice) {
+    const finalPrice = activeDiscount > 0 ? basePrice * (1 - activeDiscount / 100) : basePrice;
+    document.getElementById(elementId).innerText = `${Math.round(finalPrice)} AR`;
+  }
+
+  window.applyPromoCode = async function() {
+    const codeInput = document.getElementById('promo-input').value.trim().toUpperCase();
+    const msg = document.getElementById('promo-message');
+
+    if (!codeInput) return;
+
+    try {
+      const promoRef = doc(db, "promocodes", codeInput);
+      const promoSnap = await getDoc(promoRef);
+
+      if (promoSnap.exists()) {
+        const data = promoSnap.data();
+        activeDiscount = data.discount || 0;
+        msg.style.color = "green";
+        msg.innerText = `Promo code applied! ${activeDiscount}% off.`;
         
-        <!-- Promo Code Input Form -->
-        <div class="promo-section">
-          <input type="text" id="promoCodeInput" class="promo-input" placeholder="Enter Admin Promo Code" />
-          <button id="btnApplyPromo" class="btn-apply">Apply Code</button>
-        </div>
-        <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
-
-        <div class="plans-grid">
-          <!-- Basic Plan -->
-          <div class="plan-box">
-            <div>
-              <h3>Starter Plan</h3>
-              <p style="color: var(--text-muted); margin-top: 8px;">Basic access to core tools and features.</p>
-            </div>
-            <div class="price-tag" id="price-starter">Free</div>
-          </div>
-
-          <!-- Mid Plan -->
-          <div class="plan-box">
-            <div>
-              <h3>Pro Professional</h3>
-              <p style="color: var(--text-muted); margin-top: 8px;">Full analytics suite with priority support access.</p>
-            </div>
-            <div class="price-tag" id="price-pro">$29 / mo</div>
-          </div>
-
-          <!-- High-Tier Expensive Plan -->
-          <div class="plan-box enterprise">
-            <div>
-              <h3 style="color: var(--accent-gold);">Pro Enterprise Ultra</h3>
-              <p style="color: var(--text-muted); margin-top: 8px;">Unlimited API queries, dedicated account manager & customized infrastructure.</p>
-            </div>
-            <div class="price-tag gold" id="price-enterprise">$299 / mo</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: SETTINGS -->
-    <section id="tab-settings" class="tab-content">
-      <div class="dashboard-card">
-        <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
-        
-        <div class="setting-row">
-          <div>
-            <strong>Email Verification</strong>
-            <p style="font-size: 13px; color: var(--text-muted);">Your email status in Firebase Auth</p>
-          </div>
-          <span style="color: var(--accent-green); font-weight: 700;">Verified</span>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong>Interface Language</strong>
-            <p style="font-size: 13px; color: var(--text-muted);">Adjust preferred display language</p>
-          </div>
-          <span id="currentLangDisplay" style="font-weight: 700;">English</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: AI CHAT -->
-    <section id="tab-aichat" class="tab-content">
-      <div class="dashboard-card" style="padding: 20px;">
-        <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
-        <div class="chat-container">
-          <div class="chat-messages" id="chatBox">
-            <div class="chat-msg bot">Hello! How can I assist you with your plans or settings today?</div>
-          </div>
-          <form class="chat-input-row" id="aiForm">
-            <input type="text" class="chat-input" id="aiInput" placeholder="Type a message..." required />
-            <button type="submit" class="btn-apply" id="btn-send-msg">Send</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      onAuthStateChanged, 
-      signOut 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      getDoc 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-  apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
-  authDomain: "digitall-c77d8.firebaseapp.com",
-  projectId: "digitall-c77d8",
-  storageBucket: "digitall-c77d8.firebasestorage.app",
-  messagingSenderId: "922798712588",
-  appId: "1:922798712588:web:43235136b5b1bf58168b29"
-};
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Initial Plan Base Prices
-    const basePrices = {
-      pro: 29,
-      enterprise: 299
-    };
-
-    // User Session Check
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
+        renderPrice('price-standard', 750);
+        renderPrice('price-pro', 1200);
+        calculateFamilyPrice();
+        calculateFamilyPremiumPrice();
+      } else {
+        msg.style.color = "red";
+        msg.innerText = "Invalid promo code.";
       }
-      await user.reload();
-      if (!user.emailVerified) {
-        alert("Email not verified. Redirecting to login.");
-        await signOut(auth);
-        window.location.href = "login.html";
-        return;
-      }
-      document.getElementById('userEmailDisplay').textContent = user.email;
-    });
-
-    // Navigation Switcher
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    function switchTab(targetTab) {
-      navButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === targetTab));
-      tabContents.forEach(c => c.classList.toggle('active', c.id === `tab-${targetTab}`));
+    } catch (e) {
+      console.error(e);
+      msg.style.color = "red";
+      msg.innerText = "Error verifying promo code.";
     }
+  };
 
-    navButtons.forEach(btn => {
-      btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
-    });
-
-    // Promo Code Handler via Firestore
-    document.getElementById('btnApplyPromo').addEventListener('click', async () => {
-      const codeInput = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-      const msgDiv = document.getElementById('promoMessage');
-
-      if (!codeInput) {
-        msgDiv.style.color = "#ef4444";
-        msgDiv.textContent = "Please enter a valid code.";
-        return;
-      }
-
-      try {
-        // Query Firestore document under 'promocodes' created in admin.html
-        const promoRef = doc(db, "promocodes", codeInput);
-        const promoSnap = await getDoc(promoRef);
-
-        if (!promoSnap.exists()) {
-          msgDiv.style.color = "#ef4444";
-          msgDiv.textContent = "Invalid code. Please enter a valid promo code from admin.";
-          return;
-        }
-
-        const promoData = promoSnap.data();
-        const discountPercentage = promoData.discount || 0; // e.g. 20 for 20% off
-
-        // Calculate discounted prices
-        const proDiscounted = Math.max(0, basePrices.pro - (basePrices.pro * (discountPercentage / 100)));
-        const enterpriseDiscounted = Math.max(0, basePrices.enterprise - (basePrices.enterprise * (discountPercentage / 100)));
-
-        // Update UI
-        document.getElementById('price-pro').innerHTML = `<span class="old-price">$${basePrices.pro}</span> $${proDiscounted.toFixed(2)} / mo`;
-        document.getElementById('price-enterprise').innerHTML = `<span class="old-price">$${basePrices.enterprise}</span> $${enterpriseDiscounted.toFixed(2)} / mo`;
-
-        msgDiv.style.color = "#00ff87";
-        msgDiv.textContent = `Success! ${discountPercentage}% discount applied to all paid plans.`;
-
-      } catch (err) {
-        console.error("Promo error:", err);
-        msgDiv.style.color = "#ef4444";
-        msgDiv.textContent = "Error verifying promo code. Make sure Firestore rules allow reading 'promocodes'.";
-      }
-    });
-
-    // Language Switcher
-    const dictionary = {
-      EN: { welcome: "Welcome Back", dashTab: "Dashboard", plansTab: "Plans", settingsTab: "Settings", aiTab: "AI Assistant", balance: "Total Balance", activity: "Active Services", tickets: "Support Tickets", plansHeader: "Available Subscription Plans", settingsHeader: "Account Settings", aiHeader: "DigitAll AI Assistant", logout: "Sign Out" },
-      FR: { welcome: "Bon retour", dashTab: "Tableau de bord", plansTab: "Offres", settingsTab: "Paramètres", aiTab: "Assistant IA", balance: "Solde Total", activity: "Services Actifs", tickets: "Tickets de Support", plansHeader: "Offres d'Abonnement", settingsHeader: "Paramètres du Compte", aiHeader: "Assistant IA DigitAll", logout: "Se déconnecter" },
-      MG: { welcome: "Tonga soa indray", dashTab: "Solaitrabe", plansTab: "Fahafohezana", settingsTab: "Kajikajy", aiTab: "Mpanampy AI", balance: "Teti-bola Samy hafa", activity: "Tolotra Mandeha", tickets: "Hafatra Support", plansHeader: "Tolotra Misy", settingsHeader: "Kajikajin'ny Kaonty", aiHeader: "Mpanampy IA DigitAll", logout: "Hivoaka" }
-    };
-
-    function updateLanguage(lang) {
-      const t = dictionary[lang];
-      if (!t) return;
-      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
-      document.getElementById('txt-welcome').textContent = t.welcome;
-      document.getElementById('btn-tab-dash').textContent = t.dashTab;
-      document.getElementById('btn-tab-plans').textContent = t.plansTab;
-      document.getElementById('btn-tab-settings').textContent = t.settingsTab;
-      document.getElementById('btn-tab-ai').textContent = t.aiTab;
-      document.getElementById('lbl-balance').textContent = t.balance;
-      document.getElementById('lbl-activity').textContent = t.activity;
-      document.getElementById('lbl-tickets').textContent = t.tickets;
-      document.getElementById('txt-plans-header').textContent = t.plansHeader;
-      document.getElementById('txt-settings-header').textContent = t.settingsHeader;
-      document.getElementById('txt-ai-header').textContent = t.aiHeader;
-      document.getElementById('logoutBtn').textContent = t.logout;
+  window.toggleDarkMode = function() {
+    const isDark = document.getElementById('dark-mode-toggle').checked;
+    if (isDark) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light');
     }
+  };
 
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', function() { updateLanguage(this.getAttribute('data-lang')); });
-    });
+  window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('dark-mode-toggle').checked = true;
+    }
+  });
 
-    // AI Chat Handling
-    const aiForm = document.getElementById('aiForm');
-    const aiInput = document.getElementById('aiInput');
-    const chatBox = document.getElementById('chatBox');
+  window.selectPlan = function(planName) {
+    alert(`Selected plan: ${planName}`);
+  };
+</script>
 
-    aiForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const text = aiInput.value.trim();
-      if (!text) return;
-
-      const userDiv = document.createElement('div');
-      userDiv.className = 'chat-msg user';
-      userDiv.textContent = text;
-      chatBox.appendChild(userDiv);
-      aiInput.value = '';
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      setTimeout(() => {
-        const botDiv = document.createElement('div');
-        botDiv.className = 'chat-msg bot';
-        botDiv.textContent = "Thank you for reaching out! Our team is processing your request: \"" + text + "\"";
-        chatBox.appendChild(botDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
-    });
-
-    // Sign Out
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await signOut(auth);
-      window.location.href = "login.html";
-    });
-  </script>
 </body>
 </html>
