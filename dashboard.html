@@ -534,8 +534,8 @@
               <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Basic individual service tier.</p>
             </div>
             <div>
-              <div class="price-tag" id="price-standard">750 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;">(200 AR setup + 550 AR/mo)</p>
+              <div class="price-tag" id="price-standard">200 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;">Per month</p>
             </div>
           </div>
 
@@ -545,7 +545,7 @@
               <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Intermediate individual access tier.</p>
             </div>
             <div>
-              <div class="price-tag" id="price-plus">750 AR</div>
+              <div class="price-tag" id="price-plus">200 AR</div>
               <p style="color: var(--text-muted); font-size: 12px;">Same base as Standard</p>
             </div>
           </div>
@@ -734,8 +734,8 @@
     }
 
     function updateAllPrices() {
-      renderPrice('price-standard', 750);
-      renderPrice('price-plus', 750);
+      renderPrice('price-standard', 200);
+      renderPrice('price-plus', 200);
       renderPrice('price-pro', 1200);
       calculateFamilyPrice();
       calculateFamilyPremiumPrice();
