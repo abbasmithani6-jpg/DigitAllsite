@@ -787,7 +787,7 @@
       if (selectedCycle === 'weekly') {
         return (baseMonthly / 4) * 1.15;
       } else if (selectedCycle === 'yearly') {
-        return (baseMonthly * 12) * 0.90;
+        return baseMonthly * 12;
       }
       return baseMonthly;
     }
@@ -1218,7 +1218,7 @@
             contents: [
               {
                 role: "user",
-                parts: [{ text: `You are the AI Assistant for DigitAll, a digital service platform. Be concise and friendly. User query: ${text}` }]
+                parts: [{ text: `You are the AI Assistant for DigitAll, an automated digital service platform. Be concise and friendly. User query: ${text}` }]
               }
             ]
           })
