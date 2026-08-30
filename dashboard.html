@@ -53,7 +53,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Navigation Bar */
     .navbar {
       display: flex;
       align-items: center;
@@ -172,7 +171,6 @@
       cursor: pointer;
     }
 
-    /* Dashboard Shell */
     .dashboard-container {
       flex: 1;
       max-width: 1200px;
@@ -238,10 +236,9 @@
       color: var(--accent-green);
     }
 
-    /* Subscription Grid */
     .plans-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 20px;
     }
 
@@ -524,7 +521,7 @@
         <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
         
         <div class="promo-section">
-          <input type="text" id="promoCodeInput" class="promo-input" placeholder="ENTER ADMIN PROMO CODE" />
+          <input type="text" id="promoCodeInput" class="promo-input" placeholder="ENTER PROMO CODE" />
           <button id="btnApplyPromo" class="btn-send">Apply Code</button>
         </div>
         <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
@@ -539,6 +536,17 @@
             <div>
               <div class="price-tag" id="price-standard">750 AR</div>
               <p style="color: var(--text-muted); font-size: 12px;">(200 AR setup + 550 AR/mo)</p>
+            </div>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3>Plus</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Intermediate individual access tier.</p>
+            </div>
+            <div>
+              <div class="price-tag" id="price-plus">750 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;">Same base as Standard</p>
             </div>
           </div>
 
@@ -570,8 +578,8 @@
               </div>
             </div>
             <div>
-              <div class="price-tag" id="price-family">345 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;">(150 AR initial + members)</p>
+              <div class="price-tag" id="price-family">395 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;">(200 AR initial + members)</p>
             </div>
           </div>
 
@@ -682,8 +690,6 @@
     const db = getFirestore(app);
 
     let activeDiscount = 0;
-
-    // Fixed Auth Handler: Waits for initial Firebase resolution state
     let initialAuthChecked = false;
 
     onAuthStateChanged(auth, (user) => {
@@ -691,7 +697,6 @@
         document.getElementById('userEmailDisplay').textContent = user.email;
         initialAuthChecked = true;
       } else {
-        // Only redirect if initial token reading has finished and user is truly absent
         if (initialAuthChecked || document.readyState === "complete") {
           window.location.href = "login.html";
         } else {
@@ -707,7 +712,7 @@
     window.calculateFamilyPrice = function() {
       const adults = parseInt(document.getElementById('family-adults').value) || 0;
       const kids = parseInt(document.getElementById('family-kids').value) || 0;
-      const basePrice = 150 + (adults * 120) + (kids * 75);
+      const basePrice = 200 + (adults * 120) + (kids * 75);
       renderPrice('price-family', basePrice);
     };
 
@@ -726,6 +731,14 @@
       } else {
         target.textContent = `${Math.round(basePrice)} AR`;
       }
+    }
+
+    function updateAllPrices() {
+      renderPrice('price-standard', 750);
+      renderPrice('price-plus', 750);
+      renderPrice('price-pro', 1200);
+      calculateFamilyPrice();
+      calculateFamilyPremiumPrice();
     }
 
     const navButtons = document.querySelectorAll('.nav-btn');
@@ -748,7 +761,7 @@
 
       if (!codeInput) {
         msg.style.color = "#ef4444";
-        msg.textContent = "Please enter a code.";
+        msg.textContent = "Please enter a promo code.";
         return;
       }
 
@@ -758,15 +771,13 @@
 
         if (promoSnap.exists()) {
           const data = promoSnap.data();
-          activeDiscount = data.discount || 0;
+          const parsedDiscount = Number(data.discount);
+          activeDiscount = isNaN(parsedDiscount) ? 0 : parsedDiscount;
 
           msg.style.color = "#00ff87";
           msg.textContent = `Promo code applied! ${activeDiscount}% discount active.`;
 
-          renderPrice('price-standard', 750);
-          renderPrice('price-pro', 1200);
-          calculateFamilyPrice();
-          calculateFamilyPremiumPrice();
+          updateAllPrices();
         } else {
           msg.style.color = "#ef4444";
           msg.textContent = "Invalid promo code.";
@@ -774,7 +785,7 @@
       } catch (err) {
         console.error("Promo code fetch error:", err);
         msg.style.color = "#ef4444";
-        msg.textContent = "Error reading promo code from Firestore.";
+        msg.textContent = "Error verifying promo code.";
       }
     });
 
