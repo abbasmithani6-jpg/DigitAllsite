@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | DigitAll</title>
 
-  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -74,10 +73,7 @@
       text-decoration: none;
     }
 
-    .brand-logo img {
-      height: 38px;
-      width: auto;
-    }
+    .brand-logo img { height: 38px; width: auto; }
 
     .brand-name {
       font-size: 22px;
@@ -96,11 +92,7 @@
       margin-top: 3px;
     }
 
-    .nav-center {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .nav-center { display: flex; align-items: center; gap: 10px; }
 
     .nav-btn {
       font-family: var(--font-family);
@@ -126,11 +118,7 @@
       color: #ffffff;
     }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
 
     .lang-switcher {
       display: flex;
@@ -236,9 +224,37 @@
       color: var(--accent-green);
     }
 
+    .billing-toggle-container {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px;
+      border-radius: 16px;
+      width: fit-content;
+    }
+
+    .cycle-btn {
+      font-family: var(--font-family);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .cycle-btn.active {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
+
     .plans-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
     }
 
@@ -253,9 +269,7 @@
       transition: border-color 0.2s;
     }
 
-    .plan-box:hover {
-      border-color: var(--accent-purple);
-    }
+    .plan-box:hover { border-color: var(--accent-purple); }
 
     .plan-box.featured {
       border-color: var(--accent-gold);
@@ -276,14 +290,14 @@
       align-items: center;
       justify-content: space-between;
       margin-top: 10px;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
     }
 
     .counter-input {
       font-family: var(--font-family);
-      width: 60px;
-      padding: 6px 10px;
+      width: 54px;
+      padding: 4px 8px;
       background: var(--input-bg);
       border: 1px solid var(--input-border);
       border-radius: 8px;
@@ -327,9 +341,7 @@
       transition: background-color 0.2s;
     }
 
-    .btn-send:hover {
-      background-color: #6d28d9;
-    }
+    .btn-send:hover { background-color: #6d28d9; }
 
     .setting-row {
       display: flex;
@@ -497,7 +509,6 @@
       <span class="user-badge" id="accountStatus">Verified Account</span>
     </div>
 
-    <!-- TAB 1: DASHBOARD -->
     <section id="tab-dashboard" class="tab-content active">
       <div class="grid-cards">
         <div class="dashboard-card">
@@ -515,7 +526,6 @@
       </div>
     </section>
 
-    <!-- TAB 2: PLANS -->
     <section id="tab-plans" class="tab-content">
       <div class="dashboard-card">
         <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
@@ -526,82 +536,88 @@
         </div>
         <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
 
+        <div class="billing-toggle-container">
+          <button class="cycle-btn" data-cycle="weekly" id="btn-cycle-weekly">Weekly (+15%)</button>
+          <button class="cycle-btn active" data-cycle="monthly" id="btn-cycle-monthly">Monthly</button>
+          <button class="cycle-btn" data-cycle="yearly" id="btn-cycle-yearly">Yearly (-10%)</button>
+        </div>
+
         <div class="plans-grid">
           
           <div class="plan-box">
             <div>
-              <h3>Standard</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Basic individual service tier.</p>
+              <h3 id="lbl-plan-std">Standard</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-std">Basic individual tier.</p>
             </div>
             <div>
               <div class="price-tag" id="price-standard">200 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;">Per month</p>
+              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
             </div>
           </div>
 
           <div class="plan-box">
             <div>
-              <h3>Plus</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Intermediate individual access tier.</p>
+              <h3 id="lbl-plan-plus">Plus</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-plus">Intermediate access tier.</p>
             </div>
             <div>
-              <div class="price-tag" id="price-plus">200 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;">Same base as Standard</p>
+              <div class="price-tag" id="price-plus">500 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
             </div>
           </div>
 
           <div class="plan-box">
             <div>
-              <h3>Pro</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Advanced individual power access.</p>
+              <h3 id="lbl-plan-pro">Pro</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-pro">Advanced power access.</p>
             </div>
             <div>
               <div class="price-tag" id="price-pro">1200 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;">Per month</p>
+              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
             </div>
           </div>
 
           <div class="plan-box">
             <div>
-              <h3>Family</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Customizable household account.</p>
+              <h3 id="lbl-plan-fam">Family</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-fam">Custom household plan.</p>
               
               <div style="margin-top: 14px;">
                 <div class="counter-row">
-                  <label for="family-adults">Adults (120 AR ea):</label>
+                  <label for="family-adults" id="lbl-adults-fam">Adults (120 AR ea):</label>
                   <input type="number" id="family-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPrice()">
                 </div>
                 <div class="counter-row">
-                  <label for="family-kids">Kids (75 AR ea):</label>
+                  <label for="family-kids" id="lbl-kids-fam">Kids (75 AR ea):</label>
                   <input type="number" id="family-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPrice()">
                 </div>
               </div>
             </div>
             <div>
               <div class="price-tag" id="price-family">395 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;">(200 AR initial + members)</p>
+              <p style="color: var(--text-muted); font-size: 12px;" id="subtext-fam">(200 AR base + members)</p>
             </div>
           </div>
 
           <div class="plan-box featured">
             <div>
-              <h3 style="color: var(--accent-gold);">Family Premium</h3>
-              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">High-tier complete family access.</p>
+              <h3 style="color: var(--accent-gold);" id="lbl-plan-famprem">Family Premium</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-famprem">Complete family tier.</p>
               
               <div style="margin-top: 14px;">
                 <div class="counter-row">
-                  <label for="fam-prem-adults">Adults (400 AR ea):</label>
+                  <label for="fam-prem-adults" id="lbl-adults-prem">Adults (400 AR ea):</label>
                   <input type="number" id="fam-prem-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPremiumPrice()">
                 </div>
                 <div class="counter-row">
-                  <label for="fam-prem-kids">Kids (250 AR ea):</label>
+                  <label for="fam-prem-kids" id="lbl-kids-prem">Kids (250 AR ea):</label>
                   <input type="number" id="fam-prem-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPremiumPrice()">
                 </div>
               </div>
             </div>
             <div>
               <div class="price-tag gold" id="price-family-premium">950 AR</div>
-              <p style="color: var(--text-muted); font-size: 12px;">(300 AR initial + members)</p>
+              <p style="color: var(--text-muted); font-size: 12px;" id="subtext-famprem">(300 AR base + members)</p>
             </div>
           </div>
 
@@ -609,47 +625,45 @@
       </div>
     </section>
 
-    <!-- TAB 3: SETTINGS -->
     <section id="tab-settings" class="tab-content">
       <div class="dashboard-card">
         <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
         
         <div class="setting-row">
           <div>
-            <strong>Dark Theme</strong>
-            <p style="font-size: 13px; color: var(--text-muted);">Toggle dark/light background display</p>
+            <strong id="lbl-dark-theme">Dark Theme</strong>
+            <p style="font-size: 13px; color: var(--text-muted);" id="desc-dark-theme">Toggle dark/light background display</p>
           </div>
           <label class="switch">
-            <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+            <input type="checkbox" id="themeToggle" onchange="toggleTheme()" checked>
             <span class="slider"></span>
           </label>
         </div>
 
         <div class="setting-row">
           <div>
-            <strong>Email Verification</strong>
-            <p style="font-size: 13px; color: var(--text-muted);">Your Firebase Auth verification status</p>
+            <strong id="lbl-email-ver">Email Verification</strong>
+            <p style="font-size: 13px; color: var(--text-muted);" id="desc-email-ver">Your Firebase Auth verification status</p>
           </div>
-          <span style="color: var(--accent-green); font-weight: 700;">Verified</span>
+          <span style="color: var(--accent-green); font-weight: 700;" id="txt-verified">Verified</span>
         </div>
 
         <div class="setting-row">
           <div>
-            <strong>Interface Language</strong>
-            <p style="font-size: 13px; color: var(--text-muted);">Selected system display language</p>
+            <strong id="lbl-interface-lang">Interface Language</strong>
+            <p style="font-size: 13px; color: var(--text-muted);" id="desc-interface-lang">Selected system display language</p>
           </div>
           <span id="currentLangDisplay" style="font-weight: 700;">English</span>
         </div>
       </div>
     </section>
 
-    <!-- TAB 4: AI CHAT -->
     <section id="tab-aichat" class="tab-content">
       <div class="dashboard-card" style="padding: 20px;">
         <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
         <div class="chat-container">
           <div class="chat-messages" id="chatBox">
-            <div class="chat-msg bot">Hello! I am your DigitAll Assistant. How can I help you with your plans today?</div>
+            <div class="chat-msg bot" id="txt-ai-welcome">Hello! I am your DigitAll Assistant. How can I help you with your plans today?</div>
           </div>
           <form class="chat-input-row" id="aiForm">
             <input type="text" class="chat-input" id="aiInput" placeholder="Ask a question..." required />
@@ -690,6 +704,8 @@
     const db = getFirestore(app);
 
     let activeDiscount = 0;
+    let selectedCycle = 'monthly'; // 'weekly' | 'monthly' | 'yearly'
+    let currentLang = 'EN';
     let initialAuthChecked = false;
 
     onAuthStateChanged(auth, (user) => {
@@ -709,37 +725,69 @@
       }
     });
 
+    function getAdjustedMonthlyBase(baseMonthly) {
+      if (selectedCycle === 'weekly') {
+        return (baseMonthly / 4) * 1.15; // Weekly: base/4 + 15% surcharge
+      } else if (selectedCycle === 'yearly') {
+        return (baseMonthly * 12) * 0.90; // Yearly: base*12 - 10% discount
+      }
+      return baseMonthly; // Monthly default
+    }
+
     window.calculateFamilyPrice = function() {
       const adults = parseInt(document.getElementById('family-adults').value) || 0;
       const kids = parseInt(document.getElementById('family-kids').value) || 0;
-      const basePrice = 200 + (adults * 120) + (kids * 75);
-      renderPrice('price-family', basePrice);
+      const baseMonthly = 200 + (adults * 120) + (kids * 75);
+      renderPrice('price-family', baseMonthly);
     };
 
     window.calculateFamilyPremiumPrice = function() {
       const adults = parseInt(document.getElementById('fam-prem-adults').value) || 0;
       const kids = parseInt(document.getElementById('fam-prem-kids').value) || 0;
-      const basePrice = 300 + (adults * 400) + (kids * 250);
-      renderPrice('price-family-premium', basePrice);
+      const baseMonthly = 300 + (adults * 400) + (kids * 250);
+      renderPrice('price-family-premium', baseMonthly);
     };
 
-    function renderPrice(elementId, basePrice) {
-      const finalPrice = activeDiscount > 0 ? basePrice * (1 - activeDiscount / 100) : basePrice;
+    function renderPrice(elementId, baseMonthly) {
+      const cyclePrice = getAdjustedMonthlyBase(baseMonthly);
+      const finalPrice = activeDiscount > 0 ? cyclePrice * (1 - activeDiscount / 100) : cyclePrice;
       const target = document.getElementById(elementId);
+      
       if (activeDiscount > 0) {
-        target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 18px; margin-right: 6px;">${basePrice} AR</span>${Math.round(finalPrice)} AR`;
+        target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 16px; margin-right: 6px;">${Math.round(cyclePrice)} AR</span>${Math.round(finalPrice)} AR`;
       } else {
-        target.textContent = `${Math.round(basePrice)} AR`;
+        target.textContent = `${Math.round(finalPrice)} AR`;
       }
     }
 
     function updateAllPrices() {
       renderPrice('price-standard', 200);
-      renderPrice('price-plus', 200);
+      renderPrice('price-plus', 500);
       renderPrice('price-pro', 1200);
       calculateFamilyPrice();
       calculateFamilyPremiumPrice();
+      updateCycleSubtexts();
     }
+
+    function updateCycleSubtexts() {
+      const cycleTexts = {
+        EN: { weekly: "Per week", monthly: "Per month", yearly: "Per year" },
+        FR: { weekly: "Par semaine", monthly: "Par mois", yearly: "Par an" },
+        MG: { weekly: "Isan-kerinandro", monthly: "Isam-bolana", yearly: "Isan-taona" }
+      };
+      
+      const txt = cycleTexts[currentLang][selectedCycle];
+      document.querySelectorAll('.cycle-subtext').forEach(el => el.textContent = txt);
+    }
+
+    document.querySelectorAll('.cycle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cycle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedCycle = btn.getAttribute('data-cycle');
+        updateAllPrices();
+      });
+    });
 
     const navButtons = document.querySelectorAll('.nav-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -761,7 +809,7 @@
 
       if (!codeInput) {
         msg.style.color = "#ef4444";
-        msg.textContent = "Please enter a promo code.";
+        msg.textContent = dictionary[currentLang].promoErrEmpty;
         return;
       }
 
@@ -775,45 +823,189 @@
           activeDiscount = isNaN(parsedDiscount) ? 0 : parsedDiscount;
 
           msg.style.color = "#00ff87";
-          msg.textContent = `Promo code applied! ${activeDiscount}% discount active.`;
+          msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
 
           updateAllPrices();
         } else {
           msg.style.color = "#ef4444";
-          msg.textContent = "Invalid promo code.";
+          msg.textContent = dictionary[currentLang].promoInvalid;
         }
       } catch (err) {
         console.error("Promo code fetch error:", err);
         msg.style.color = "#ef4444";
-        msg.textContent = "Error verifying promo code.";
+        msg.textContent = dictionary[currentLang].promoErrFetch;
       }
     });
 
+    // DARK THEME FIX: Correct toggle orientation logic
     window.toggleTheme = function() {
-      const isDark = !document.body.classList.contains('light-mode');
-      if (isDark) {
-        document.body.classList.add('light-mode');
-        localStorage.setItem('digitall_theme', 'light');
-      } else {
+      const themeToggle = document.getElementById('themeToggle');
+      if (themeToggle.checked) {
         document.body.classList.remove('light-mode');
         localStorage.setItem('digitall_theme', 'dark');
+      } else {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('digitall_theme', 'light');
       }
     };
 
     if (localStorage.getItem('digitall_theme') === 'light') {
       document.body.classList.add('light-mode');
+      document.getElementById('themeToggle').checked = false;
+    } else {
+      document.body.classList.remove('light-mode');
       document.getElementById('themeToggle').checked = true;
     }
 
     const dictionary = {
-      EN: { welcome: "Welcome Back", dashTab: "Dashboard", plansTab: "Plans", settingsTab: "Settings", aiTab: "AI Assistant", balance: "Total Balance", activity: "Active Services", tickets: "Support Tickets", plansHeader: "Available Subscription Plans", settingsHeader: "Account Settings", aiHeader: "DigitAll AI Assistant", logout: "Sign Out" },
-      FR: { welcome: "Bon retour", dashTab: "Tableau de bord", plansTab: "Offres", settingsTab: "Paramètres", aiTab: "Assistant IA", balance: "Solde Total", activity: "Services Actifs", tickets: "Tickets de Support", plansHeader: "Offres d'Abonnement", settingsHeader: "Paramètres du Compte", aiHeader: "Assistant IA DigitAll", logout: "Se déconnecter" },
-      MG: { welcome: "Tonga soa indray", dashTab: "Solaitrabe", plansTab: "Fahafohezana", settingsTab: "Kajikajy", aiTab: "Mpanampy AI", balance: "Teti-bola Samy hafa", activity: "Tolotra Mandeha", tickets: "Hafatra Support", plansHeader: "Tolotra Misy", settingsHeader: "Kajikajin'ny Kaonty", aiHeader: "Mpanampy IA DigitAll", logout: "Hivoaka" }
+      EN: {
+        welcome: "Welcome Back",
+        dashTab: "Dashboard",
+        plansTab: "Plans",
+        settingsTab: "Settings",
+        aiTab: "AI Assistant",
+        balance: "Total Balance",
+        activity: "Active Services",
+        tickets: "Support Tickets",
+        plansHeader: "Available Subscription Plans",
+        settingsHeader: "Account Settings",
+        aiHeader: "DigitAll AI Assistant",
+        logout: "Sign Out",
+        cycleWeekly: "Weekly (+15%)",
+        cycleMonthly: "Monthly",
+        cycleYearly: "Yearly (-10%)",
+        planStd: "Standard",
+        planPlus: "Plus",
+        planPro: "Pro",
+        planFam: "Family",
+        planFamPrem: "Family Premium",
+        descStd: "Basic individual tier.",
+        descPlus: "Intermediate access tier.",
+        descPro: "Advanced power access.",
+        descFam: "Custom household plan.",
+        descFamPrem: "Complete family tier.",
+        lblAdultsFam: "Adults (120 AR ea):",
+        lblKidsFam: "Kids (75 AR ea):",
+        lblAdultsPrem: "Adults (400 AR ea):",
+        lblKidsPrem: "Kids (250 AR ea):",
+        subtextFam: "(200 AR base + members)",
+        subtextFamPrem: "(300 AR base + members)",
+        darkTheme: "Dark Theme",
+        descDarkTheme: "Toggle dark/light background display",
+        emailVer: "Email Verification",
+        descEmailVer: "Your Firebase Auth verification status",
+        verified: "Verified",
+        interfaceLang: "Interface Language",
+        descInterfaceLang: "Selected system display language",
+        aiWelcome: "Hello! I am your DigitAll Assistant. How can I help you with your plans today?",
+        placeholderPromo: "ENTER PROMO CODE",
+        btnApply: "Apply Code",
+        promoSuccess: "Promo code applied! Discount:",
+        promoInvalid: "Invalid promo code.",
+        promoErrEmpty: "Please enter a promo code.",
+        promoErrFetch: "Error verifying promo code."
+      },
+      FR: {
+        welcome: "Bon retour",
+        dashTab: "Tableau de bord",
+        plansTab: "Offres",
+        settingsTab: "Paramètres",
+        aiTab: "Assistant IA",
+        balance: "Solde Total",
+        activity: "Services Actifs",
+        tickets: "Tickets de Support",
+        plansHeader: "Offres d'Abonnement",
+        settingsHeader: "Paramètres du Compte",
+        aiHeader: "Assistant IA DigitAll",
+        logout: "Se déconnecter",
+        cycleWeekly: "Hebdomadaire (+15%)",
+        cycleMonthly: "Mensuel",
+        cycleYearly: "Annuel (-10%)",
+        planStd: "Standard",
+        planPlus: "Plus",
+        planPro: "Pro",
+        planFam: "Famille",
+        planFamPrem: "Famille Premium",
+        descStd: "Offre individuelle de base.",
+        descPlus: "Offre d'accès intermédiaire.",
+        descPro: "Accès avancé haute performance.",
+        descFam: "Plan familial personnalisable.",
+        descFamPrem: "Offre familiale complète.",
+        lblAdultsFam: "Adultes (120 AR ch.):",
+        lblKidsFam: "Enfants (75 AR ch.):",
+        lblAdultsPrem: "Adultes (400 AR ch.):",
+        lblKidsPrem: "Enfants (250 AR ch.):",
+        subtextFam: "(200 AR base + membres)",
+        subtextFamPrem: "(300 AR base + membres)",
+        darkTheme: "Thème Sombre",
+        descDarkTheme: "Basculez l'affichage sombre/clair",
+        emailVer: "Vérification Email",
+        descEmailVer: "Statut de vérification Firebase Auth",
+        verified: "Vérifié",
+        interfaceLang: "Langue de l'interface",
+        descInterfaceLang: "Langue d'affichage sélectionnée",
+        aiWelcome: "Bonjour! Je suis votre assistant DigitAll. Comment puis-je vous aider aujourd'hui?",
+        placeholderPromo: "ENTRER CODE PROMO",
+        btnApply: "Appliquer",
+        promoSuccess: "Code promo appliqué! Remise:",
+        promoInvalid: "Code promo invalide.",
+        promoErrEmpty: "Veuillez entrer un code promo.",
+        promoErrFetch: "Erreur de vérification du code promo."
+      },
+      MG: {
+        welcome: "Tonga soa indray",
+        dashTab: "Solaitrabe",
+        plansTab: "Fahafohezana",
+        settingsTab: "Kajikajy",
+        aiTab: "Mpanampy AI",
+        balance: "Teti-bola Samy hafa",
+        activity: "Tolotra Mandeha",
+        tickets: "Hafatra Support",
+        plansHeader: "Tolotra Misy",
+        settingsHeader: "Kajikajin'ny Kaonty",
+        aiHeader: "Mpanampy IA DigitAll",
+        logout: "Hivoaka",
+        cycleWeekly: "Kerinandro (+15%)",
+        cycleMonthly: "Isam-bolana",
+        cycleYearly: "Taona (-10%)",
+        planStd: "Tsotra",
+        planPlus: "Manoatra",
+        planPro: "Pro",
+        planFam: "Karakara",
+        planFamPrem: "Karakara Premium",
+        descStd: "Tolotra tsotra ho an'ny olon-tokana.",
+        descPlus: "Tolotra antonony ho an'olona.",
+        descPro: "Tolotra ho an'ny mpampiasa lehibe.",
+        descFam: "Tolotra azo ovaina ho an'ny fianakaviana.",
+        descFamPrem: "Tolotra feno ho an'ny fianakaviana.",
+        lblAdultsFam: "Mbe (120 AR isany):",
+        lblKidsFam: "Ankizy (75 AR isany):",
+        lblAdultsPrem: "Mbe (400 AR isany):",
+        lblKidsPrem: "Ankizy (250 AR isany):",
+        subtextFam: "(200 AR fototra + mpikambana)",
+        subtextFamPrem: "(300 AR fototra + mpikambana)",
+        darkTheme: "Akanjo Maizina",
+        descDarkTheme: "Ovaay hazavana/famaizinana ny rindranasa",
+        emailVer: "Fanamarinana Email",
+        descEmailVer: "Fanehoana ny fahamarinan'ny Firebase Auth",
+        verified: "Voamarina",
+        interfaceLang: "Teny ampiasaina",
+        descInterfaceLang: "Teny nosafidiana hiseho",
+        aiWelcome: "Manao ahoana! Izaho no mpanampy DigitAll. Ahoana no azoko anampiana anao ambonin'ny tolotra?",
+        placeholderPromo: "AMPIRATRO CODE PROMO",
+        btnApply: "Hanamarina",
+        promoSuccess: "Lasa ny code promo! Afototra:",
+        promoInvalid: "Code promo tsy mety.",
+        promoErrEmpty: "Mampidira code promo azafady.",
+        promoErrFetch: "Nisy olana tamin'ny fizahana ny code."
+      }
     };
 
     function updateLanguage(lang) {
+      currentLang = lang;
       const t = dictionary[lang];
       if (!t) return;
+
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
       document.getElementById('txt-welcome').textContent = t.welcome;
       document.getElementById('btn-tab-dash').textContent = t.dashTab;
@@ -827,8 +1019,47 @@
       document.getElementById('txt-settings-header').textContent = t.settingsHeader;
       document.getElementById('txt-ai-header').textContent = t.aiHeader;
       document.getElementById('logoutBtn').textContent = t.logout;
+
+      document.getElementById('btn-cycle-weekly').textContent = t.cycleWeekly;
+      document.getElementById('btn-cycle-monthly').textContent = t.cycleMonthly;
+      document.getElementById('btn-cycle-yearly').textContent = t.cycleYearly;
+
+      document.getElementById('lbl-plan-std').textContent = t.planStd;
+      document.getElementById('lbl-plan-plus').textContent = t.planPlus;
+      document.getElementById('lbl-plan-pro').textContent = t.planPro;
+      document.getElementById('lbl-plan-fam').textContent = t.planFam;
+      document.getElementById('lbl-plan-famprem').textContent = t.planFamPrem;
+
+      document.getElementById('desc-std').textContent = t.descStd;
+      document.getElementById('desc-plus').textContent = t.descPlus;
+      document.getElementById('desc-pro').textContent = t.descPro;
+      document.getElementById('desc-fam').textContent = t.descFam;
+      document.getElementById('desc-famprem').textContent = t.descFamPrem;
+
+      document.getElementById('lbl-adults-fam').textContent = t.lblAdultsFam;
+      document.getElementById('lbl-kids-fam').textContent = t.lblKidsFam;
+      document.getElementById('lbl-adults-prem').textContent = t.lblAdultsPrem;
+      document.getElementById('lbl-kids-prem').textContent = t.lblKidsPrem;
+
+      document.getElementById('subtext-fam').textContent = t.subtextFam;
+      document.getElementById('subtext-famprem').textContent = t.subtextFamPrem;
+
+      document.getElementById('lbl-dark-theme').textContent = t.darkTheme;
+      document.getElementById('desc-dark-theme').textContent = t.descDarkTheme;
+      document.getElementById('lbl-email-ver').textContent = t.emailVer;
+      document.getElementById('desc-email-ver').textContent = t.descEmailVer;
+      document.getElementById('txt-verified').textContent = t.verified;
+      document.getElementById('lbl-interface-lang').textContent = t.interfaceLang;
+      document.getElementById('desc-interface-lang').textContent = t.descInterfaceLang;
+
+      document.getElementById('promoCodeInput').placeholder = t.placeholderPromo;
+      document.getElementById('btnApplyPromo').textContent = t.btnApply;
+      document.getElementById('txt-ai-welcome').textContent = t.aiWelcome;
+
       const langNames = { EN: "English", FR: "Français", MG: "Malagasy" };
       document.getElementById('currentLangDisplay').textContent = langNames[lang];
+
+      updateAllPrices();
     }
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -864,6 +1095,8 @@
       await signOut(auth);
       window.location.href = "login.html";
     });
+
+    updateAllPrices();
   </script>
 </body>
 </html>
