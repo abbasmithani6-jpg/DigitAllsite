@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | DigitAll</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
     :root {
       --bg-dark: #070614;
       --card-bg: #100c2a;
@@ -20,7 +24,7 @@
       --text-muted: #94a3b8;
       --input-bg: rgba(255, 255, 255, 0.04);
       --input-border: rgba(255, 255, 255, 0.1);
-      --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     body.light-mode {
@@ -39,13 +43,14 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: var(--font-family);
+      font-family: var(--font-family) !important;
       background-color: var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       transition: background-color 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* Top Navigation Bar */
@@ -99,6 +104,7 @@
     }
 
     .nav-btn {
+      font-family: var(--font-family);
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--input-border);
       color: var(--text-main);
@@ -138,6 +144,7 @@
     }
 
     .lang-btn {
+      font-family: var(--font-family);
       background: transparent;
       border: none;
       color: var(--text-muted);
@@ -154,6 +161,7 @@
     }
 
     .btn-logout {
+      font-family: var(--font-family);
       background: rgba(239, 68, 68, 0.1);
       border: 1px solid rgba(239, 68, 68, 0.3);
       color: #ef4444;
@@ -276,6 +284,7 @@
     }
 
     .counter-input {
+      font-family: var(--font-family);
       width: 60px;
       padding: 6px 10px;
       background: var(--input-bg);
@@ -286,7 +295,6 @@
       text-align: center;
     }
 
-    /* Promo Code Section */
     .promo-section {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--card-border);
@@ -299,18 +307,19 @@
     }
 
     .promo-input {
+      font-family: var(--font-family);
       flex: 1;
       padding: 12px 16px;
       background: var(--input-bg);
       border: 1px solid var(--input-border);
       border-radius: 12px;
       color: var(--text-main);
-      font-family: inherit;
       text-transform: uppercase;
       font-weight: 700;
     }
 
     .btn-send {
+      font-family: var(--font-family);
       padding: 12px 24px;
       background: var(--accent-purple);
       color: #ffffff;
@@ -325,7 +334,6 @@
       background-color: #6d28d9;
     }
 
-    /* Settings & Controls */
     .setting-row {
       display: flex;
       align-items: center;
@@ -334,7 +342,6 @@
       border-bottom: 1px solid var(--input-border);
     }
 
-    /* Toggle Switch */
     .switch {
       position: relative;
       display: inline-block;
@@ -376,7 +383,6 @@
       background-color: #ffffff;
     }
 
-    /* AI Chat */
     .chat-container {
       display: flex;
       flex-direction: column;
@@ -427,6 +433,7 @@
     }
 
     .chat-input {
+      font-family: var(--font-family);
       flex: 1;
       padding: 12px 16px;
       background: var(--input-bg);
@@ -488,11 +495,12 @@
     <div class="welcome-card">
       <div class="welcome-text">
         <h1 id="txt-welcome">Welcome Back</h1>
-        <p id="userEmailDisplay">Authenticating session...</p>
+        <p id="userEmailDisplay">Loading profile...</p>
       </div>
       <span class="user-badge" id="accountStatus">Verified Account</span>
     </div>
 
+    <!-- TAB 1: DASHBOARD -->
     <section id="tab-dashboard" class="tab-content active">
       <div class="grid-cards">
         <div class="dashboard-card">
@@ -510,6 +518,7 @@
       </div>
     </section>
 
+    <!-- TAB 2: PLANS -->
     <section id="tab-plans" class="tab-content">
       <div class="dashboard-card">
         <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
@@ -592,6 +601,7 @@
       </div>
     </section>
 
+    <!-- TAB 3: SETTINGS -->
     <section id="tab-settings" class="tab-content">
       <div class="dashboard-card">
         <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
@@ -625,6 +635,7 @@
       </div>
     </section>
 
+    <!-- TAB 4: AI CHAT -->
     <section id="tab-aichat" class="tab-content">
       <div class="dashboard-card" style="padding: 20px;">
         <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
@@ -672,22 +683,27 @@
 
     let activeDiscount = 0;
 
-    // Fixed Auth Guard (Prevents immediate redirect loops)
-    onAuthStateChanged(auth, async (user) => {
+    // Fixed Auth Handler: Waits for initial Firebase resolution state
+    let initialAuthChecked = false;
+
+    onAuthStateChanged(auth, (user) => {
       if (user) {
-        try {
-          // Verify user status safely without premature signout
-          document.getElementById('userEmailDisplay').textContent = user.email;
-        } catch (e) {
-          console.error("Auth status error:", e);
-        }
+        document.getElementById('userEmailDisplay').textContent = user.email;
+        initialAuthChecked = true;
       } else {
-        // Only redirect if Firebase explicitly confirms no active session
-        window.location.href = "login.html";
+        // Only redirect if initial token reading has finished and user is truly absent
+        if (initialAuthChecked || document.readyState === "complete") {
+          window.location.href = "login.html";
+        } else {
+          setTimeout(() => {
+            if (!auth.currentUser) {
+              window.location.href = "login.html";
+            }
+          }, 1500);
+        }
       }
     });
 
-    // Dynamic Pricing Calculations
     window.calculateFamilyPrice = function() {
       const adults = parseInt(document.getElementById('family-adults').value) || 0;
       const kids = parseInt(document.getElementById('family-kids').value) || 0;
@@ -712,7 +728,6 @@
       }
     }
 
-    // Navigation Tab Switching
     const navButtons = document.querySelectorAll('.nav-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -727,7 +742,6 @@
 
     document.getElementById('floatingAiBtn').addEventListener('click', () => switchTab('aichat'));
 
-    // Admin Promo Code Direct Verification via Firestore
     document.getElementById('btnApplyPromo').addEventListener('click', async () => {
       const codeInput = document.getElementById('promoCodeInput').value.trim().toUpperCase();
       const msg = document.getElementById('promoMessage');
@@ -764,7 +778,6 @@
       }
     });
 
-    // Theme Switcher
     window.toggleTheme = function() {
       const isDark = !document.body.classList.contains('light-mode');
       if (isDark) {
@@ -781,7 +794,6 @@
       document.getElementById('themeToggle').checked = true;
     }
 
-    // Multilingual support
     const dictionary = {
       EN: { welcome: "Welcome Back", dashTab: "Dashboard", plansTab: "Plans", settingsTab: "Settings", aiTab: "AI Assistant", balance: "Total Balance", activity: "Active Services", tickets: "Support Tickets", plansHeader: "Available Subscription Plans", settingsHeader: "Account Settings", aiHeader: "DigitAll AI Assistant", logout: "Sign Out" },
       FR: { welcome: "Bon retour", dashTab: "Tableau de bord", plansTab: "Offres", settingsTab: "Paramètres", aiTab: "Assistant IA", balance: "Solde Total", activity: "Services Actifs", tickets: "Tickets de Support", plansHeader: "Offres d'Abonnement", settingsHeader: "Paramètres du Compte", aiHeader: "Assistant IA DigitAll", logout: "Se déconnecter" },
@@ -812,7 +824,6 @@
       btn.addEventListener('click', function() { updateLanguage(this.getAttribute('data-lang')); });
     });
 
-    // AI Form Handler
     const aiForm = document.getElementById('aiForm');
     const aiInput = document.getElementById('aiInput');
     const chatBox = document.getElementById('chatBox');
@@ -838,7 +849,6 @@
       }, 500);
     });
 
-    // Sign Out Handler
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await signOut(auth);
       window.location.href = "login.html";
