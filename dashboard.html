@@ -1,611 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | DigitAll</title>
 
-     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      onAuthStateChanged, 
-      signOut 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      getDoc 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
-      authDomain: "digitall-c77d8.firebaseapp.com",
-      projectId: "digitall-c77d8",
-      storageBucket: "digitall-c77d8.firebasestorage.app",
-      messagingSenderId: "922798712588",
-      appId: "1:922798712588:web:43235136b5b1bf58168b29"
-    };
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-    let activeDiscount = 0;
-    let selectedCycle = 'monthly';
-    let currentLang = 'EN';
-
-    const AR_TO_CREDITS_RATIO = 2.5;
-
-    let userCredits = 0; 
-    let userMonthlyAllocation = "No active plan yet"; 
-    let userPlanTier = "None";
-    let isAdultFamilyMember = false; 
-
-    document.addEventListener('DOMContentLoaded', () => {
-      updateDashboardMetrics();
-      updateAllPrices();
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('userEmailDisplay').textContent = user.email;
-        updateDashboardMetrics();
-      } else {
-        setTimeout(() => {
-          if (!auth.currentUser) {
-            window.location.href = "login.html";
-          }
-        }, 1200);
-      }
-    });
-
-    function updateDashboardMetrics() {
-      document.getElementById('userCreditDisplay').textContent = `${userCredits} Credits`;
-      document.getElementById('userIncomeDisplay').textContent = userMonthlyAllocation;
-      document.getElementById('userPlanTierDisplay').textContent = userPlanTier;
-      
-      const transferSec = document.getElementById('familyTransferSection');
-      if (transferSec) {
-        transferSec.style.display = isAdultFamilyMember ? 'flex' : 'none';
-      }
+    :root {
+      --bg-dark: #070614;
+      --card-bg: #100c2a;
+      --card-border: rgba(124, 58, 237, 0.25);
+      --accent-green: #00ff87;
+      --accent-purple: #7c3aed;
+      --accent-gold: #ffb703;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    document.getElementById('btnSendTransfer')?.addEventListener('click', () => {
-      const target = document.getElementById('transferTargetInput').value.trim();
-      const amt = parseInt(document.getElementById('transferAmountInput').value) || 0;
-      const msg = document.getElementById('transferMsg');
-
-      if (!target) {
-        msg.style.color = "#ef4444";
-        msg.textContent = "Please specify target child account ID.";
-        return;
-      }
-      if (amt <= 0 || amt > userCredits) {
-        msg.style.color = "#ef4444";
-        msg.textContent = "Invalid credit amount selection.";
-        return;
-      }
-
-      userCredits -= amt;
-      updateDashboardMetrics();
-      msg.style.color = "#00ff87";
-      msg.textContent = `Successfully transferred ${amt} credits to ${target}!`;
-      document.getElementById('transferTargetInput').value = '';
-    });
-
-    function getAdjustedMonthlyBase(baseMonthly) {
-      if (selectedCycle === 'weekly') {
-        return (baseMonthly / 4) * 1.15;
-      } else if (selectedCycle === 'yearly') {
-        return baseMonthly * 12;
-      }
-      return baseMonthly;
+    body.light-mode {
+      --bg-dark: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-border: rgba(124, 58, 237, 0.15);
+      --accent-green: #10b981;
+      --accent-purple: #6d28d9;
+      --accent-gold: #d97706;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --input-bg: rgba(0, 0, 0, 0.03);
+      --input-border: rgba(0, 0, 0, 0.12);
     }
 
-    window.calculateFamilyPrice = function() {
-      const adults = parseInt(document.getElementById('family-adults').value) || 0;
-      const kids = parseInt(document.getElementById('family-kids').value) || 0;
-      const baseMonthly = 200 + (adults * 120) + (kids * 75);
-      renderPrice('price-family', 'credit-price-fam', baseMonthly);
-    };
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    window.calculateFamilyPremiumPrice = function() {
-      const adults = parseInt(document.getElementById('fam-prem-adults').value) || 0;
-      const kids = parseInt(document.getElementById('fam-prem-kids').value) || 0;
-      const baseMonthly = 300 + (adults * 400) + (kids * 250);
-      renderPrice('price-family-premium', 'credit-price-famprem', baseMonthly);
-    };
-
-    function renderPrice(elementId, creditElementId, baseMonthly) {
-      const cyclePrice = getAdjustedMonthlyBase(baseMonthly);
-      const finalPrice = activeDiscount > 0 ? cyclePrice * (1 - activeDiscount / 100) : cyclePrice;
-      const target = document.getElementById(elementId);
-      const creditTarget = document.getElementById(creditElementId);
-      
-      const roundedPrice = Math.round(finalPrice);
-      const roundedOriginal = Math.round(cyclePrice);
-      const roundedCredits = Math.round(finalPrice * AR_TO_CREDITS_RATIO);
-
-      let priceDisplay = `${roundedPrice} AR`;
-      if (selectedCycle === 'weekly') {
-        const fullYearCost = Math.round(cyclePrice * 52);
-        priceDisplay += ` <span style="font-size: 11px; opacity: 0.7;">(Full 52-week cost: ${fullYearCost} AR)</span>`;
-      } else if (selectedCycle === 'monthly') {
-        const fullYearCost = Math.round(cyclePrice * 12);
-        priceDisplay += ` <span style="font-size: 11px; opacity: 0.7;">(12-month year cost: ${fullYearCost} AR)</span>`;
-      } else if (selectedCycle === 'yearly') {
-        priceDisplay += ` <span style="font-size: 11px; opacity: 0.7;">(Annual billing package)</span>`;
-      }
-
-      if (activeDiscount > 0) {
-        target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 16px; margin-right: 6px;">${roundedOriginal} AR</span>${priceDisplay}`;
-      } else {
-        target.innerHTML = priceDisplay;
-      }
-
-      creditTarget.textContent = `Or ${roundedCredits.toLocaleString()} Credits`;
+    body {
+      font-family: var(--font-family) !important;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
     }
 
-    function updateAllPrices() {
-      renderPrice('price-standard', 'credit-price-std', 200);
-      renderPrice('price-plus', 'credit-price-plus', 500);
-      renderPrice('price-pro', 'credit-price-pro', 1200);
-      calculateFamilyPrice();
-      calculateFamilyPremiumPrice();
-      updateCycleSubtexts();
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(16, 12, 42, 0.7);
+      backdrop-filter: blur(12px);
     }
 
-    function updateCycleSubtexts() {
-      const cycleTexts = {
-        EN: { weekly: "Per week", monthly: "Per month", yearly: "Per year" },
-        FR: { weekly: "Par semaine", monthly: "Par mois", yearly: "Par an" },
-        MG: { weekly: "Isan-kerinandro", monthly: "Isam-bolana", yearly: "Isan-taona" }
-      };
-      
-      const txt = cycleTexts[currentLang][selectedCycle];
-      document.querySelectorAll('.cycle-subtext').forEach(el => el.textContent = txt);
+    body.light-mode .navbar {
+      background: rgba(255, 255, 255, 0.8);
     }
 
-    document.querySelectorAll('.cycle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cycle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedCycle = btn.getAttribute('data-cycle');
-        updateAllPrices();
-      });
-    });
-
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    function switchTab(targetTab) {
-      navButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === targetTab));
-      tabContents.forEach(c => c.classList.toggle('active', c.id === `tab-${targetTab}`));
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
     }
 
-    navButtons.forEach(btn => {
-      btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
-    });
+    .brand-logo img { height: 38px; width: auto; }
 
-    document.getElementById('floatingAiBtn').addEventListener('click', () => switchTab('aichat'));
-
-    document.getElementById('btnApplyPromo').addEventListener('click', async () => {
-      const codeInput = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-      const msg = document.getElementById('promoMessage');
-
-      if (!codeInput) {
-        msg.style.color = "#ef4444";
-        msg.textContent = dictionary[currentLang].promoErrEmpty;
-        return;
-      }
-
-      try {
-        const promoRef = doc(db, "promocodes", codeInput);
-        const promoSnap = await getDoc(promoRef);
-
-        if (promoSnap.exists()) {
-          const data = promoSnap.data();
-          const parsedDiscount = Number(data.discount);
-          activeDiscount = isNaN(parsedDiscount) ? 0 : parsedDiscount;
-
-          msg.style.color = "#00ff87";
-          msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
-          updateAllPrices();
-        } else {
-          const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
-          if (staticCodes[codeInput] !== undefined) {
-            activeDiscount = staticCodes[codeInput];
-            msg.style.color = "#00ff87";
-            msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
-            updateAllPrices();
-          } else {
-            activeDiscount = 0;
-            msg.style.color = "#ef4444";
-            msg.textContent = dictionary[currentLang].promoInvalid;
-            updateAllPrices();
-          }
-        }
-      } catch (err) {
-        console.error("Promo code fetch error:", err);
-        const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
-        if (staticCodes[codeInput] !== undefined) {
-          activeDiscount = staticCodes[codeInput];
-          msg.style.color = "#00ff87";
-          msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
-          updateAllPrices();
-        } else {
-          activeDiscount = 0;
-          msg.style.color = "#ef4444";
-          msg.textContent = dictionary[currentLang].promoInvalid;
-          updateAllPrices();
-        }
-      }
-    });
-
-    window.toggleTheme = function() {
-      const themeToggle = document.getElementById('themeToggle');
-      if (themeToggle.checked) {
-        document.body.classList.remove('light-mode');
-        localStorage.setItem('digitall_theme', 'dark');
-      } else {
-        document.body.classList.add('light-mode');
-        localStorage.setItem('digitall_theme', 'light');
-      }
-    };
-
-    if (localStorage.getItem('digitall_theme') === 'light') {
-      document.body.classList.add('light-mode');
-      document.getElementById('themeToggle').checked = false;
-    } else {
-      document.body.classList.remove('light-mode');
-      document.getElementById('themeToggle').checked = true;
+    .brand-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
     }
 
-    const dictionary = {
-      EN: {
-        welcome: "Welcome Back",
-        dashTab: "Dashboard",
-        plansTab: "Plans",
-        settingsTab: "Settings",
-        aiTab: "AI Assistant",
-        balance: "Credit Balance",
-        activity: "Monthly Allocation",
-        status: "Current Plan Tier",
-        plansHeader: "Available Subscription Plans",
-        settingsHeader: "Account Settings",
-        aiHeader: "DigitAll AI Assistant",
-        logout: "Sign Out",
-        cycleWeekly: "Weekly",
-        cycleMonthly: "Monthly",
-        cycleYearly: "Yearly",
-        planStd: "Standard",
-        planPlus: "Plus",
-        planPro: "Pro",
-        planFam: "Family",
-        planFamPrem: "Family Premium",
-        descStd: "Basic individual access.",
-        descPlus: "Intermediate performance tier.",
-        descPro: "Maximum individual speed.",
-        descFam: "Custom shared household plan.",
-        descFamPrem: "Complete household performance tier.",
-        featStd1: "Single account access",
-        featStd2: "Standard cloud bandwidth",
-        featStd3: "Automated daily sync",
-        featStd4: "Credits: 0",
-        featPlus1: "High-speed data routes",
-        featPlus2: "Real-time sync automation",
-        featPlus3: "Auto-backup storage",
-        featPlus4: "Credits: 0",
-        featPro1: "Advanced AI Data Analysis",
-        featPro2: "Unlimited cloud throughput",
-        featPro3: "Automated recovery tools",
-        featPro4: "Credits: 0",
-        featFam1: "Centralized billing profile",
-        featFam2: "Credits: 0",
-        featFam3: "Kids get reduced credit income",
-        featPrem1: "Advanced AI Deep Insight Analysis",
-        featPrem2: "Automated child protection settings",
-        featPrem3: "Credits: 0",
-        lblAdultsFam: "Adults (120 AR ea):",
-        lblKidsFam: "Kids (75 AR ea):",
-        lblAdultsPrem: "Adults (400 AR ea):",
-        lblKidsPrem: "Kids (250 AR ea):",
-        subtextFam: "(200 AR base + members)",
-        subtextFamPrem: "(300 AR base + members)",
-        darkTheme: "Dark Theme",
-        descDarkTheme: "Toggle dark/light background display",
-        emailVer: "Email Verification",
-        descEmailVer: "Your Firebase Auth verification status",
-        verified: "Verified",
-        interfaceLang: "Interface Language",
-        descInterfaceLang: "Selected system display language",
-        aiWelcome: "Hello! I am your DigitAll Assistant powered by Gemini AI. How can I help you today?",
-        placeholderPromo: "ENTER PROMO CODE",
-        btnApply: "Apply Code",
-        promoSuccess: "Promo code applied! Discount:",
-        promoInvalid: "Invalid promo code.",
-        promoErrEmpty: "Please enter a promo code.",
-        transferHeader: "Transfer Credits to Child Member",
-        transferDesc: "Adult household profile credit delegation system."
-      },
-      FR: {
-        welcome: "Bon retour",
-        dashTab: "Tableau de bord",
-        plansTab: "Offres",
-        settingsTab: "Paramètres",
-        aiTab: "Assistant IA",
-        balance: "Solde de Crédits",
-        activity: "Allocation Mensuelle",
-        status: "Niveau d'Offre Actuel",
-        plansHeader: "Offres d'Abonnement",
-        settingsHeader: "Paramètres du Compte",
-        aiHeader: "Assistant IA DigitAll",
-        logout: "Se déconnecter",
-        cycleWeekly: "Hebdomadaire",
-        cycleMonthly: "Mensuel",
-        cycleYearly: "Annuel",
-        planStd: "Standard",
-        planPlus: "Plus",
-        planPro: "Pro",
-        planFam: "Famille",
-        planFamPrem: "Famille Premium",
-        descStd: "Accès individuel de base.",
-        descPlus: "Niveau de performance intermédiaire.",
-        descPro: "Vitesse individuelle maximale.",
-        descFam: "Offre partagée sur mesure.",
-        descFamPrem: "Performance complète pour le foyer.",
-        featStd1: "Accès pour un seul compte",
-        featStd2: "Bande passante cloud standard",
-        featStd3: "Synchronisation quotidienne",
-        featStd4: "Crédits : 0",
-        featPlus1: "Routes de données haute vitesse",
-        featPlus2: "Synchronisation en temps réel",
-        featPlus3: "Stockage de sauvegarde",
-        featPlus4: "Crédits : 0",
-        featPro1: "Analyse de données IA avancée",
-        featPro2: "Débit cloud illimité",
-        featPro3: "Outils de récupération",
-        featPro4: "Crédits : 0",
-        featFam1: "Profil de facturation centralisé",
-        featFam2: "Crédits : 0",
-        featFam3: "Revenu de crédit réduit",
-        featPrem1: "Analyse IA approfondie avancée",
-        featPrem2: "Protection des enfants",
-        featPrem3: "Crédits : 0",
-        lblAdultsFam: "Adultes (120 AR ch.):",
-        lblKidsFam: "Enfants (75 AR ch.):",
-        lblAdultsPrem: "Adultes (400 AR ch.):",
-        lblKidsPrem: "Enfants (250 AR ch.):",
-        subtextFam: "(200 AR base + membres)",
-        subtextFamPrem: "(300 AR base + membres)",
-        darkTheme: "Thème Sombre",
-        descDarkTheme: "Basculez l'affichage sombre/clair",
-        emailVer: "Vérification Email",
-        descEmailVer: "Statut de vérification Firebase Auth",
-        verified: "Vérifié",
-        interfaceLang: "Langue de l'interface",
-        descInterfaceLang: "Langue d'affichage sélectionnée",
-        aiWelcome: "Bonjour! Je suis votre assistant DigitAll propulsé par Gemini AI. Comment puis-je vous aider aujourd'hui?",
-        placeholderPromo: "ENTRER CODE PROMO",
-        btnApply: "Appliquer",
-        promoSuccess: "Code promo appliqué! Remise:",
-        promoInvalid: "Code promo invalide.",
-        promoErrEmpty: "Veuillez entrer un code promo.",
-        transferHeader: "Transférer des crédits à un enfant",
-        transferDesc: "Système de délégation de crédits pour adultes."
-      },
-      MG: {
-        welcome: "Tonga soa indray",
-        dashTab: "Solaitrabe",
-        plansTab: "Fahafohezana",
-        settingsTab: "Kajikajy",
-        aiTab: "Mpanampy AI",
-        balance: "Vola Credit",
-        activity: "Fizarana Isam-bolana",
-        status: "Sata Tolotra Amin'izao",
-        plansHeader: "Tolotra Misy",
-        settingsHeader: "Kajikajin'ny Kaonty",
-        aiHeader: "Mpanampy IA DigitAll",
-        logout: "Hivoaka",
-        cycleWeekly: "Kerinandro",
-        cycleMonthly: "Isam-bolana",
-        cycleYearly: "Taona",
-        planStd: "Tsotra",
-        planPlus: "Manoatra",
-        planPro: "Pro",
-        planFam: "Karakara",
-        planFamPrem: "Karakara Premium",
-        descStd: "Tolotra tsotra ho an'ny olon-tokana.",
-        descPlus: "Tolotra antonony ho an'olona.",
-        descPro: "Hafainganam-pandeha ambony indrindra.",
-        descFam: "Tolotra zaraina ho an'ny fianakaviana.",
-        descFamPrem: "Fahombiazana feno ho an'ny trano iray.",
-        featStd1: "Fidirana kaonty tokana",
-        featStd2: "Bande passante cloud tsotra",
-        featStd3: "Fampirindrana isan'andro",
-        featStd4: "Credits: 0",
-        featPlus1: "Lalam-pifandraisana mahery vaika",
-        featPlus2: "Fampirindrana amin'ny fotoana tena izy",
-        featPlus3: "Tahiry famerenana rakitra",
-        featPlus4: "Credits: 0",
-        featPro1: "Fanadihadiana AI mandroso",
-        featPro2: "Fandehanana cloud tsy misy fetra",
-        featPro3: "Fitaovana famerenana rakitra",
-        featPro4: "Credits: 0",
-        featFam1: "Kaonty fandoavam-bola iray ihany",
-        featFam2: "Credits: 0",
-        featFam3: "Kely ny credit ho an'ny ankizy",
-        featPrem1: "Fanadihadiana AI lalina kokoa",
-        featPrem2: "Fiarovana ny ankizy",
-        featPrem3: "Credits: 0",
-        lblAdultsFam: "Mbe (120 AR isany):",
-        lblKidsFam: "Ankizy (75 AR isany):",
-        lblAdultsPrem: "Mbe (400 AR isany):",
-        lblKidsPrem: "Ankizy (250 AR isany):",
-        subtextFam: "(200 AR fototra + mpikambana)",
-        subtextFamPrem: "(300 AR fototra + mpikambana)",
-        darkTheme: "Akanjo Maizina",
-        descDarkTheme: "Ovaay hazavana/famaizinana ny rindranasa",
-        emailVer: "Fanamarinana Email",
-        descEmailVer: "Fanehoana ny fahamarinan'ny Firebase Auth",
-        verified: "Voamarina",
-        interfaceLang: "Teny ampiasaina",
-        descInterfaceLang: "Teny nosafidiana hiseho",
-        aiWelcome: "Manao ahoana! Izaho no mpanampy DigitAll mampiasa Gemini AI. Ahoana no azoko anampiana anao indray?",
-        placeholderPromo: "AMPIRATRO CODE PROMO",
-        btnApply: "Hanamarina",
-        promoSuccess: "Lasa ny code promo! Afototra:",
-        promoInvalid: "Code promo tsy mety.",
-        promoErrEmpty: "Mampidira code promo azafady.",
-        transferHeader: "Fandefasana Credit ho an'ny Ankizy",
-        transferDesc: "Rafitra fandefasana credit avy amin'ny olon-dehibe."
-      }
-    };
+    .brand-name span { color: var(--accent-green); }
 
-    function updateLanguage(lang) {
-      currentLang = lang;
-      const t = dictionary[lang];
-      if (!t) return;
-
-      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
-      document.getElementById('txt-welcome').textContent = t.welcome;
-      document.getElementById('btn-tab-dash').textContent = t.dashTab;
-      document.getElementById('btn-tab-plans').textContent = t.plansTab;
-      document.getElementById('btn-tab-settings').textContent = t.settingsTab;
-      document.getElementById('btn-tab-ai').textContent = t.aiTab;
-      document.getElementById('lbl-balance').textContent = t.balance;
-      document.getElementById('lbl-activity').textContent = t.activity;
-      document.getElementById('lbl-status').textContent = t.status;
-      document.getElementById('txt-plans-header').textContent = t.plansHeader;
-      document.getElementById('txt-settings-header').textContent = t.settingsHeader;
-      document.getElementById('txt-ai-header').textContent = t.aiHeader;
-      document.getElementById('logoutBtn').textContent = t.logout;
-
-      document.getElementById('btn-cycle-weekly').textContent = t.cycleWeekly;
-      document.getElementById('btn-cycle-monthly').textContent = t.cycleMonthly;
-      document.getElementById('btn-cycle-yearly').textContent = t.cycleYearly;
-
-      document.getElementById('lbl-plan-std').textContent = t.planStd;
-      document.getElementById('lbl-plan-plus').textContent = t.planPlus;
-      document.getElementById('lbl-plan-pro').textContent = t.planPro;
-      document.getElementById('lbl-plan-fam').textContent = t.planFam;
-      document.getElementById('lbl-plan-famprem').textContent = t.planFamPrem;
-
-      document.getElementById('desc-std').textContent = t.descStd;
-      document.getElementById('desc-plus').textContent = t.descPlus;
-      document.getElementById('desc-pro').textContent = t.descPro;
-      document.getElementById('desc-fam').textContent = t.descFam;
-      document.getElementById('desc-famprem').textContent = t.descFamPrem;
-
-      document.getElementById('feat-std-1').textContent = t.featStd1;
-      document.getElementById('feat-std-2').textContent = t.featStd2;
-      document.getElementById('feat-std-3').textContent = t.featStd3;
-      document.getElementById('feat-std-4').textContent = t.featStd4;
-
-      document.getElementById('feat-plus-1').textContent = t.featPlus1;
-      document.getElementById('feat-plus-2').textContent = t.featPlus2;
-      document.getElementById('feat-plus-3').textContent = t.featPlus3;
-      document.getElementById('feat-plus-4').textContent = t.featPlus4;
-
-      document.getElementById('feat-pro-1').textContent = t.featPro1;
-      document.getElementById('feat-pro-2').textContent = t.featPro2;
-      document.getElementById('feat-pro-3').textContent = t.featPro3;
-      document.getElementById('feat-pro-4').textContent = t.featPro4;
-
-      document.getElementById('feat-fam-1').textContent = t.featFam1;
-      document.getElementById('feat-fam-2').textContent = t.featFam2;
-      document.getElementById('feat-fam-3').textContent = t.featFam3;
-
-      document.getElementById('feat-prem-1').textContent = t.featPrem1;
-      document.getElementById('feat-prem-2').textContent = t.featPrem2;
-      document.getElementById('feat-prem-3').textContent = t.featPrem3;
-
-      document.getElementById('lbl-adults-fam').textContent = t.lblAdultsFam;
-      document.getElementById('lbl-kids-fam').textContent = t.lblKidsFam;
-      document.getElementById('lbl-adults-prem').textContent = t.lblAdultsPrem;
-      document.getElementById('lbl-kids-prem').textContent = t.lblKidsPrem;
-
-      document.getElementById('subtext-fam').textContent = t.subtextFam;
-      document.getElementById('subtext-famprem').textContent = t.subtextFamPrem;
-
-      document.getElementById('lbl-dark-theme').textContent = t.darkTheme;
-      document.getElementById('desc-dark-theme').textContent = t.descDarkTheme;
-      document.getElementById('lbl-email-ver').textContent = t.emailVer;
-      document.getElementById('desc-email-ver').textContent = t.descEmailVer;
-      document.getElementById('txt-verified').textContent = t.verified;
-      document.getElementById('lbl-interface-lang').textContent = t.interfaceLang;
-      document.getElementById('desc-interface-lang').textContent = t.descInterfaceLang;
-
-      document.getElementById('promoCodeInput').placeholder = t.placeholderPromo;
-      document.getElementById('btnApplyPromo').textContent = t.btnApply;
-      document.getElementById('txt-ai-welcome').textContent = t.aiWelcome;
-
-      const transferHeaderEl = document.getElementById('lbl-transfer-header');
-      const transferDescEl = document.getElementById('lbl-transfer-desc');
-      if(transferHeaderEl) transferHeaderEl.textContent = t.transferHeader;
-      if(transferDescEl) transferDescEl.textContent = t.transferDesc;
-
-      const langNames = { EN: "English", FR: "Français", MG: "Malagasy" };
-      document.getElementById('currentLangDisplay').textContent = langNames[lang];
-
-      updateAllPrices();
+    .brand-tagline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent-green);
+      margin-top: 3px;
     }
 
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', function() { updateLanguage(this.getAttribute('data-lang')); });
-    });
+    .nav-center { display: flex; align-items: center; gap: 10px; }
 
-    const aiForm = document.getElementById('aiForm');
-    const aiInput = document.getElementById('aiInput');
-    const chatBox = document.getElementById('chatBox');
+    .nav-btn {
+      font-family: var(--font-family);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--input-border);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-    aiForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const text = aiInput.value.trim();
-      if (!text) return;
+    .nav-btn:hover {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: var(--accent-purple);
+    }
 
-      const userDiv = document.createElement('div');
-      userDiv.className = 'chat-msg user';
-      userDiv.textContent = text;
-      chatBox.appendChild(userDiv);
-      aiInput.value = '';
-      chatBox.scrollTop = chatBox.scrollHeight;
+    .nav-btn.active {
+      background: var(--accent-purple);
+      border-color: var(--accent-purple);
+      color: #ffffff;
+    }
 
-      const botDiv = document.createElement('div');
-      botDiv.className = 'chat-msg bot';
-      botDiv.textContent = "...";
-      chatBox.appendChild(botDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
+    .nav-right { display: flex; align-items: center; gap: 16px; }
 
-      try {
-        const response = await fetch(GEMINI_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: `You are the AI Assistant for DigitAll, a service platform. Provide concise, expert automated analytics or support responses. User query: ${text}` }]
-              }
-            ]
-          })
-        });
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--input-border);
+      border-radius: 20px;
+      padding: 4px;
+      gap: 2px;
+    }
 
-        const data = await response.json();
+    .lang-btn {
+      font-family: var(--font-family);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+    }
 
-        if (data.candidates && data.candidates[0].content.parts[0].text) {
-          botDiv.textContent = data.candidates[0].content.parts[0].text;
-        } else {
-          botDiv.textContent = "Sorry, I couldn't generate a proper response.";
-        }
-      } catch (err) {
-        console.error("Gemini API Error:", err);
-        botDiv.textContent = "Unable to connect to AI Assistant. Please check your API key.";
-      }
+    .lang-btn.active {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
 
-      chatBox.scrollTop = chatBox.scrollHeight;
-    });
+    .btn-logout {
+      font-family: var(--font-family);
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await signOut(auth);
-      window.location.href = "login.html";
-    });
-  </script>
+    .dashboard-container {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .welcome-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .welcome-text h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .welcome-text p { color: var(--text-muted); font-size: 14px; }
+
+    .user-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(0, 255, 135, 0.1);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .dashboard-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent-green);
+    }
+
+    .billing-toggle-container {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px;
+      border-radius: 16px;
+      width: fit-content;
+    }
+
+    .cycle-btn {
+      font-family: var(--font-family);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .cycle-btn.active {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .plan-box {
+      border: 1px solid var(--input-border);
+      border-radius: 20px;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s;
+    }
+
+    .plan-box:hover { border-color: var(--accent-purple); }
+
+    .plan-box.featured {
+      border-color: var(--accent-gold);
+      background: rgba(255, 183, 3, 0.04);
+    }
+
+    .price-tag {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent-green);
+      margin: 16px 0 2px 0;
+    }
+
+    .price-tag.gold { color: var(--accent-gold); }
+
+    .feature-list {
+      list-style: none;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feature-list li {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--accent-green);
+      font-weight: 800;
+    }
+
+    .plan-box.featured .feature-list li::before {
+      color: var(--accent-gold);
+    }
+
+    .counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .counter-input {
+      font-family: var(--font-family);
+      width: 54px;
+      padding: 4px 8px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .promo-section {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .promo-input {
+      font-family: var(--font-family);
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      color: var(--text-main);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .btn-send {
+      font-family: var(--font-family);
+      padding: 12px 24px;
+      background: var(--accent-purple);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-send:hover { background-color: #6d28d9; }
+
+    .transfer-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--input-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .transfer-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--input-border);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--input-border);
+      transition: .3s;
+      border-radius: 26px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--text-muted);
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent-purple);
+      border-color: var(--accent-purple);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+      background-color: #ffffff;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-msg {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid var(--accent-purple);
+      color: var(--text-main);
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: var(--accent-green);
+      color: #070614;
+      font-weight: 600;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid var(--input-border);
+    }
+
+    .chat-input {
+      font-family: var(--font-family);
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      color: var(--text-main);
+    }
+
+    .floating-chat-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 28px;
+      background: var(--accent-purple);
+      color: #ffffff;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="dashboard.html" class="brand-logo">
+      <img src="digitall-logo-mark.png" alt="DigitAll Logo" />
+      <div class="brand-text">
+        <div class="brand-name">Digit<span>All</span></div>
+        <div class="brand-tagline">DIGITAL FOR ALL</div>
+      </div>
+    </a>
+
+    <nav class="nav-center">
+      <button class="nav-btn active" data-tab="dashboard" id="btn-tab-dash">Dashboard</button>
+      <button class="nav-btn" data-tab="plans" id="btn-tab-plans">Plans</button>
+      <button class="nav-btn" data-tab="settings" id="btn-tab-settings">Settings</button>
+      <button class="nav-btn" data-tab="aichat" id="btn-tab-ai">AI Assistant</button>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button type="button" class="lang-btn active" data-lang="EN">EN</button>
+        <button type="button" class="lang-btn" data-lang="FR">FR</button>
+        <button type="button" class="lang-btn" data-lang="MG">MG</button>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    
+    <div class="welcome-card">
+      <div class="welcome-text">
+        <h1 id="txt-welcome">Welcome Back</h1>
+        <p id="userEmailDisplay">Loading profile...</p>
+      </div>
+      <span class="user-badge" id="accountStatus">Verified Account</span>
+    </div>
+
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="grid-cards">
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-balance">Credit Balance</div>
+          <div class="card-value" id="userCreditDisplay">0 Credits</div>
+        </div>
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-activity">Monthly Allocation</div>
+          <div class="card-value" id="userIncomeDisplay" style="color: var(--accent-purple);">No Active Plan</div>
+        </div>
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-status">Current Plan Tier</div>
+          <div class="card-value" id="userPlanTierDisplay" style="color: var(--accent-purple);">None</div>
+        </div>
+      </div>
+
+      <div class="transfer-box" id="familyTransferSection" style="display: none;">
+        <h3 id="lbl-transfer-header" style="font-size: 16px;">Transfer Credits to Child Member</h3>
+        <p style="font-size: 13px; color: var(--text-muted);" id="lbl-transfer-desc">Adult household profile credit delegation system.</p>
+        <div class="transfer-row">
+          <input type="text" id="transferTargetInput" class="promo-input" placeholder="CHILD EMAIL OR USER ID" />
+          <input type="number" id="transferAmountInput" class="counter-input" value="5" min="1" style="width: 80px;" />
+          <button id="btnSendTransfer" class="btn-send">Transfer</button>
+        </div>
+        <div id="transferMsg" style="font-size: 13px; font-weight: 700;"></div>
+      </div>
+    </section>
+
+    <section id="tab-plans" class="tab-content">
+      <div class="dashboard-card">
+        <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
+        
+        <div class="promo-section">
+          <input type="text" id="promoCodeInput" class="promo-input" placeholder="ENTER PROMO CODE" />
+          <button id="btnApplyPromo" class="btn-send">Apply Code</button>
+        </div>
+        <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
+
+        <div class="billing-toggle-container">
+          <button class="cycle-btn" data-cycle="weekly" id="btn-cycle-weekly">Weekly</button>
+          <button class="cycle-btn active" data-cycle="monthly" id="btn-cycle-monthly">Monthly</button>
+          <button class="cycle-btn" data-cycle="yearly" id="btn-cycle-yearly">Yearly</button>
+        </div>
+
+        <div class="plans-grid">
+          
+          <div class="plan-box">
+            <div>
+              <h3 id="lbl-plan-std">Standard</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-std">Basic individual access.</p>
+              
+              <ul class="feature-list">
+                <li id="feat-std-1">Single account access</li>
+                <li id="feat-std-2">Standard cloud bandwidth</li>
+                <li id="feat-std-3">Automated daily sync</li>
+                <li id="feat-std-4">Credits: 0</li>
+              </ul>
+            </div>
+            <div>
+              <div class="price-tag" id="price-standard">200 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-std">Or 500 Credits</div>
+            </div>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3 id="lbl-plan-plus">Plus</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-plus">Intermediate performance tier.</p>
+
+              <ul class="feature-list">
+                <li id="feat-plus-1">High-speed data routes</li>
+                <li id="feat-plus-2">Real-time sync automation</li>
+                <li id="feat-plus-3">Auto-backup storage</li>
+                <li id="feat-plus-4">Credits: 0</li>
+              </ul>
+            </div>
+            <div>
+              <div class="price-tag" id="price-plus">500 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-plus">Or 1,250 Credits</div>
+            </div>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3 id="lbl-plan-pro">Pro</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-pro">Maximum individual speed.</p>
+
+              <ul class="feature-list">
+                <li id="feat-pro-1">Advanced AI Data Analysis</li>
+                <li id="feat-pro-2">Unlimited cloud throughput</li>
+                <li id="feat-pro-3">Automated recovery tools</li>
+                <li id="feat-pro-4">Credits: 0</li>
+              </ul>
+            </div>
+            <div>
+              <div class="price-tag" id="price-pro">1200 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-pro">Or 3,000 Credits</div>
+            </div>
+          </div>
