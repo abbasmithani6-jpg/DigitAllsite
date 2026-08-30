@@ -654,3 +654,117 @@
               <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-pro">Or 3,000 Credits</div>
             </div>
           </div>
+
+          <div class="plan-box">
+            <div>
+              <h3 id="lbl-plan-fam">Family</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-fam">Custom shared household plan.</p>
+
+              <ul class="feature-list" style="margin-bottom: 12px;">
+                <li id="feat-fam-1">Centralized billing profile</li>
+                <li id="feat-fam-2">Credits: 0</li>
+                <li id="feat-fam-3">Kids get reduced credit allowance</li>
+              </ul>
+              
+              <div>
+                <div class="counter-row">
+                  <label for="family-adults" id="lbl-adults-fam">Adults (120 AR ea):</label>
+                  <input type="number" id="family-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPrice()">
+                </div>
+                <div class="counter-row">
+                  <label for="family-kids" id="lbl-kids-fam">Kids (75 AR ea):</label>
+                  <input type="number" id="family-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPrice()">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="price-tag" id="price-family">395 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;" id="subtext-fam">(200 AR base + members)</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-fam">Or 988 Credits</div>
+            </div>
+          </div>
+
+          <div class="plan-box featured">
+            <div>
+              <h3 style="color: var(--accent-gold);" id="lbl-plan-famprem">Family Premium</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-famprem">Complete household performance tier.</p>
+
+              <ul class="feature-list" style="margin-bottom: 12px;">
+                <li id="feat-prem-1">Advanced AI Deep Insight Analysis</li>
+                <li id="feat-prem-2">Automated child protection settings</li>
+                <li id="feat-prem-3">Credits: 0</li>
+              </ul>
+
+              <div>
+                <div class="counter-row">
+                  <label for="fam-prem-adults" id="lbl-adults-prem">Adults (400 AR ea):</label>
+                  <input type="number" id="fam-prem-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPremiumPrice()">
+                </div>
+                <div class="counter-row">
+                  <label for="fam-prem-kids" id="lbl-kids-prem">Kids (250 AR ea):</label>
+                  <input type="number" id="fam-prem-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPremiumPrice()">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="price-tag gold" id="price-family-premium">950 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;" id="subtext-famprem">(300 AR base + members)</p>
+              <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-top: 4px;" id="credit-price-famprem">Or 2,375 Credits</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="tab-content">
+      <div class="dashboard-card">
+        <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
+        
+        <div class="setting-row">
+          <div>
+            <strong id="lbl-dark-theme">Dark Theme</strong>
+            <p style="font-size: 13px; color: var(--text-muted);" id="desc-dark-theme">Toggle dark/light background display</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="themeToggle" onchange="toggleTheme()" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong id="lbl-email-ver">Email Verification</strong>
+            <p style="font-size: 13px; color: var(--text-muted);" id="desc-email-ver">Your Firebase Auth verification status</p>
+          </div>
+          <span style="color: var(--accent-green); font-weight: 700;" id="txt-verified">Verified</span>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong id="lbl-interface-lang">Interface Language</strong>
+            <p style="font-size: 13px; color: var(--text-muted);" id="desc-interface-lang">Selected system display language</p>
+          </div>
+          <span id="currentLangDisplay" style="font-weight: 700;">English</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-aichat" class="tab-content">
+      <div class="dashboard-card" style="padding: 20px;">
+        <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
+        <div class="chat-container">
+          <div class="chat-messages" id="chatBox">
+            <div class="chat-msg bot" id="txt-ai-welcome">Hello! I am your DigitAll Assistant powered by Gemini AI. How can I help you today?</div>
+          </div>
+          <form class="chat-input-row" id="aiForm">
+            <input type="text" class="chat-input" id="aiInput" placeholder="Ask a question..." required />
+            <button type="submit" class="btn-send" id="btn-send-msg">Send</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <button class="floating-chat-toggle" id="floatingAiBtn" title="Open AI Chat">🤖</button>
