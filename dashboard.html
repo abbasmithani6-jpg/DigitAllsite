@@ -277,7 +277,7 @@
     }
 
     .price-tag {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
       color: var(--accent-green);
       margin: 16px 0 2px 0;
@@ -552,22 +552,24 @@
       <span class="user-badge" id="accountStatus">Verified Account</span>
     </div>
 
+    <!-- TAB 1: DASHBOARD -->
     <section id="tab-dashboard" class="tab-content active">
       <div class="grid-cards">
         <div class="dashboard-card">
           <div class="card-title" id="lbl-balance">Credit Balance</div>
-          <div class="card-value" id="userCreditDisplay">15 Credits</div>
+          <div class="card-value" id="userCreditDisplay">0 Credits</div>
         </div>
         <div class="dashboard-card">
-          <div class="card-title" id="lbl-activity">Monthly Income</div>
-          <div class="card-value" id="userIncomeDisplay" style="color: var(--accent-purple);">+10 Credits/mo</div>
+          <div class="card-title" id="lbl-activity">Monthly Allocation</div>
+          <div class="card-value" id="userIncomeDisplay" style="color: var(--accent-purple);">No Active Plan</div>
         </div>
         <div class="dashboard-card">
-          <div class="card-title" id="lbl-status">Automated System</div>
-          <div class="card-value" style="color: var(--accent-purple);">Online</div>
+          <div class="card-title" id="lbl-status">Current Plan Tier</div>
+          <div class="card-value" id="userPlanTierDisplay" style="color: var(--accent-purple);">None</div>
         </div>
       </div>
 
+      <!-- Family Transfer Utility Component -->
       <div class="transfer-box" id="familyTransferSection" style="display: none;">
         <h3 id="lbl-transfer-header" style="font-size: 16px;">Transfer Credits to Child Member</h3>
         <p style="font-size: 13px; color: var(--text-muted);" id="lbl-transfer-desc">Adult household profile credit delegation system.</p>
@@ -580,6 +582,7 @@
       </div>
     </section>
 
+    <!-- TAB 2: PLANS -->
     <section id="tab-plans" class="tab-content">
       <div class="dashboard-card">
         <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
@@ -598,6 +601,7 @@
 
         <div class="plans-grid">
           
+          <!-- Standard -->
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-std">Standard</h3>
@@ -607,15 +611,17 @@
                 <li id="feat-std-1">Single account access</li>
                 <li id="feat-std-2">Standard cloud bandwidth</li>
                 <li id="feat-std-3">Automated daily sync</li>
-                <li id="feat-std-4">+5 Monthly Credits Income</li>
+                <li id="feat-std-4">You get 5 Monthly Credits</li>
               </ul>
             </div>
             <div>
               <div class="price-tag" id="price-standard">200 AR</div>
               <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-std">Or 500 Credits</div>
             </div>
           </div>
 
+          <!-- Plus -->
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-plus">Plus</h3>
@@ -625,15 +631,17 @@
                 <li id="feat-plus-1">High-speed data routes</li>
                 <li id="feat-plus-2">Real-time sync automation</li>
                 <li id="feat-plus-3">Auto-backup storage</li>
-                <li id="feat-plus-4">+15 Monthly Credits Income</li>
+                <li id="feat-plus-4">You get 15 Monthly Credits</li>
               </ul>
             </div>
             <div>
               <div class="price-tag" id="price-plus">500 AR</div>
               <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-plus">Or 1,250 Credits</div>
             </div>
           </div>
 
+          <!-- Pro -->
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-pro">Pro</h3>
@@ -643,15 +651,17 @@
                 <li id="feat-pro-1">Advanced AI Data Analysis</li>
                 <li id="feat-pro-2">Unlimited cloud throughput</li>
                 <li id="feat-pro-3">Automated recovery tools</li>
-                <li id="feat-pro-4">+40 Monthly Credits Income</li>
+                <li id="feat-pro-4">You get 40 Monthly Credits</li>
               </ul>
             </div>
             <div>
               <div class="price-tag" id="price-pro">1200 AR</div>
               <p style="color: var(--text-muted); font-size: 12px;" class="cycle-subtext">Per month</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-pro">Or 3,000 Credits</div>
             </div>
           </div>
 
+          <!-- Family -->
           <div class="plan-box">
             <div>
               <h3 id="lbl-plan-fam">Family</h3>
@@ -677,9 +687,11 @@
             <div>
               <div class="price-tag" id="price-family">395 AR</div>
               <p style="color: var(--text-muted); font-size: 12px;" id="subtext-fam">(200 AR base + members)</p>
+              <div style="font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-top: 4px;" id="credit-price-fam">Or 988 Credits</div>
             </div>
           </div>
 
+          <!-- Family Premium -->
           <div class="plan-box featured">
             <div>
               <h3 style="color: var(--accent-gold);" id="lbl-plan-famprem">Family Premium</h3>
@@ -705,6 +717,7 @@
             <div>
               <div class="price-tag gold" id="price-family-premium">950 AR</div>
               <p style="color: var(--text-muted); font-size: 12px;" id="subtext-famprem">(300 AR base + members)</p>
+              <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-top: 4px;" id="credit-price-famprem">Or 2,375 Credits</div>
             </div>
           </div>
 
@@ -712,6 +725,7 @@
       </div>
     </section>
 
+    <!-- TAB 3: SETTINGS -->
     <section id="tab-settings" class="tab-content">
       <div class="dashboard-card">
         <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
@@ -745,6 +759,7 @@
       </div>
     </section>
 
+    <!-- TAB 4: AI CHAT -->
     <section id="tab-aichat" class="tab-content">
       <div class="dashboard-card" style="padding: 20px;">
         <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
@@ -774,7 +789,9 @@
     import { 
       getFirestore, 
       doc, 
-      getDoc 
+      getDoc,
+      setDoc,
+      collection
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -798,11 +815,13 @@
     let currentLang = 'EN';
     let initialAuthChecked = false;
 
-    // Secret ratio reference context: 5 credits = approx 2 AR
-    // User simulated credit vault & monthly income state
-    let userCredits = 18; 
-    let userMonthlyIncome = 10; 
-    let isAdultFamilyMember = true; 
+    // Secret ratio reference context: 5 credits = approx 2 AR -> 1 AR = 2.5 Credits
+    const AR_TO_CREDITS_RATIO = 2.5;
+
+    let userCredits = 0; 
+    let userMonthlyAllocation = "No Active Plan"; 
+    let userPlanTier = "None";
+    let isAdultFamilyMember = false; 
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -824,7 +843,8 @@
 
     function updateDashboardMetrics() {
       document.getElementById('userCreditDisplay').textContent = `${userCredits} Credits`;
-      document.getElementById('userIncomeDisplay').textContent = `+${userMonthlyIncome} Credits/mo`;
+      document.getElementById('userIncomeDisplay').textContent = userMonthlyAllocation;
+      document.getElementById('userPlanTierDisplay').textContent = userPlanTier;
       
       const transferSec = document.getElementById('familyTransferSection');
       if (transferSec) {
@@ -868,40 +888,50 @@
       const adults = parseInt(document.getElementById('family-adults').value) || 0;
       const kids = parseInt(document.getElementById('family-kids').value) || 0;
       const baseMonthly = 200 + (adults * 120) + (kids * 75);
-      renderPrice('price-family', baseMonthly);
+      renderPrice('price-family', 'credit-price-fam', baseMonthly);
     };
 
     window.calculateFamilyPremiumPrice = function() {
       const adults = parseInt(document.getElementById('fam-prem-adults').value) || 0;
       const kids = parseInt(document.getElementById('fam-prem-kids').value) || 0;
       const baseMonthly = 300 + (adults * 400) + (kids * 250);
-      renderPrice('price-family-premium', baseMonthly);
+      renderPrice('price-family-premium', 'credit-price-famprem', baseMonthly);
     };
 
-    function renderPrice(elementId, baseMonthly) {
+    function renderPrice(elementId, creditElementId, baseMonthly) {
       const cyclePrice = getAdjustedMonthlyBase(baseMonthly);
       const finalPrice = activeDiscount > 0 ? cyclePrice * (1 - activeDiscount / 100) : cyclePrice;
       const target = document.getElementById(elementId);
+      const creditTarget = document.getElementById(creditElementId);
       
       const roundedPrice = Math.round(finalPrice);
       const roundedOriginal = Math.round(cyclePrice);
+      const roundedCredits = Math.round(finalPrice * AR_TO_CREDITS_RATIO);
 
       let priceDisplay = `${roundedPrice} AR`;
-      if (selectedCycle === 'yearly') {
-        priceDisplay += ` (${roundedPrice} AR per year)`;
+      if (selectedCycle === 'weekly') {
+        const fullYearCost = Math.round(cyclePrice * 52);
+        priceDisplay += ` <span style="font-size: 11px; opacity: 0.7;">(Full 52-week cost: ${fullYearCost} AR)</span>`;
+      } else if (selectedCycle === 'monthly') {
+        const fullYearCost = Math.round(cyclePrice * 12);
+        priceDisplay += ` <span style="font-size: 11px; opacity: 0.7;">(12-month year cost: ${fullYearCost} AR)</span>`;
+      } else if (selectedCycle === 'yearly') {
+        priceDisplay += ` <span style="font-size: 11px; opacity: 0.7;">(Annual billing package)</span>`;
       }
 
       if (activeDiscount > 0) {
         target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 16px; margin-right: 6px;">${roundedOriginal} AR</span>${priceDisplay}`;
       } else {
-        target.textContent = priceDisplay;
+        target.innerHTML = priceDisplay;
       }
+
+      creditTarget.textContent = `Or ${roundedCredits.toLocaleString()} Credits`;
     }
 
     function updateAllPrices() {
-      renderPrice('price-standard', 200);
-      renderPrice('price-plus', 500);
-      renderPrice('price-pro', 1200);
+      renderPrice('price-standard', 'credit-price-std', 200);
+      renderPrice('price-plus', 'credit-price-plus', 500);
+      renderPrice('price-pro', 'credit-price-pro', 1200);
       calculateFamilyPrice();
       calculateFamilyPremiumPrice();
       updateCycleSubtexts();
@@ -929,6 +959,11 @@
 
     const navButtons = document.querySelectorAll('.nav-btn');
     const tabContents = document.querySelectorAll('.tab-content');
+
+    fnSwitchTab(targetTab) {
+      navButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === targetTab));
+      tabContents.forEach(c => c.classList.toggle('active', c.id === `tab-${targetTab}`));
+    }
 
     function switchTab(targetTab) {
       navButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === targetTab));
@@ -965,13 +1000,35 @@
 
           updateAllPrices();
         } else {
-          msg.style.color = "#ef4444";
-          msg.textContent = dictionary[currentLang].promoInvalid;
+          // Fallback static codes if Firestore document isn't populated yet
+          const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
+          if (staticCodes[codeInput] !== undefined) {
+            activeDiscount = staticCodes[codeInput];
+            msg.style.color = "#00ff87";
+            msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
+            updateAllPrices();
+          } else {
+            activeDiscount = 0;
+            msg.style.color = "#ef4444";
+            msg.textContent = dictionary[currentLang].promoInvalid;
+            updateAllPrices();
+          }
         }
       } catch (err) {
         console.error("Promo code fetch error:", err);
-        msg.style.color = "#ef4444";
-        msg.textContent = dictionary[currentLang].promoErrFetch;
+        // Fallback to static codes on network error
+        const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
+        if (staticCodes[codeInput] !== undefined) {
+          activeDiscount = staticCodes[codeInput];
+          msg.style.color = "#00ff87";
+          msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
+          updateAllPrices();
+        } else {
+          activeDiscount = 0;
+          msg.style.color = "#ef4444";
+          msg.textContent = dictionary[currentLang].promoInvalid;
+          updateAllPrices();
+        }
       }
     });
 
@@ -1002,8 +1059,8 @@
         settingsTab: "Settings",
         aiTab: "AI Assistant",
         balance: "Credit Balance",
-        activity: "Monthly Income",
-        status: "Automated System",
+        activity: "Monthly Allocation",
+        status: "Current Plan Tier",
         plansHeader: "Available Subscription Plans",
         settingsHeader: "Account Settings",
         aiHeader: "DigitAll AI Assistant",
@@ -1024,15 +1081,15 @@
         featStd1: "Single account access",
         featStd2: "Standard cloud bandwidth",
         featStd3: "Automated daily sync",
-        featStd4: "+5 Monthly Credits Income",
+        featStd4: "You get 5 Monthly Credits",
         featPlus1: "High-speed data routes",
         featPlus2: "Real-time sync automation",
         featPlus3: "Auto-backup storage",
-        featPlus4: "+15 Monthly Credits Income",
+        featPlus4: "You get 15 Monthly Credits",
         featPro1: "Advanced AI Data Analysis",
         featPro2: "Unlimited cloud throughput",
         featPro3: "Automated recovery tools",
-        featPro4: "+40 Monthly Credits Income",
+        featPro4: "You get 40 Monthly Credits",
         featFam1: "Centralized billing profile",
         featFam2: "Adults get credits, transferrable to kids",
         featFam3: "Kids get reduced credit income",
@@ -1069,8 +1126,8 @@
         settingsTab: "Paramètres",
         aiTab: "Assistant IA",
         balance: "Solde de Crédits",
-        activity: "Revenu Mensuel",
-        status: "Système Automatisé",
+        activity: "Allocation Mensuelle",
+        status: "Niveau d'Offre Actuel",
         plansHeader: "Offres d'Abonnement",
         settingsHeader: "Paramètres du Compte",
         aiHeader: "Assistant IA DigitAll",
@@ -1091,15 +1148,15 @@
         featStd1: "Accès pour un seul compte",
         featStd2: "Bande passante cloud standard",
         featStd3: "Synchronisation quotidienne automatique",
-        featStd4: "+5 Crédits de revenu mensuel",
+        featStd4: "Vous obtenez 5 crédits mensuels",
         featPlus1: "Routes de données haute vitesse",
         featPlus2: "Synchronisation automatique en temps réel",
         featPlus3: "Stockage de sauvegarde automatique",
-        featPlus4: "+15 Crédits de revenu mensuel",
+        featPlus4: "Vous obtenez 15 crédits mensuels",
         featPro1: "Analyse de données IA avancée",
         featPro2: "Débit cloud illimité",
         featPro3: "Outils de récupération automatisés",
-        featPro4: "+40 Crédits de revenu mensuel",
+        featPro4: "Vous obtenez 40 crédits mensuels",
         featFam1: "Profil de facturation centralisé",
         featFam2: "Les adultes reçoivent des crédits transférables",
         featFam3: "Les enfants reçoivent un revenu réduit",
@@ -1136,8 +1193,8 @@
         settingsTab: "Kajikajy",
         aiTab: "Mpanampy AI",
         balance: "Vola Credit",
-        activity: "Fidiram-bola Isam-bolana",
-        status: "Rafitra Mandeha Ho Azy",
+        activity: "Fizarana Isam-bolana",
+        status: "Sata Tolotra Amin'izao",
         plansHeader: "Tolotra Misy",
         settingsHeader: "Kajikajin'ny Kaonty",
         aiHeader: "Mpanampy IA DigitAll",
@@ -1158,15 +1215,15 @@
         featStd1: "Fidirana kaonty tokana",
         featStd2: "Bande passante cloud tsotra",
         featStd3: "Fampirindrana isan'andro ho azy",
-        featStd4: "+5 Vola Credit isam-bolana",
+        featStd4: "Mahazo credit 5 isam-bolana ianao",
         featPlus1: "Lalam-pifandraisana mahery vaika",
         featPlus2: "Fampirindrana amin'ny fotoana tena izy",
         featPlus3: "Tahiry famerenana ho azy",
-        featPlus4: "+15 Vola Credit isam-bolana",
+        featPlus4: "Mahazo credit 15 isam-bolana ianao",
         featPro1: "Fanadihadiana AI mandroso",
         featPro2: "Fandehanana cloud tsy misy fetra",
         featPro3: "Fitaovana famerenana rakitra ho azy",
-        featPro4: "+40 Vola Credit isam-bolana",
+        featPro4: "Mahazo credit 40 isam-bolana ianao",
         featFam1: "Kaonty fandoavam-bola iray ihany",
         featFam2: "Ny olon-dehibe mahazo credit azo afindra",
         featFam3: "Kely ny credit ho an'ny ankizy",
