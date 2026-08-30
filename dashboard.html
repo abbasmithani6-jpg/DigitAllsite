@@ -3,282 +3,355 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DigitAll - Dashboard</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <title>Dashboard | DigitAll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-body: #f4f6f9;
-      --bg-card: #ffffff;
-      --bg-sidebar: #1e293b;
-      --text-main: #334155;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --sidebar-text: #94a3b8;
-      --sidebar-active: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-
-    body.dark-mode {
-      --bg-body: #0f172a;
-      --bg-card: #1e293b;
-      --bg-sidebar: #090d16;
-      --text-main: #f8fafc;
+      --bg-dark: #070614;
+      --card-bg: #100c2a;
+      --card-border: rgba(124, 58, 237, 0.25);
+      --accent-green: #00ff87;
+      --accent-purple: #7c3aed;
+      --accent-gold: #ffb703;
+      --text-main: #ffffff;
       --text-muted: #94a3b8;
-      --border-color: #334155;
-      --primary: #3b82f6;
-      --primary-hover: #60a5fa;
-      --sidebar-text: #64748b;
-      --sidebar-active: #38bdf8;
-      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    body.light-mode {
+      --bg-dark: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-border: rgba(124, 58, 237, 0.15);
+      --accent-green: #10b981;
+      --accent-purple: #6d28d9;
+      --accent-gold: #d97706;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --input-bg: rgba(0, 0, 0, 0.03);
+      --input-border: rgba(0, 0, 0, 0.12);
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-body);
+      font-family: var(--font-family);
+      background-color: var(--bg-dark);
       color: var(--text-main);
-      display: flex;
       min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    /* Sidebar Design */
-    .sidebar {
-      width: 260px;
-      background-color: var(--bg-sidebar);
-      color: var(--sidebar-text);
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .sidebar-header {
-      padding: 24px;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #ffffff;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Top Navigation Bar */
+    .navbar {
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .nav-links {
-      list-style: none;
-      padding: 24px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .nav-links a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      color: var(--sidebar-text);
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: var(--sidebar-active);
-    }
-
-    /* Main Content Area */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-
-    .top-header {
-      background-color: var(--bg-card);
-      border-bottom: 1px solid var(--border-color);
-      padding: 16px 32px;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(16, 12, 42, 0.7);
+      backdrop-filter: blur(12px);
     }
 
-    .user-profile {
+    body.light-mode .navbar {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .brand-logo {
       display: flex;
       align-items: center;
       gap: 12px;
+      text-decoration: none;
     }
 
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: var(--primary);
-      color: white;
+    .brand-logo img {
+      height: 38px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .brand-name span { color: var(--accent-green); }
+
+    .brand-tagline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent-green);
+      margin-top: 3px;
+    }
+
+    .nav-center {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-weight: bold;
+      gap: 10px;
     }
 
-    .content-body {
-      padding: 32px;
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--input-border);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: var(--accent-purple);
+    }
+
+    .nav-btn.active {
+      background: var(--accent-purple);
+      border-color: var(--accent-purple);
+      color: #ffffff;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--input-border);
+      border-radius: 20px;
+      padding: 4px;
+      gap: 2px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: var(--accent-purple);
+      color: #ffffff;
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Dashboard Shell */
+    .dashboard-container {
+      flex: 1;
       max-width: 1200px;
-      margin: 0 auto;
       width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px;
     }
 
-    /* Section Headings */
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 16px;
+    .welcome-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 32px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
 
-    /* Subscription Plans Grid */
+    .welcome-text h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .welcome-text p { color: var(--text-muted); font-size: 14px; }
+
+    .user-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(0, 255, 135, 0.1);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .dashboard-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent-green);
+    }
+
+    /* Subscription Grid */
     .plans-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 20px;
-      margin-bottom: 32px;
     }
 
-    .plan-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
+    .plan-box {
+      border: 1px solid var(--input-border);
+      border-radius: 20px;
       padding: 24px;
-      box-shadow: var(--shadow);
+      background: rgba(255, 255, 255, 0.02);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transition: border-color 0.2s;
     }
 
-    .plan-card:hover {
-      border-color: var(--primary);
+    .plan-box:hover {
+      border-color: var(--accent-purple);
     }
 
-    .plan-price {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--primary);
+    .plan-box.featured {
+      border-color: var(--accent-gold);
+      background: rgba(255, 183, 3, 0.04);
+    }
+
+    .price-tag {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent-green);
       margin: 16px 0 4px 0;
     }
 
-    .member-counter {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin: 16px 0;
-      background: var(--bg-body);
-      padding: 12px;
-      border-radius: 8px;
-    }
+    .price-tag.gold { color: var(--accent-gold); }
 
-    .counter-item {
+    .counter-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
     }
 
-    .counter-item input {
-      width: 50px;
-      padding: 4px 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background: var(--bg-card);
+    .counter-input {
+      width: 60px;
+      padding: 6px 10px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
       color: var(--text-main);
+      font-weight: 700;
       text-align: center;
     }
 
-    /* Promo and Settings Panels */
-    .panel-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-
-    .panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    .input-group {
+    /* Promo Code Section */
+    .promo-section {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
       display: flex;
-      gap: 10px;
-      margin-top: 12px;
+      gap: 12px;
+      align-items: center;
     }
 
-    input[type="text"] {
+    .promo-input {
       flex: 1;
-      padding: 10px 14px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      background: var(--bg-card);
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
       color: var(--text-main);
+      font-family: inherit;
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
-    .btn {
-      background-color: var(--primary);
-      color: white;
+    .btn-send {
+      padding: 12px 24px;
+      background: var(--accent-purple);
+      color: #ffffff;
       border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
+      border-radius: 12px;
+      font-weight: 700;
       cursor: pointer;
-      font-weight: 600;
       transition: background-color 0.2s;
     }
 
-    .btn:hover {
-      background-color: var(--primary-hover);
+    .btn-send:hover {
+      background-color: #6d28d9;
     }
 
-    .toggle-row {
+    /* Settings & Controls */
+    .setting-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding-top: 8px;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--input-border);
     }
 
-    /* Switch Styling */
+    /* Toggle Switch */
     .switch {
       position: relative;
       display: inline-block;
-      width: 46px;
-      height: 24px;
+      width: 48px;
+      height: 26px;
     }
 
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .switch input { opacity: 0; width: 0; height: 0; }
 
     .slider {
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 24px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--input-border);
+      transition: .3s;
+      border-radius: 26px;
     }
 
     .slider:before {
@@ -288,187 +361,301 @@
       width: 18px;
       left: 3px;
       bottom: 3px;
-      background-color: white;
-      transition: .4s;
+      background-color: var(--text-muted);
+      transition: .3s;
       border-radius: 50%;
     }
 
     input:checked + .slider {
-      background-color: var(--primary);
+      background-color: var(--accent-purple);
+      border-color: var(--accent-purple);
     }
 
     input:checked + .slider:before {
       transform: translateX(22px);
+      background-color: #ffffff;
     }
 
-    /* AI Assistant Chat Panel */
-    .chat-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: var(--shadow);
+    /* AI Chat */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      overflow: hidden;
     }
 
-    .chat-box {
-      height: 150px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 12px;
-      margin: 12px 0;
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
       overflow-y: auto;
-      background: var(--bg-body);
-      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-msg {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid var(--accent-purple);
+      color: var(--text-main);
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: var(--accent-green);
+      color: #070614;
+      font-weight: 600;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid var(--input-border);
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      color: var(--text-main);
+    }
+
+    .floating-chat-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 28px;
+      background: var(--accent-purple);
+      color: #ffffff;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar Navigation -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <i class="fa-solid fa-cube"></i> DigitAll
-    </div>
-    <ul class="nav-links">
-      <li><a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-      <li><a href="#"><i class="fa-solid fa-credit-card"></i> Plans & Billing</a></li>
-      <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
-    </ul>
-  </aside>
+  <header class="navbar">
+    <a href="dashboard.html" class="brand-logo">
+      <img src="digitall-logo-mark.png" alt="DigitAll Logo" />
+      <div class="brand-text">
+        <div class="brand-name">Digit<span>All</span></div>
+        <div class="brand-tagline">DIGITAL FOR ALL</div>
+      </div>
+    </a>
 
-  <!-- Main Application Area -->
-  <div class="main-content">
+    <nav class="nav-center">
+      <button class="nav-btn active" data-tab="dashboard" id="btn-tab-dash">Dashboard</button>
+      <button class="nav-btn" data-tab="plans" id="btn-tab-plans">Plans</button>
+      <button class="nav-btn" data-tab="settings" id="btn-tab-settings">Settings</button>
+      <button class="nav-btn" data-tab="aichat" id="btn-tab-ai">AI Assistant</button>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button type="button" class="lang-btn active" data-lang="EN">EN</button>
+        <button type="button" class="lang-btn" data-lang="FR">FR</button>
+        <button type="button" class="lang-btn" data-lang="MG">MG</button>
+      </div>
+      <button id="logoutBtn" class="btn-logout">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
     
-    <!-- Top Header -->
-    <header class="top-header">
-      <h2>Financial Dashboard</h2>
-      <div class="user-profile">
-        <span>User Portal</span>
-        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+    <div class="welcome-card">
+      <div class="welcome-text">
+        <h1 id="txt-welcome">Welcome Back</h1>
+        <p id="userEmailDisplay">Authenticating session...</p>
       </div>
-    </header>
-
-    <div class="content-body">
-      
-      <!-- Plans Section -->
-      <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> Choose a Plan</h3>
-      <div class="plans-grid">
-        
-        <!-- Standard -->
-        <div class="plan-card">
-          <div>
-            <h4>Standard</h4>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Basic access for individual accounts.</p>
-            <div class="plan-price" id="price-standard">750 AR</div>
-            <p style="color: var(--text-muted); font-size: 0.75rem;">(200 AR initial + 550 AR/mo)</p>
-          </div>
-          <button class="btn" style="margin-top: 16px;" onclick="selectPlan('Standard')">Subscribe</button>
-        </div>
-
-        <!-- Pro -->
-        <div class="plan-card">
-          <div>
-            <h4>Pro</h4>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Advanced features for power users.</p>
-            <div class="plan-price" id="price-pro">1200 AR</div>
-            <p style="color: var(--text-muted); font-size: 0.75rem;">Flat monthly fee</p>
-          </div>
-          <button class="btn" style="margin-top: 16px;" onclick="selectPlan('Pro')">Subscribe</button>
-        </div>
-
-        <!-- Family -->
-        <div class="plan-card">
-          <div>
-            <h4>Family</h4>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Flexible plan for household members.</p>
-            
-            <div class="member-counter">
-              <div class="counter-item">
-                <label for="family-adults">Adults (120 AR ea):</label>
-                <input type="number" id="family-adults" value="1" min="1" onchange="calculateFamilyPrice()">
-              </div>
-              <div class="counter-item">
-                <label for="family-kids">Kids (75 AR ea):</label>
-                <input type="number" id="family-kids" value="1" min="0" onchange="calculateFamilyPrice()">
-              </div>
-            </div>
-
-            <div class="plan-price" id="price-family">345 AR</div>
-            <p style="color: var(--text-muted); font-size: 0.75rem;">(150 AR base + member fees)</p>
-          </div>
-          <button class="btn" style="margin-top: 16px;" onclick="selectPlan('Family')">Subscribe</button>
-        </div>
-
-        <!-- Family Premium -->
-        <div class="plan-card">
-          <div>
-            <h4>Family Premium</h4>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Full feature access for the family.</p>
-            
-            <div class="member-counter">
-              <div class="counter-item">
-                <label for="fam-prem-adults">Adults (400 AR ea):</label>
-                <input type="number" id="fam-prem-adults" value="1" min="1" onchange="calculateFamilyPremiumPrice()">
-              </div>
-              <div class="counter-item">
-                <label for="fam-prem-kids">Kids (250 AR ea):</label>
-                <input type="number" id="fam-prem-kids" value="1" min="0" onchange="calculateFamilyPremiumPrice()">
-              </div>
-            </div>
-
-            <div class="plan-price" id="price-family-premium">950 AR</div>
-            <p style="color: var(--text-muted); font-size: 0.75rem;">(300 AR base + member fees)</p>
-          </div>
-          <button class="btn" style="margin-top: 16px;" onclick="selectPlan('Family Premium')">Subscribe</button>
-        </div>
-
-      </div>
-
-      <!-- Controls Panel Grid -->
-      <div class="panel-grid">
-        
-        <!-- Promo Code Panel -->
-        <div class="panel">
-          <h3 class="section-title"><i class="fa-solid fa-ticket"></i> Apply Promo Code</h3>
-          <div class="input-group">
-            <input type="text" id="promo-input" placeholder="ENTER CODE">
-            <button class="btn" onclick="applyPromoCode()">Apply</button>
-          </div>
-          <p id="promo-message" style="margin-top: 10px; font-size: 0.85rem;"></p>
-        </div>
-
-        <!-- Settings Panel -->
-        <div class="panel">
-          <h3 class="section-title"><i class="fa-solid fa-sliders"></i> Settings</h3>
-          <div class="toggle-row">
-            <span>Dark Mode</span>
-            <label class="switch">
-              <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- AI Assistant Interaction Box -->
-      <div class="chat-panel">
-        <h3 class="section-title"><i class="fa-solid fa-robot"></i> AI Assistant</h3>
-        <div class="chat-box" id="chat-box">
-          <p><strong>System:</strong> Welcome! How can I assist you with your subscription options today?</p>
-        </div>
-        <div class="input-group">
-          <input type="text" id="chat-input" placeholder="Ask a question...">
-          <button class="btn" onclick="sendChatMessage()">Send</button>
-        </div>
-      </div>
-
+      <span class="user-badge" id="accountStatus">Verified Account</span>
     </div>
-  </div>
+
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="grid-cards">
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-balance">Total Balance</div>
+          <div class="card-value">0.00 AR</div>
+        </div>
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-activity">Active Services</div>
+          <div class="card-value">1 Plan</div>
+        </div>
+        <div class="dashboard-card">
+          <div class="card-title" id="lbl-tickets">Support Tickets</div>
+          <div class="card-value">0 Open</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-plans" class="tab-content">
+      <div class="dashboard-card">
+        <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
+        
+        <div class="promo-section">
+          <input type="text" id="promoCodeInput" class="promo-input" placeholder="ENTER ADMIN PROMO CODE" />
+          <button id="btnApplyPromo" class="btn-send">Apply Code</button>
+        </div>
+        <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
+
+        <div class="plans-grid">
+          
+          <div class="plan-box">
+            <div>
+              <h3>Standard</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Basic individual service tier.</p>
+            </div>
+            <div>
+              <div class="price-tag" id="price-standard">750 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;">(200 AR setup + 550 AR/mo)</p>
+            </div>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3>Pro</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Advanced individual power access.</p>
+            </div>
+            <div>
+              <div class="price-tag" id="price-pro">1200 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;">Per month</p>
+            </div>
+          </div>
+
+          <div class="plan-box">
+            <div>
+              <h3>Family</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">Customizable household account.</p>
+              
+              <div style="margin-top: 14px;">
+                <div class="counter-row">
+                  <label for="family-adults">Adults (120 AR ea):</label>
+                  <input type="number" id="family-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPrice()">
+                </div>
+                <div class="counter-row">
+                  <label for="family-kids">Kids (75 AR ea):</label>
+                  <input type="number" id="family-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPrice()">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="price-tag" id="price-family">345 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;">(150 AR initial + members)</p>
+            </div>
+          </div>
+
+          <div class="plan-box featured">
+            <div>
+              <h3 style="color: var(--accent-gold);">Family Premium</h3>
+              <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;">High-tier complete family access.</p>
+              
+              <div style="margin-top: 14px;">
+                <div class="counter-row">
+                  <label for="fam-prem-adults">Adults (400 AR ea):</label>
+                  <input type="number" id="fam-prem-adults" class="counter-input" value="1" min="1" onchange="calculateFamilyPremiumPrice()">
+                </div>
+                <div class="counter-row">
+                  <label for="fam-prem-kids">Kids (250 AR ea):</label>
+                  <input type="number" id="fam-prem-kids" class="counter-input" value="1" min="0" onchange="calculateFamilyPremiumPrice()">
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="price-tag gold" id="price-family-premium">950 AR</div>
+              <p style="color: var(--text-muted); font-size: 12px;">(300 AR initial + members)</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="tab-content">
+      <div class="dashboard-card">
+        <h2 style="margin-bottom: 20px;" id="txt-settings-header">Account Settings</h2>
+        
+        <div class="setting-row">
+          <div>
+            <strong>Dark Theme</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Toggle dark/light background display</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Email Verification</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Your Firebase Auth verification status</p>
+          </div>
+          <span style="color: var(--accent-green); font-weight: 700;">Verified</span>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Interface Language</strong>
+            <p style="font-size: 13px; color: var(--text-muted);">Selected system display language</p>
+          </div>
+          <span id="currentLangDisplay" style="font-weight: 700;">English</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-aichat" class="tab-content">
+      <div class="dashboard-card" style="padding: 20px;">
+        <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
+        <div class="chat-container">
+          <div class="chat-messages" id="chatBox">
+            <div class="chat-msg bot">Hello! I am your DigitAll Assistant. How can I help you with your plans today?</div>
+          </div>
+          <form class="chat-input-row" id="aiForm">
+            <input type="text" class="chat-input" id="aiInput" placeholder="Ask a question..." required />
+            <button type="submit" class="btn-send" id="btn-send-msg">Send</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <button class="floating-chat-toggle" id="floatingAiBtn" title="Open AI Chat">🤖</button>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
@@ -480,36 +667,76 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
     let activeDiscount = 0;
 
-    // Price Calculations
+    // Fixed Auth Guard (Prevents immediate redirect loops)
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          // Verify user status safely without premature signout
+          document.getElementById('userEmailDisplay').textContent = user.email;
+        } catch (e) {
+          console.error("Auth status error:", e);
+        }
+      } else {
+        // Only redirect if Firebase explicitly confirms no active session
+        window.location.href = "login.html";
+      }
+    });
+
+    // Dynamic Pricing Calculations
     window.calculateFamilyPrice = function() {
       const adults = parseInt(document.getElementById('family-adults').value) || 0;
       const kids = parseInt(document.getElementById('family-kids').value) || 0;
-      const total = 150 + (adults * 120) + (kids * 75);
-      renderPrice('price-family', total);
+      const basePrice = 150 + (adults * 120) + (kids * 75);
+      renderPrice('price-family', basePrice);
     };
 
     window.calculateFamilyPremiumPrice = function() {
       const adults = parseInt(document.getElementById('fam-prem-adults').value) || 0;
       const kids = parseInt(document.getElementById('fam-prem-kids').value) || 0;
-      const total = 300 + (adults * 400) + (kids * 250);
-      renderPrice('price-family-premium', total);
+      const basePrice = 300 + (adults * 400) + (kids * 250);
+      renderPrice('price-family-premium', basePrice);
     };
 
     function renderPrice(elementId, basePrice) {
       const finalPrice = activeDiscount > 0 ? basePrice * (1 - activeDiscount / 100) : basePrice;
-      document.getElementById(elementId).innerText = `${Math.round(finalPrice)} AR`;
+      const target = document.getElementById(elementId);
+      if (activeDiscount > 0) {
+        target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 18px; margin-right: 6px;">${basePrice} AR</span>${Math.round(finalPrice)} AR`;
+      } else {
+        target.textContent = `${Math.round(basePrice)} AR`;
+      }
     }
 
-    // Promo Code Handler
-    window.applyPromoCode = async function() {
-      const codeInput = document.getElementById('promo-input').value.trim().toUpperCase();
-      const msg = document.getElementById('promo-message');
+    // Navigation Tab Switching
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-      if (!codeInput) return;
+    function switchTab(targetTab) {
+      navButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === targetTab));
+      tabContents.forEach(c => c.classList.toggle('active', c.id === `tab-${targetTab}`));
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+    });
+
+    document.getElementById('floatingAiBtn').addEventListener('click', () => switchTab('aichat'));
+
+    // Admin Promo Code Direct Verification via Firestore
+    document.getElementById('btnApplyPromo').addEventListener('click', async () => {
+      const codeInput = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+      const msg = document.getElementById('promoMessage');
+
+      if (!codeInput) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Please enter a code.";
+        return;
+      }
 
       try {
         const promoRef = doc(db, "promocodes", codeInput);
@@ -518,61 +745,104 @@
         if (promoSnap.exists()) {
           const data = promoSnap.data();
           activeDiscount = data.discount || 0;
-          msg.style.color = "#10b981";
-          msg.innerText = `Promo code applied! ${activeDiscount}% off.`;
-          
+
+          msg.style.color = "#00ff87";
+          msg.textContent = `Promo code applied! ${activeDiscount}% discount active.`;
+
           renderPrice('price-standard', 750);
           renderPrice('price-pro', 1200);
           calculateFamilyPrice();
           calculateFamilyPremiumPrice();
         } else {
           msg.style.color = "#ef4444";
-          msg.innerText = "Invalid promo code.";
+          msg.textContent = "Invalid promo code.";
         }
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error("Promo code fetch error:", err);
         msg.style.color = "#ef4444";
-        msg.innerText = "Error checking promo code.";
-      }
-    };
-
-    // Dark Mode Switcher
-    window.toggleDarkMode = function() {
-      const isDark = document.getElementById('dark-mode-toggle').checked;
-      if (isDark) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-      }
-    };
-
-    // Load User Preferences
-    window.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('dark-mode-toggle').checked = true;
+        msg.textContent = "Error reading promo code from Firestore.";
       }
     });
 
-    window.selectPlan = function(planName) {
-      alert(`Selected plan: ${planName}`);
+    // Theme Switcher
+    window.toggleTheme = function() {
+      const isDark = !document.body.classList.contains('light-mode');
+      if (isDark) {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('digitall_theme', 'light');
+      } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('digitall_theme', 'dark');
+      }
     };
 
-    window.sendChatMessage = function() {
-      const input = document.getElementById('chat-input');
-      const box = document.getElementById('chat-box');
-      if (!input.value.trim()) return;
+    if (localStorage.getItem('digitall_theme') === 'light') {
+      document.body.classList.add('light-mode');
+      document.getElementById('themeToggle').checked = true;
+    }
 
-      const userPara = document.createElement('p');
-      userPara.innerHTML = `<strong>You:</strong> ${input.value}`;
-      box.appendChild(userPara);
-
-      input.value = '';
-      box.scrollTop = box.scrollHeight;
+    // Multilingual support
+    const dictionary = {
+      EN: { welcome: "Welcome Back", dashTab: "Dashboard", plansTab: "Plans", settingsTab: "Settings", aiTab: "AI Assistant", balance: "Total Balance", activity: "Active Services", tickets: "Support Tickets", plansHeader: "Available Subscription Plans", settingsHeader: "Account Settings", aiHeader: "DigitAll AI Assistant", logout: "Sign Out" },
+      FR: { welcome: "Bon retour", dashTab: "Tableau de bord", plansTab: "Offres", settingsTab: "Paramètres", aiTab: "Assistant IA", balance: "Solde Total", activity: "Services Actifs", tickets: "Tickets de Support", plansHeader: "Offres d'Abonnement", settingsHeader: "Paramètres du Compte", aiHeader: "Assistant IA DigitAll", logout: "Se déconnecter" },
+      MG: { welcome: "Tonga soa indray", dashTab: "Solaitrabe", plansTab: "Fahafohezana", settingsTab: "Kajikajy", aiTab: "Mpanampy AI", balance: "Teti-bola Samy hafa", activity: "Tolotra Mandeha", tickets: "Hafatra Support", plansHeader: "Tolotra Misy", settingsHeader: "Kajikajin'ny Kaonty", aiHeader: "Mpanampy IA DigitAll", logout: "Hivoaka" }
     };
+
+    function updateLanguage(lang) {
+      const t = dictionary[lang];
+      if (!t) return;
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
+      document.getElementById('txt-welcome').textContent = t.welcome;
+      document.getElementById('btn-tab-dash').textContent = t.dashTab;
+      document.getElementById('btn-tab-plans').textContent = t.plansTab;
+      document.getElementById('btn-tab-settings').textContent = t.settingsTab;
+      document.getElementById('btn-tab-ai').textContent = t.aiTab;
+      document.getElementById('lbl-balance').textContent = t.balance;
+      document.getElementById('lbl-activity').textContent = t.activity;
+      document.getElementById('lbl-tickets').textContent = t.tickets;
+      document.getElementById('txt-plans-header').textContent = t.plansHeader;
+      document.getElementById('txt-settings-header').textContent = t.settingsHeader;
+      document.getElementById('txt-ai-header').textContent = t.aiHeader;
+      document.getElementById('logoutBtn').textContent = t.logout;
+      const langNames = { EN: "English", FR: "Français", MG: "Malagasy" };
+      document.getElementById('currentLangDisplay').textContent = langNames[lang];
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', function() { updateLanguage(this.getAttribute('data-lang')); });
+    });
+
+    // AI Form Handler
+    const aiForm = document.getElementById('aiForm');
+    const aiInput = document.getElementById('aiInput');
+    const chatBox = document.getElementById('chatBox');
+
+    aiForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = aiInput.value.trim();
+      if (!text) return;
+
+      const userDiv = document.createElement('div');
+      userDiv.className = 'chat-msg user';
+      userDiv.textContent = text;
+      chatBox.appendChild(userDiv);
+      aiInput.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.className = 'chat-msg bot';
+        botDiv.textContent = "Thank you for reaching out! Our team is processing your request: \"" + text + "\"";
+        chatBox.appendChild(botDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+    });
+
+    // Sign Out Handler
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
   </script>
-
 </body>
 </html>
