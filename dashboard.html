@@ -369,6 +369,22 @@
 
     .btn-send:hover { background-color: #6d28d9; }
 
+    .transfer-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--input-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .transfer-row {
+      display: flex;
+      gap: 12px;
+    }
+
     .setting-row {
       display: flex;
       align-items: center;
@@ -539,17 +555,28 @@
     <section id="tab-dashboard" class="tab-content active">
       <div class="grid-cards">
         <div class="dashboard-card">
-          <div class="card-title" id="lbl-balance">Total Balance</div>
-          <div class="card-value">0.00 AR</div>
+          <div class="card-title" id="lbl-balance">Credit Balance</div>
+          <div class="card-value" id="userCreditDisplay">15 Credits</div>
         </div>
         <div class="dashboard-card">
-          <div class="card-title" id="lbl-activity">Active Services</div>
-          <div class="card-value">1 Plan</div>
+          <div class="card-title" id="lbl-activity">Monthly Income</div>
+          <div class="card-value" id="userIncomeDisplay" style="color: var(--accent-purple);">+10 Credits/mo</div>
         </div>
         <div class="dashboard-card">
           <div class="card-title" id="lbl-status">Automated System</div>
           <div class="card-value" style="color: var(--accent-purple);">Online</div>
         </div>
+      </div>
+
+      <div class="transfer-box" id="familyTransferSection" style="display: none;">
+        <h3 id="lbl-transfer-header" style="font-size: 16px;">Transfer Credits to Child Member</h3>
+        <p style="font-size: 13px; color: var(--text-muted);" id="lbl-transfer-desc">Adult household profile credit delegation system.</p>
+        <div class="transfer-row">
+          <input type="text" id="transferTargetInput" class="promo-input" placeholder="CHILD EMAIL OR USER ID" />
+          <input type="number" id="transferAmountInput" class="counter-input" value="5" min="1" style="width: 80px;" />
+          <button id="btnSendTransfer" class="btn-send">Transfer</button>
+        </div>
+        <div id="transferMsg" style="font-size: 13px; font-weight: 700;"></div>
       </div>
     </section>
 
@@ -580,6 +607,7 @@
                 <li id="feat-std-1">Single account access</li>
                 <li id="feat-std-2">Standard cloud bandwidth</li>
                 <li id="feat-std-3">Automated daily sync</li>
+                <li id="feat-std-4">+5 Monthly Credits Income</li>
               </ul>
             </div>
             <div>
@@ -597,6 +625,7 @@
                 <li id="feat-plus-1">High-speed data routes</li>
                 <li id="feat-plus-2">Real-time sync automation</li>
                 <li id="feat-plus-3">Auto-backup storage</li>
+                <li id="feat-plus-4">+15 Monthly Credits Income</li>
               </ul>
             </div>
             <div>
@@ -611,9 +640,10 @@
               <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-pro">Maximum individual speed.</p>
 
               <ul class="feature-list">
-                <li id="feat-pro-1">Priority engine server allocation</li>
+                <li id="feat-pro-1">Advanced AI Data Analysis</li>
                 <li id="feat-pro-2">Unlimited cloud throughput</li>
                 <li id="feat-pro-3">Automated recovery tools</li>
+                <li id="feat-pro-4">+40 Monthly Credits Income</li>
               </ul>
             </div>
             <div>
@@ -629,7 +659,8 @@
 
               <ul class="feature-list" style="margin-bottom: 12px;">
                 <li id="feat-fam-1">Centralized billing profile</li>
-                <li id="feat-fam-2">Separate account spaces</li>
+                <li id="feat-fam-2">Adults get credits, transferrable to kids</li>
+                <li id="feat-fam-3">Kids get reduced credit income</li>
               </ul>
               
               <div>
@@ -655,8 +686,9 @@
               <p style="color: var(--text-muted); margin-top: 6px; font-size: 13px;" id="desc-famprem">Complete household performance tier.</p>
 
               <ul class="feature-list" style="margin-bottom: 12px;">
-                <li id="feat-prem-1">High-speed allocation for all profiles</li>
+                <li id="feat-prem-1">Advanced AI Deep Insight Analysis</li>
                 <li id="feat-prem-2">Automated child protection settings</li>
+                <li id="feat-prem-3">High adult income tier + transfer tools</li>
               </ul>
 
               <div>
@@ -766,10 +798,17 @@
     let currentLang = 'EN';
     let initialAuthChecked = false;
 
+    // Secret ratio reference context: 5 credits = approx 2 AR
+    // User simulated credit vault & monthly income state
+    let userCredits = 18; 
+    let userMonthlyIncome = 10; 
+    let isAdultFamilyMember = true; 
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('userEmailDisplay').textContent = user.email;
         initialAuthChecked = true;
+        updateDashboardMetrics();
       } else {
         if (initialAuthChecked || document.readyState === "complete") {
           window.location.href = "login.html";
@@ -781,6 +820,39 @@
           }, 1500);
         }
       }
+    });
+
+    function updateDashboardMetrics() {
+      document.getElementById('userCreditDisplay').textContent = `${userCredits} Credits`;
+      document.getElementById('userIncomeDisplay').textContent = `+${userMonthlyIncome} Credits/mo`;
+      
+      const transferSec = document.getElementById('familyTransferSection');
+      if (transferSec) {
+        transferSec.style.display = isAdultFamilyMember ? 'flex' : 'none';
+      }
+    }
+
+    document.getElementById('btnSendTransfer')?.addEventListener('click', () => {
+      const target = document.getElementById('transferTargetInput').value.trim();
+      const amt = parseInt(document.getElementById('transferAmountInput').value) || 0;
+      const msg = document.getElementById('transferMsg');
+
+      if (!target) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Please specify target child account ID.";
+        return;
+      }
+      if (amt <= 0 || amt > userCredits) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Invalid credit amount selection.";
+        return;
+      }
+
+      userCredits -= amt;
+      updateDashboardMetrics();
+      msg.style.color = "#00ff87";
+      msg.textContent = `Successfully transferred ${amt} credits to ${target}!`;
+      document.getElementById('transferTargetInput').value = '';
     });
 
     function getAdjustedMonthlyBase(baseMonthly) {
@@ -929,8 +1001,8 @@
         plansTab: "Plans",
         settingsTab: "Settings",
         aiTab: "AI Assistant",
-        balance: "Total Balance",
-        activity: "Active Services",
+        balance: "Credit Balance",
+        activity: "Monthly Income",
         status: "Automated System",
         plansHeader: "Available Subscription Plans",
         settingsHeader: "Account Settings",
@@ -952,16 +1024,21 @@
         featStd1: "Single account access",
         featStd2: "Standard cloud bandwidth",
         featStd3: "Automated daily sync",
+        featStd4: "+5 Monthly Credits Income",
         featPlus1: "High-speed data routes",
         featPlus2: "Real-time sync automation",
         featPlus3: "Auto-backup storage",
-        featPro1: "Priority engine server allocation",
+        featPlus4: "+15 Monthly Credits Income",
+        featPro1: "Advanced AI Data Analysis",
         featPro2: "Unlimited cloud throughput",
         featPro3: "Automated recovery tools",
+        featPro4: "+40 Monthly Credits Income",
         featFam1: "Centralized billing profile",
-        featFam2: "Separate account spaces",
-        featPrem1: "High-speed allocation for all profiles",
+        featFam2: "Adults get credits, transferrable to kids",
+        featFam3: "Kids get reduced credit income",
+        featPrem1: "Advanced AI Deep Insight Analysis",
         featPrem2: "Automated child protection settings",
+        featPrem3: "High adult income tier + transfer tools",
         lblAdultsFam: "Adults (120 AR ea):",
         lblKidsFam: "Kids (75 AR ea):",
         lblAdultsPrem: "Adults (400 AR ea):",
@@ -981,7 +1058,9 @@
         promoSuccess: "Promo code applied! Discount:",
         promoInvalid: "Invalid promo code.",
         promoErrEmpty: "Please enter a promo code.",
-        promoErrFetch: "Error verifying promo code."
+        promoErrFetch: "Error verifying promo code.",
+        transferHeader: "Transfer Credits to Child Member",
+        transferDesc: "Adult household profile credit delegation system."
       },
       FR: {
         welcome: "Bon retour",
@@ -989,8 +1068,8 @@
         plansTab: "Offres",
         settingsTab: "Paramètres",
         aiTab: "Assistant IA",
-        balance: "Solde Total",
-        activity: "Services Actifs",
+        balance: "Solde de Crédits",
+        activity: "Revenu Mensuel",
         status: "Système Automatisé",
         plansHeader: "Offres d'Abonnement",
         settingsHeader: "Paramètres du Compte",
@@ -1012,16 +1091,21 @@
         featStd1: "Accès pour un seul compte",
         featStd2: "Bande passante cloud standard",
         featStd3: "Synchronisation quotidienne automatique",
+        featStd4: "+5 Crédits de revenu mensuel",
         featPlus1: "Routes de données haute vitesse",
         featPlus2: "Synchronisation automatique en temps réel",
         featPlus3: "Stockage de sauvegarde automatique",
-        featPro1: "Allocation serveur prioritaire",
+        featPlus4: "+15 Crédits de revenu mensuel",
+        featPro1: "Analyse de données IA avancée",
         featPro2: "Débit cloud illimité",
         featPro3: "Outils de récupération automatisés",
+        featPro4: "+40 Crédits de revenu mensuel",
         featFam1: "Profil de facturation centralisé",
-        featFam2: "Espaces de compte séparés",
-        featPrem1: "Allocation haute vitesse pour tous les profils",
+        featFam2: "Les adultes reçoivent des crédits transférables",
+        featFam3: "Les enfants reçoivent un revenu réduit",
+        featPrem1: "Analyse IA approfondie avancée",
         featPrem2: "Paramètres de protection des enfants automatisés",
+        featPrem3: "Niveau de revenu adulte élevé + outils",
         lblAdultsFam: "Adultes (120 AR ch.):",
         lblKidsFam: "Enfants (75 AR ch.):",
         lblAdultsPrem: "Adultes (400 AR ch.):",
@@ -1041,7 +1125,9 @@
         promoSuccess: "Code promo appliqué! Remise:",
         promoInvalid: "Code promo invalide.",
         promoErrEmpty: "Veuillez entrer un code promo.",
-        promoErrFetch: "Erreur de vérification du code promo."
+        promoErrFetch: "Erreur de vérification du code promo.",
+        transferHeader: "Transférer des crédits à un enfant",
+        transferDesc: "Système de délégation de crédits pour adultes."
       },
       MG: {
         welcome: "Tonga soa indray",
@@ -1049,8 +1135,8 @@
         plansTab: "Fahafohezana",
         settingsTab: "Kajikajy",
         aiTab: "Mpanampy AI",
-        balance: "Teti-bola Samy hafa",
-        activity: "Tolotra Mandeha",
+        balance: "Vola Credit",
+        activity: "Fidiram-bola Isam-bolana",
         status: "Rafitra Mandeha Ho Azy",
         plansHeader: "Tolotra Misy",
         settingsHeader: "Kajikajin'ny Kaonty",
@@ -1072,16 +1158,21 @@
         featStd1: "Fidirana kaonty tokana",
         featStd2: "Bande passante cloud tsotra",
         featStd3: "Fampirindrana isan'andro ho azy",
+        featStd4: "+5 Vola Credit isam-bolana",
         featPlus1: "Lalam-pifandraisana mahery vaika",
         featPlus2: "Fampirindrana amin'ny fotoana tena izy",
         featPlus3: "Tahiry famerenana ho azy",
-        featPro1: "Laharana voalohany amin'ny serviera",
+        featPlus4: "+15 Vola Credit isam-bolana",
+        featPro1: "Fanadihadiana AI mandroso",
         featPro2: "Fandehanana cloud tsy misy fetra",
         featPro3: "Fitaovana famerenana rakitra ho azy",
+        featPro4: "+40 Vola Credit isam-bolana",
         featFam1: "Kaonty fandoavam-bola iray ihany",
-        featFam2: "Toerana mitokana ho an'ny tsirairay",
-        featPrem1: "Hafainganam-pandeha ho an'ny rehetra",
+        featFam2: "Ny olon-dehibe mahazo credit azo afindra",
+        featFam3: "Kely ny credit ho an'ny ankizy",
+        featPrem1: "Fanadihadiana AI lalina kokoa",
         featPrem2: "Fiarovana ny ankizy mandeha ho azy",
+        featPrem3: "Fidiram-bola ambony ho an'ny olon-dehibe",
         lblAdultsFam: "Mbe (120 AR isany):",
         lblKidsFam: "Ankizy (75 AR isany):",
         lblAdultsPrem: "Mbe (400 AR isany):",
@@ -1101,7 +1192,9 @@
         promoSuccess: "Lasa ny code promo! Afototra:",
         promoInvalid: "Code promo tsy mety.",
         promoErrEmpty: "Mampidira code promo azafady.",
-        promoErrFetch: "Nisy olana tamin'ny fizahana ny code."
+        promoErrFetch: "Nisy olana tamin'ny fizahana ny code.",
+        transferHeader: "Fandefasana Credit ho an'ny Ankizy",
+        transferDesc: "Rafitra fandefasana credit avy amin'ny olon-dehibe."
       }
     };
 
@@ -1143,20 +1236,25 @@
       document.getElementById('feat-std-1').textContent = t.featStd1;
       document.getElementById('feat-std-2').textContent = t.featStd2;
       document.getElementById('feat-std-3').textContent = t.featStd3;
+      document.getElementById('feat-std-4').textContent = t.featStd4;
 
       document.getElementById('feat-plus-1').textContent = t.featPlus1;
       document.getElementById('feat-plus-2').textContent = t.featPlus2;
       document.getElementById('feat-plus-3').textContent = t.featPlus3;
+      document.getElementById('feat-plus-4').textContent = t.featPlus4;
 
       document.getElementById('feat-pro-1').textContent = t.featPro1;
       document.getElementById('feat-pro-2').textContent = t.featPro2;
       document.getElementById('feat-pro-3').textContent = t.featPro3;
+      document.getElementById('feat-pro-4').textContent = t.featPro4;
 
       document.getElementById('feat-fam-1').textContent = t.featFam1;
       document.getElementById('feat-fam-2').textContent = t.featFam2;
+      document.getElementById('feat-fam-3').textContent = t.featFam3;
 
       document.getElementById('feat-prem-1').textContent = t.featPrem1;
       document.getElementById('feat-prem-2').textContent = t.featPrem2;
+      document.getElementById('feat-prem-3').textContent = t.featPrem3;
 
       document.getElementById('lbl-adults-fam').textContent = t.lblAdultsFam;
       document.getElementById('lbl-kids-fam').textContent = t.lblKidsFam;
@@ -1177,6 +1275,11 @@
       document.getElementById('promoCodeInput').placeholder = t.placeholderPromo;
       document.getElementById('btnApplyPromo').textContent = t.btnApply;
       document.getElementById('txt-ai-welcome').textContent = t.aiWelcome;
+
+      const transferHeaderEl = document.getElementById('lbl-transfer-header');
+      const transferDescEl = document.getElementById('lbl-transfer-desc');
+      if(transferHeaderEl) transferHeaderEl.textContent = t.transferHeader;
+      if(transferDescEl) transferDescEl.textContent = t.transferDesc;
 
       const langNames = { EN: "English", FR: "Français", MG: "Malagasy" };
       document.getElementById('currentLangDisplay').textContent = langNames[lang];
@@ -1218,7 +1321,7 @@
             contents: [
               {
                 role: "user",
-                parts: [{ text: `You are the AI Assistant for DigitAll, an automated digital service platform. Be concise and friendly. User query: ${text}` }]
+                parts: [{ text: `You are the AI Assistant for DigitAll, a service platform. Provide concise, expert automated analytics or support responses. User query: ${text}` }]
               }
             ]
           })
