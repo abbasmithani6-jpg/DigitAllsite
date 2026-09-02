@@ -4,42 +4,53 @@ import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-
     emailjs.init("l9xhVDI7VRC5H1tqk");
   }
 })();
-document.getElementById('btnCreatePromo').addEventListener('click', async () => {
-  const codeInput = document.getElementById('newPromoCode').value.trim().toUpperCase();
-  const typeInput = document.getElementById('newPromoType').value;
-  const valueInput = Number(document.getElementById('newPromoValue').value);
-  const maxUsesInput = Number(document.getElementById('newPromoMaxUses').value);
-  const msg = document.getElementById('adminPromoMessage');
-
-  if (!codeInput || isNaN(valueInput) || valueInput <= 0) {
-    msg.style.color = "#ef4444";
-    msg.textContent = "Please enter a valid code and a non-zero value.";
+document.addEventListener('DOMContentLoaded', () => {
+  const createBtn = document.getElementById('btnCreatePromo');
+  
+  if (!createBtn) {
+    console.error("Could not find btnCreatePromo element on the page!");
     return;
   }
 
-  try {
-    // Uses the promo code itself as the Firestore Document ID, matching your dashboard setup
-    const promoRef = doc(db, "promocodes", codeInput);
-    
-    await setDoc(promoRef, {
-      code: codeInput,
-      type: typeInput,
-      value: valueInput,
-      maxUses: maxUsesInput,
-      currentUses: 0
-    });
+  createBtn.addEventListener('click', async () => {
+    const codeInput = document.getElementById('newPromoCode').value.trim().toUpperCase();
+    const typeInput = document.getElementById('newPromoType').value;
+    const valueInput = Number(document.getElementById('newPromoValue').value);
+    const maxUsesInput = Number(document.getElementById('newPromoMaxUses').value);
+    const msg = document.getElementById('adminPromoMessage');
 
-    msg.style.color = "#00ff87";
-    msg.textContent = `Promo code "${codeInput}" created successfully!`;
-    
-    // Clear form fields
-    document.getElementById('newPromoCode').value = '';
-    document.getElementById('newPromoValue').value = '';
-  } catch (err) {
-    console.error("Error creating promo code:", err);
-    msg.style.color = "#ef4444";
-    msg.textContent = "Error creating promo code. Check console.";
-  }
+    console.log("Create promo clicked for:", codeInput);
+
+    if (!codeInput || isNaN(valueInput) || valueInput <= 0) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Please enter a valid code and a non-zero value.";
+      return;
+    }
+
+    try {
+      // Make sure 'doc', 'setDoc', and 'db' are imported at the top of your admin.js file from Firebase
+      const promoRef = doc(db, "promocodes", codeInput);
+      
+      await setDoc(promoRef, {
+        code: codeInput,
+        type: typeInput,
+        value: valueInput,
+        maxUses: maxUsesInput,
+        currentUses: 0
+      });
+
+      msg.style.color = "#00ff87";
+      msg.textContent = `Promo code "${codeInput}" created successfully!`;
+      
+      // Clear form fields
+      document.getElementById('newPromoCode').value = '';
+      document.getElementById('newPromoValue').value = '';
+    } catch (err) {
+      console.error("Error creating promo code:", err);
+      msg.style.color = "#ef4444";
+      msg.textContent = "Error creating promo code. Check console.";
+    }
+  });
 });
 // Outlook-Style Autocomplete Logic
 document.addEventListener('DOMContentLoaded', function() {
