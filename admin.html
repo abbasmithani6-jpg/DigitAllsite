@@ -156,56 +156,25 @@
     </div>
 
     <!-- TAB 1: Promo Codes -->
-    <div id="promoTab" class="tab-content active">
-      <div class="dashboard-card">
-        <h2>Create New Promo Code</h2>
-        <form id="createPromoForm" class="form-grid">
-          <div class="input-group">
-            <label>Code Name</label>
-            <input type="text" id="promoCodeInput" placeholder="SUMMER20" required>
-          </div>
-          <div class="input-group">
-            <label>Discount Type</label>
-            <select id="discountTypeInput">
-              <option value="percent">Percentage (%)</option>
-              <option value="money">Money Amount ($/£)</option>
-              <option value="credits">Store Credits</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label>Discount Value</label>
-            <input type="number" id="discountValueInput" placeholder="20" min="1" required>
-          </div>
-          <div class="input-group">
-            <label>Max Total Uses</label>
-            <input type="number" id="maxUsesInput" placeholder="100" min="1" required>
-          </div>
-          <button type="submit" class="btn-primary">Add Code</button>
-        </form>
-      </div>
+   <div class="admin-card" style="background: #1e1e2f; padding: 20px; border-radius: 12px; margin-bottom: 20px; color: white;">
+  <h3>Create New Promo Code</h3>
+  <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+    <input type="text" id="newPromoCode" placeholder="Code (e.g. SUMMER50)" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;" />
+    
+    <select id="newPromoType" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;">
+      <option value="percentage">Percentage (%)</option>
+      <option value="fixed">Fixed Amount / Money</option>
+      <option value="credits">Bonus Credits</option>
+    </select>
 
-      <div class="dashboard-card">
-        <div class="card-header-flex">
-          <h2>Active Promo Codes <span id="promoCounter" class="badge-count">0</span></h2>
-          <input type="text" id="searchPromoInput" class="search-input" placeholder="Search codes..." onkeyup="filterPromos()">
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Code</th>
-                <th>Discount / Reward</th>
-                <th>Current Uses</th>
-                <th>Max Uses</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="promoTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <input type="number" id="newPromoValue" placeholder="Value (e.g. 20 for 20%)" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;" />
 
+    <input type="number" id="newPromoMaxUses" placeholder="Max Uses (e.g. 100)" value="100" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;" />
+
+    <button id="btnCreatePromo" class="btn-send" style="padding: 10px; background: #00ff87; color: black; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Create Promo Code</button>
+  </div>
+  <div id="adminPromoMessage" style="margin-top: 10px; font-weight: 700; font-size: 14px;"></div>
+</div>
     <!-- TAB 2: Registered Users Table -->
     <div id="usersTab" class="tab-content">
       <div class="dashboard-card">
