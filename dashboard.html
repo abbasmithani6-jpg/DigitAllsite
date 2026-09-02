@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -765,7 +765,7 @@
         <h2 style="margin-bottom: 16px;" id="txt-ai-header">DigitAll AI Assistant</h2>
         <div class="chat-container">
           <div class="chat-messages" id="chatBox">
-            <div class="chat-msg bot" id="txt-ai-welcome">Hello! I am your DigitAll Assistant powered by Gemini AI. How can I help you today?</div>
+            <div class="chat-msg bot" id="txt-ai-welcome">Hello! I am your DigitAll Assistant. How can I help you today?</div>
           </div>
           <form class="chat-input-row" id="aiForm">
             <input type="text" class="chat-input" id="aiInput" placeholder="Ask a question..." required />
@@ -789,7 +789,9 @@
     import { 
       getFirestore, 
       doc, 
-      getDoc 
+      getDoc,
+      updateDoc,
+      increment
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -805,6 +807,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Replace with your valid Gemini API key to make the AI chat work properly
     const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
@@ -989,6 +992,15 @@
           msg.style.color = "#00ff87";
           msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
           updateAllPrices();
+
+          // Increment usage count in Firestore if a usage counter field exists
+          try {
+            await updateDoc(promoRef, {
+              uses: increment(1)
+            });
+          } catch (e) {
+            console.log("Note: 'uses' field increment skipped or failed.", e);
+          }
         } else {
           const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
           if (staticCodes[codeInput] !== undefined) {
@@ -1097,7 +1109,7 @@
         verified: "Verified",
         interfaceLang: "Interface Language",
         descInterfaceLang: "Selected system display language",
-        aiWelcome: "Hello! I am your DigitAll Assistant powered by Gemini AI. How can I help you today?",
+        aiWelcome: "Hello! I am your DigitAll Assistant. How can I help you today?",
         placeholderPromo: "ENTER PROMO CODE",
         btnApply: "Apply Code",
         promoSuccess: "Promo code applied! Discount:",
@@ -1163,7 +1175,7 @@
         verified: "Vérifié",
         interfaceLang: "Langue de l'interface",
         descInterfaceLang: "Langue d'affichage sélectionnée",
-        aiWelcome: "Bonjour! Je suis votre assistant DigitAll propulsé par Gemini AI. Comment puis-je vous aider aujourd'hui?",
+        aiWelcome: "Bonjour! Je suis votre assistant DigitAll. Comment puis-je vous aider aujourd'hui?",
         placeholderPromo: "ENTRER CODE PROMO",
         btnApply: "Appliquer",
         promoSuccess: "Code promo appliqué! Remise:",
@@ -1229,7 +1241,7 @@
         verified: "Voamarina",
         interfaceLang: "Teny ampiasaina",
         descInterfaceLang: "Teny nosafidiana hiseho",
-        aiWelcome: "Manao ahoana! Izaho no mpanampy DigitAll mampiasa Gemini AI. Ahoana no azoko anampiana anao indray?",
+        aiWelcome: "Manao ahoana! Izaho no mpanampy DigitAll. Ahoana no azoko anampiana anao indray?",
         placeholderPromo: "AMPIRATRO CODE PROMO",
         btnApply: "Hanamarina",
         promoSuccess: "Lasa ny code promo! Afototra:",
@@ -1373,12 +1385,14 @@
 
         if (data.candidates && data.candidates[0].content.parts[0].text) {
           botDiv.textContent = data.candidates[0].content.parts[0].text;
+        } else if (data.error) {
+          botDiv.textContent = `API Error: ${data.error.message || "Please check your configuration."}`;
         } else {
           botDiv.textContent = "Sorry, I couldn't generate a proper response.";
         }
       } catch (err) {
         console.error("Gemini API Error:", err);
-        botDiv.textContent = "Unable to connect to AI Assistant. Please check your API key.";
+        botDiv.textContent = "Unable to connect to AI Assistant. Please verify your GEMINI_API_KEY in the code.";
       }
 
       chatBox.scrollTop = chatBox.scrollHeight;
