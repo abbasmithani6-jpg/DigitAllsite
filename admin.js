@@ -188,7 +188,7 @@ async function loadDashboardData() {
     const userCounter = document.getElementById("userCounter");
     if (userCounter) userCounter.innerText = userCount;
 
-    // Load Promo Codes
+ // Load Promo Codes
     const promoSnap = await getDocs(collection(db, "promocodes"));
     const promoTable = document.getElementById("promoTableBody");
     if (!promoTable) return;
@@ -199,20 +199,27 @@ async function loadDashboardData() {
 
     promoSnap.forEach((docSnap) => {
       const p = docSnap.data();
-      const type = p.type || p.discountType || 'percentage';
-      const val = p.value ?? p.discountValue ?? p.discountPercent ?? 0;
-      const maxUses = p.maxUses ?? 0;
+      // Catch different possible field names for type and value
+      const type = (p.type || p.discountType || p.category || 'percentage').toLowerCase();
+      const val = p.value ?? p.amount ?? p.discountValue ?? p.discountPercent ?? p.val ?? 0;
+      const maxUses = p.maxUses ?? p.uses ?? 0;
 
       let displayValue = "";
-      if (type === "percentage" || type === "percent") displayValue = `${val}% Off`;
-      else if (type === "fixed" || type === "money") displayValue = `$${val} Off`;
-      else if (type === "credits") displayValue = `${val} Credits`;
+      if (type.includes("percent") || type === "%") {
+        displayValue = `${val}% Off`;
+      } else if (type.includes("fixed") || type.includes("money") || type.includes("flat") || type === "$") {
+        displayValue = `$${val} Off`;
+      } else if (type.includes("credit")) {
+        displayValue = `${val} Credits`;
+      } else {
+        displayValue = `${val} ${type}`;
+      }
 
       promoTable.innerHTML += `
         <tr>
           <td><strong>${docSnap.id}</strong></td>
           <td><span class="badge">${displayValue}</span></td>
-          <td>${p.currentUses ?? 0}</td>
+          <td>${p.currentUses ?? p.usesCount ?? 0}</td>
           <td>${maxUses}</td>
           <td>
             <button class="btn-edit" onclick="window.openEditModal('${docSnap.id}', '${type}', ${val}, ${maxUses})">Edit</button>
