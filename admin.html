@@ -37,7 +37,6 @@
     input:focus, select:focus { border-color: var(--accent-color); }
     .btn-primary { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
     .btn-primary:hover { background: var(--accent-hover); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
     /* Dashboard Layout */
     #adminDashboard { display: none; width: 100%; max-width: 1100px; margin-top: 10px; }
@@ -61,12 +60,7 @@
     .card-header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
     .dashboard-card h2 { font-size: 18px; color: var(--text-main); }
     
-    /* Search Bar Input */
     .search-input { max-width: 280px; padding: 8px 12px; font-size: 13px; }
-
-    /* Form Grids */
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end; }
-    .form-grid button { height: 40px; }
 
     /* Tables */
     .table-container { overflow-x: auto; }
@@ -76,7 +70,6 @@
     tr.user-main-row { cursor: pointer; transition: background 0.2s; }
     tr.user-main-row:hover { background-color: rgba(255,255,255,0.03); }
 
-    /* Expandable User Info Details Drawer */
     .user-details-row { display: none; background: #0f172a; }
     .user-details-row.active { display: table-row; }
     .user-details-container { padding: 16px; font-size: 13px; line-height: 1.6; border-left: 3px solid var(--accent-color); margin: 4px 0; }
@@ -84,39 +77,11 @@
     .user-detail-item { color: var(--text-muted); }
     .user-detail-item span { color: var(--text-main); font-weight: 600; display: block; margin-top: 2px; word-break: break-all; }
 
-    /* Badges & Action Buttons */
     .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; background: rgba(16, 185, 129, 0.1); color: var(--accent-color); display: inline-block; }
     .badge-admin { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
     .badge-count { background: #0f172a; color: var(--text-muted); border: 1px solid var(--border-color); padding: 2px 10px; border-radius: 20px; font-size: 13px; }
-    .action-btns { display: flex; gap: 8px; }
     .btn-edit { background: var(--edit-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
     .btn-edit:hover { background: var(--edit-hover); }
-
-    /* Autocomplete Dropdown */
-    .autocomplete-list {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      max-height: 180px;
-      overflow-y: auto;
-      z-index: 1000;
-      list-style: none;
-      margin-top: 4px;
-      padding: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      display: none;
-    }
-
-    .autocomplete-list.active { display: block; }
-    .autocomplete-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; }
-    .autocomplete-item:last-child { border-bottom: none; }
-    .autocomplete-item:hover { background-color: rgba(255, 255, 255, 0.08); }
-    .autocomplete-item strong { color: var(--text-main); font-size: 14px; }
-    .autocomplete-item span { color: var(--text-muted); font-size: 12px; }
 
     /* Modal */
     #editModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
@@ -156,25 +121,49 @@
     </div>
 
     <!-- TAB 1: Promo Codes -->
-   <div class="admin-card" style="background: #1e1e2f; padding: 20px; border-radius: 12px; margin-bottom: 20px; color: white;">
-  <h3>Create New Promo Code</h3>
-  <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-    <input type="text" id="newPromoCode" placeholder="Code (e.g. SUMMER50)" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;" />
-    
-    <select id="newPromoType" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;">
-      <option value="percentage">Percentage (%)</option>
-      <option value="fixed">Fixed Amount / Money</option>
-      <option value="credits">Bonus Credits</option>
-    </select>
+    <div id="promoTab" class="tab-content active">
+      <div class="dashboard-card">
+        <h2>Create New Promo Code</h2>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+          <input type="text" id="newPromoCode" placeholder="Code (e.g. SUMMER50)" />
+          
+          <select id="newPromoType">
+            <option value="percentage">Percentage (%)</option>
+            <option value="fixed">Fixed Amount / Money</option>
+            <option value="credits">Bonus Credits</option>
+          </select>
 
-    <input type="number" id="newPromoValue" placeholder="Value (e.g. 20 for 20%)" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;" />
+          <input type="number" id="newPromoValue" placeholder="Value (e.g. 20 for 20%)" />
+          <input type="number" id="newPromoMaxUses" placeholder="Max Uses (e.g. 100)" value="100" />
 
-    <input type="number" id="newPromoMaxUses" placeholder="Max Uses (e.g. 100)" value="100" class="admin-input" style="padding: 10px; background: #2a2a40; border: 1px solid #444; color: white; border-radius: 6px;" />
+          <button id="btnCreatePromo" class="btn-primary" style="background: var(--accent-color);">Create Promo Code</button>
+        </div>
+        <div id="adminPromoMessage" style="margin-top: 10px; font-weight: 700; font-size: 14px;"></div>
+      </div>
 
-    <button id="btnCreatePromo" class="btn-send" style="padding: 10px; background: #00ff87; color: black; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Create Promo Code</button>
-  </div>
-  <div id="adminPromoMessage" style="margin-top: 10px; font-weight: 700; font-size: 14px;"></div>
-</div>
+      <!-- Existing Promos Table -->
+      <div class="dashboard-card">
+        <div class="card-header-flex">
+          <h2>Active Promo Codes <span id="promoCounter" class="badge-count">0</span></h2>
+          <input type="text" id="searchPromoInput" class="search-input" placeholder="Search promos..." onkeyup="filterPromos()">
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Type / Value</th>
+                <th>Current Uses</th>
+                <th>Max Uses</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="promoTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB 2: Registered Users Table -->
     <div id="usersTab" class="tab-content">
       <div class="dashboard-card">
@@ -203,16 +192,14 @@
       <div class="dashboard-card">
         <h2>Send Promo Code Email</h2>
         
-        <div class="input-group" style="position: relative;">
+        <div class="input-group">
           <label>Recipient Name</label>
           <input type="text" id="admin-user-name" placeholder="Start typing name..." autocomplete="off">
-          <ul id="name-suggestions" class="autocomplete-list"></ul>
         </div>
 
-        <div class="input-group" style="position: relative;">
+        <div class="input-group">
           <label>Recipient Email Address</label>
           <input type="email" id="admin-user-email" placeholder="Start typing email..." required autocomplete="off">
-          <ul id="email-suggestions" class="autocomplete-list"></ul>
         </div>
 
         <div class="input-group">
@@ -234,8 +221,8 @@
       <div class="input-group">
         <label>Discount Type</label>
         <select id="editModalType">
-          <option value="percent">Percentage (%)</option>
-          <option value="money">Money Amount ($/£)</option>
+          <option value="percentage">Percentage (%)</option>
+          <option value="fixed">Fixed Amount / Money</option>
           <option value="credits">Store Credits</option>
         </select>
       </div>
@@ -255,285 +242,7 @@
     </div>
   </div>
 
-  <!-- 4. Firebase Logic Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword, 
-      onAuthStateChanged, 
-      signOut 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      collection, 
-      getDocs, 
-      doc, 
-      setDoc, 
-      updateDoc 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
-      authDomain: "digitall-c77d8.firebaseapp.com",
-      projectId: "digitall-c77d8",
-      storageBucket: "digitall-c77d8.firebasestorage.app",
-      messagingSenderId: "922798712588",
-      appId: "1:922798712588:web:43235136b5b1bf58168b29"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Cache database users globally for autocomplete search
-    window.allUsers = [];
-
-    // Tab Switcher
-    window.switchTab = function(tabId, element) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      element.classList.add('active');
-    };
-
-    // Toggle User Expansion
-    window.toggleUserDetails = function(id) {
-      const detailsRow = document.getElementById(`user-details-${id}`);
-      if (detailsRow) {
-        detailsRow.classList.toggle('active');
-      }
-    };
-
-    // Real-time Search Filters
-    window.filterPromos = function() {
-      const term = document.getElementById("searchPromoInput").value.toLowerCase();
-      const rows = document.querySelectorAll("#promoTableBody tr");
-      rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(term) ? "" : "none";
-      });
-    };
-
-    window.filterUsers = function() {
-      const term = document.getElementById("searchUserInput").value.toLowerCase();
-      const rows = document.querySelectorAll("#usersTableBody tr.user-main-row");
-      rows.forEach(row => {
-        const userId = row.getAttribute('data-id');
-        const detailsRow = document.getElementById(`user-details-${userId}`);
-        const text = (row.innerText + " " + (detailsRow ? detailsRow.innerText : "")).toLowerCase();
-        
-        if (text.includes(term)) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-          if (detailsRow) detailsRow.classList.remove('active');
-        }
-      });
-    };
-
-    // Auth Observer
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("loginScreen").style.display = "none";
-        document.getElementById("adminDashboard").style.display = "block";
-        loadDashboardData();
-      } else {
-        document.getElementById("loginScreen").style.display = "block";
-        document.getElementById("adminDashboard").style.display = "none";
-      }
-    });
-
-    window.handleLogin = async function() {
-      const email = document.getElementById("emailInput").value;
-      const password = document.getElementById("passwordInput").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        alert("Login failed: " + error.message);
-      }
-    };
-
-    window.handleLogout = function() {
-      signOut(auth);
-    };
-
-    async function loadDashboardData() {
-      try {
-        const currentUser = auth.currentUser;
-        
-        // Load Users
-        const usersSnap = await getDocs(collection(db, "users"));
-        const usersTable = document.getElementById("usersTableBody");
-        usersTable.innerHTML = "";
-        
-        window.allUsers = [];
-        let userCount = 0;
-        let foundSelf = false;
-
-        usersSnap.forEach((docSnap) => {
-          userCount++;
-          const u = docSnap.data();
-          if (currentUser && docSnap.id === currentUser.uid) foundSelf = true;
-          
-          const fullName = (u.firstName || u.lastName) 
-            ? `${u.firstName || ""} ${u.lastName || ""}`.trim() 
-            : (u.name || u.displayName || "Unnamed User");
-            
-          const email = u.email || "";
-          const role = u.role || (currentUser && docSnap.id === currentUser.uid ? "admin" : "user");
-          const safeId = docSnap.id;
-
-          if (email || fullName) {
-            window.allUsers.push({ name: fullName, email: email });
-          }
-
-          usersTable.innerHTML += `
-            <tr class="user-main-row" data-id="${safeId}" onclick="window.toggleUserDetails('${safeId}')">
-              <td>
-                <strong style="font-size: 15px;">${fullName}</strong>
-                <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">(Tap for details)</span>
-              </td>
-            </tr>
-            <tr id="user-details-${safeId}" class="user-details-row">
-              <td>
-                <div class="user-details-container">
-                  <div class="user-details-grid">
-                    <div class="user-detail-item">Full Name: <span>${fullName}</span></div>
-                    <div class="user-detail-item">Email Address: <span>${email || "No email"}</span></div>
-                    <div class="user-detail-item">User ID: <span><code>${safeId}</code></span></div>
-                    <div class="user-detail-item">Account Role: <span><span class="badge ${role === 'admin' ? 'badge-admin' : ''}">${role}</span></span></div>
-                  </div>
-                </div>
-              </td>
-            </tr>`;
-        });
-
-        if (!foundSelf && currentUser) {
-          userCount++;
-          const adminId = currentUser.uid;
-          const adminEmail = currentUser.email || "";
-          window.allUsers.push({ name: "Admin Account", email: adminEmail });
-
-          usersTable.innerHTML = `
-            <tr class="user-main-row" data-id="${adminId}" onclick="window.toggleUserDetails('${adminId}')">
-              <td>
-                <strong style="font-size: 15px;">Admin Account (You)</strong>
-                <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">(Tap for details)</span>
-              </td>
-            </tr>
-            <tr id="user-details-${adminId}" class="user-details-row">
-              <td>
-                <div class="user-details-container">
-                  <div class="user-details-grid">
-                    <div class="user-detail-item">Email Address: <span>${adminEmail}</span></div>
-                    <div class="user-detail-item">User ID: <span><code>${adminId}</code></span></div>
-                    <div class="user-detail-item">Role: <span><span class="badge badge-admin">admin</span></span></div>
-                  </div>
-                </div>
-              </td>
-            </tr>` + usersTable.innerHTML;
-        }
-
-        document.getElementById("userCounter").innerText = userCount;
-
-        // Load Promo Codes
-        const promoSnap = await getDocs(collection(db, "promocodes"));
-        const promoTable = document.getElementById("promoTableBody");
-        promoTable.innerHTML = "";
-        
-        document.getElementById("promoCounter").innerText = promoSnap.size;
-
-        promoSnap.forEach((docSnap) => {
-          const p = docSnap.data();
-          const type = p.discountType || (p.discountPercent !== undefined ? 'percent' : 'money');
-          const val = p.discountValue ?? p.discountPercent ?? 0;
-          const maxUses = p.maxUses ?? 0;
-
-          let displayValue = "";
-          if (type === "percent") displayValue = `${val}% Off`;
-          else if (type === "money") displayValue = `$${val} Off`;
-          else if (type === "credits") displayValue = `${val} Credits`;
-
-          promoTable.innerHTML += `
-            <tr>
-              <td><strong>${docSnap.id}</strong></td>
-              <td><span class="badge">${displayValue}</span></td>
-              <td>${p.currentUses ?? 0}</td>
-              <td>${maxUses}</td>
-              <td>
-                <button class="btn-edit" onclick="window.openEditModal('${docSnap.id}', '${type}', ${val}, ${maxUses})">Edit</button>
-              </td>
-            </tr>`;
-        });
-      } catch (err) {
-        console.error("Data fetch error:", err);
-      }
-    }
-
-    // Submit New Promo Code
-    document.getElementById("createPromoForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!auth.currentUser) return alert("Admin login required.");
-
-      const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
-      const type = document.getElementById("discountTypeInput").value;
-      const val = Number(document.getElementById("discountValueInput").value);
-      const maxUses = Number(document.getElementById("maxUsesInput").value);
-
-      try {
-        await setDoc(doc(db, "promocodes", code), {
-          discountType: type,
-          discountValue: val,
-          currentUses: 0,
-          maxUses: maxUses,
-          createdAt: new Date().toISOString()
-        });
-        alert(`Promo code ${code} created!`);
-        document.getElementById("createPromoForm").reset();
-        loadDashboardData();
-      } catch (err) {
-        alert("Error creating promo code: " + err.message);
-      }
-    });
-
-    // Edit Modal Handlers
-    window.openEditModal = function(code, type, val, maxUses) {
-      document.getElementById("editModalCodeTitle").innerText = code;
-      document.getElementById("editModalCode").value = code;
-      document.getElementById("editModalType").value = type;
-      document.getElementById("editModalValue").value = val;
-      document.getElementById("editModalMaxUses").value = maxUses;
-      document.getElementById("editModal").style.display = "flex";
-    };
-
-    window.closeEditModal = function() {
-      document.getElementById("editModal").style.display = "none";
-    };
-
-    window.savePromoEdit = async function() {
-      const code = document.getElementById("editModalCode").value;
-      const type = document.getElementById("editModalType").value;
-      const val = Number(document.getElementById("editModalValue").value);
-      const maxUses = Number(document.getElementById("editModalMaxUses").value);
-
-      try {
-        await updateDoc(doc(db, "promocodes", code), {
-          discountType: type,
-          discountValue: val,
-          maxUses: maxUses
-        });
-        alert(`Updated ${code}`);
-        window.closeEditModal();
-        loadDashboardData();
-      } catch (err) {
-        alert("Update error: " + err.message);
-      }
-    };
-  </script>
-
-  <!-- Load admin.js -->
-  <script src="admin.js"></script>
+  <!-- 4. Load admin.js as a module -->
+  <script type="module" src="admin.js"></script>
 </body>
 </html>
