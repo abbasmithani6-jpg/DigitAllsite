@@ -1345,11 +1345,8 @@
       btn.addEventListener('click', function() { updateLanguage(this.getAttribute('data-lang')); });
     });
 
-    const aiForm = document.getElementById('aiForm');
-    const aiInput = document.getElementById('aiInput');
-    const chatBox = document.getElementById('chatBox');
+const WORKER_URL = "https://digitall-gemini-proxy.abbasmithani6.workers.dev";
 
-    // REPLACE EVERYTHING FROM HERE...
     aiForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = aiInput.value.trim();
@@ -1369,17 +1366,10 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
-        const response = await fetch(GEMINI_API_URL, {
+        const response = await fetch(WORKER_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: `You are the AI Assistant for DigitAll, a service platform. Provide concise, expert analytics or support responses. User query: ${text}` }]
-              }
-            ]
-          })
+          body: JSON.stringify({ text: text })
         });
 
         const data = await response.json();
@@ -1392,8 +1382,8 @@
           botDiv.textContent = "Sorry, I couldn't generate a proper response.";
         }
       } catch (err) {
-        console.error("Gemini API Error:", err);
-        botDiv.textContent = "Unable to connect to AI Assistant. Please verify your GEMINI_API_KEY in the code.";
+        console.error("Worker Connection Error:", err);
+        botDiv.textContent = "Unable to connect to AI Assistant proxy.";
       }
 
       chatBox.scrollTop = chatBox.scrollHeight;
