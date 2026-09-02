@@ -594,56 +594,73 @@
         </div>
         <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
         <script>
-  document.getElementById('btnApplyPromo').addEventListener('click', async () => {
-    const codeInput = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-    const msg = document.getElementById('promoMessage');
+document.getElementById('btnApplyPromo').addEventListener('click', async () => {
+      const codeInput = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+      const msg = document.getElementById('promoMessage');
 
-    if (!codeInput) {
-      msg.style.color = "#ef4444";
-      msg.textContent = dictionary[currentLang].promoErrEmpty;
-      return;
-    }
+      if (!codeInput) {
+        msg.style.color = "#ef4444";
+        msg.textContent = dictionary[currentLang].promoErrEmpty;
+        return;
+      }
 
-    try {
-      const promoRef = doc(db, "promocodes", codeInput);
-      const promoSnap = await getDoc(promoRef);
+      try {
+        const promoRef = doc(db, "promocodes", codeInput);
+        const promoSnap = await getDoc(promoRef);
 
-      if (promoSnap.exists()) {
-        const data = promoSnap.data();
-        let rawDiscount = data.discount ?? data.discountPercent ?? data.value ?? 0;
-        if (typeof rawDiscount === 'string') {
-          rawDiscount = rawDiscount.replace('%', '').trim();
+        if (promoSnap.exists()) {
+          const data = promoSnap.data();
+          const promoType = data.type ? data.type.toLowerCase() : 'percentage';
+          const promoValue = Number(data.value) || 0;
+
+          if (promoValue <= 0) {
+            activeDiscount = 0;
+            msg.style.color = "#ef4444";
+            msg.textContent = dictionary[currentLang].promoInvalid;
+            updateAllPrices();
+            return;
+          }
+
+          // Handle different promo types
+          if (promoType === 'percentage' || promoType === 'percent') {
+            activeDiscount = promoValue;
+            msg.style.color = "#00ff87";
+            msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
+          } else if (promoType === 'fixed' || promoType === 'money') {
+            // If you want a fixed money amount off, handle it here or map it
+            activeDiscount = promoValue; 
+            msg.style.color = "#00ff87";
+            msg.textContent = `Success! ${promoValue} Currency Off`;
+          } else if (promoType === 'credits') {
+            // Handle bonus credits if needed
+            msg.style.color = "#00ff87";
+            msg.textContent = `Success! +${promoValue} Bonus Credits Added`;
+          }
+
+          updateAllPrices();
+
+          // Increment currentUses safely matching your database field
+          try {
+            await updateDoc(promoRef, {
+              currentUses: increment(1)
+            });
+          } catch (e) {
+            console.log("Note: 'currentUses' field increment skipped or failed.", e);
+          }
+        } else {
+          activeDiscount = 0;
+          msg.style.color = "#ef4444";
+          msg.textContent = dictionary[currentLang].promoInvalid;
+          updateAllPrices();
         }
-
-        let parsedDiscount = Number(rawDiscount);
-        activeDiscount = isNaN(parsedDiscount) ? 0 : parsedDiscount;
-
-        msg.style.color = "#00ff87";
-        msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
-        updateAllPrices();
-
-        try {
-          await updateDoc(promoRef, {
-            uses: increment(1)
-          });
-        } catch (e) {
-          console.log("Note: 'uses' field increment skipped or failed.", e);
-        }
-      } else {
+      } catch (err) {
+        console.error("Promo code fetch error:", err);
         activeDiscount = 0;
         msg.style.color = "#ef4444";
         msg.textContent = dictionary[currentLang].promoInvalid;
         updateAllPrices();
       }
-    } catch (err) {
-      console.error("Promo code fetch error:", err);
-      activeDiscount = 0;
-      msg.style.color = "#ef4444";
-      msg.textContent = dictionary[currentLang].promoInvalid;
-      updateAllPrices();
-    }
-  });
-</script>
+    });</script>
 
         <div class="billing-toggle-container">
           <button class="cycle-btn" data-cycle="weekly" id="btn-cycle-weekly">Weekly</button>
