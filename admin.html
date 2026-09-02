@@ -3,246 +3,455 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DigitAll Admin Portal</title>
-
-  <!-- Load EmailJS SDK v4 -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
+  <title>Digitall - Admin Dashboard</title>
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     :root {
       --bg-color: #0f172a;
       --card-bg: #1e293b;
-      --accent-color: #10b981;
-      --accent-hover: #059669;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --border-color: #334155;
-      --danger-color: #ef4444;
-      --danger-hover: #dc2626;
-      --edit-color: #3b82f6;
-      --edit-hover: #2563eb;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --danger: #ef4444;
+      --success: #00ff87;
+      --border: #334155;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
     /* Login Screen */
-    #loginScreen { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; width: 100%; max-width: 400px; margin-top: 80px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    #loginScreen h2 { margin-bottom: 20px; text-align: center; color: var(--text-main); }
-    .input-group { margin-bottom: 16px; position: relative; }
-    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-    input[type="email"], input[type="password"], input[type="text"], input[type="number"], select {
-      width: 100%; padding: 10px 14px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s;
+    #loginScreen {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
     }
-    input:focus, select:focus { border-color: var(--accent-color); }
-    .btn-primary { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-    .btn-primary:hover { background: var(--accent-hover); }
 
-    /* Dashboard Layout */
-    #adminDashboard { display: none; width: 100%; max-width: 1100px; margin-top: 10px; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
-    header h1 { font-size: 24px; }
-    .btn-logout { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-    .btn-logout:hover { color: var(--text-main); border-color: var(--text-muted); }
+    #loginScreen h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      text-align: center;
+    }
 
-    /* Navigation Tabs */
-    .tab-navigation { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-    .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px 18px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
-    .tab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
-    .tab-btn.active { color: var(--text-main); background: var(--card-bg); border: 1px solid var(--border-color); }
+    .form-group {
+      margin-bottom: 16px;
+    }
 
-    /* Tab Sections */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
 
-    /* Section Cards */
-    .dashboard-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-    .card-header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
-    .dashboard-card h2 { font-size: 18px; color: var(--text-main); }
-    
-    .search-input { max-width: 280px; padding: 8px 12px; font-size: 13px; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 14px;
+    }
 
-    /* Tables */
-    .table-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-    th { background: #0f172a; color: var(--text-muted); padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-color); }
-    td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
-    tr.user-main-row { cursor: pointer; transition: background 0.2s; }
-    tr.user-main-row:hover { background-color: rgba(255,255,255,0.03); }
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-    .user-details-row { display: none; background: #0f172a; }
-    .user-details-row.active { display: table-row; }
-    .user-details-container { padding: 16px; font-size: 13px; line-height: 1.6; border-left: 3px solid var(--accent-color); margin: 4px 0; }
-    .user-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-    .user-detail-item { color: var(--text-muted); }
-    .user-detail-item span { color: var(--text-main); font-weight: 600; display: block; margin-top: 2px; word-break: break-all; }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
 
-    .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; background: rgba(16, 185, 129, 0.1); color: var(--accent-color); display: inline-block; }
-    .badge-admin { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-    .badge-count { background: #0f172a; color: var(--text-muted); border: 1px solid var(--border-color); padding: 2px 10px; border-radius: 20px; font-size: 13px; }
-    .btn-edit { background: var(--edit-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-    .btn-edit:hover { background: var(--edit-hover); }
+    /* Admin Dashboard */
+    #adminDashboard {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-logout:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+      border-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Tables & Grid */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .user-main-row {
+      cursor: pointer;
+    }
+
+    .user-main-row:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .user-details-row {
+      display: none;
+      background: rgba(0,0,0,0.2);
+    }
+
+    .user-details-row.active {
+      display: table-row;
+    }
+
+    .user-details-container {
+      padding: 16px;
+    }
+
+    .user-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .user-detail-item {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .user-detail-item span {
+      display: block;
+      color: var(--text-main);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .badge-admin {
+      background: rgba(0, 255, 135, 0.1);
+      color: var(--success);
+    }
+
+    /* Autocomplete dropdown */
+    .autocomplete-wrapper {
+      position: relative;
+    }
+
+    .suggestions-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      list-style: none;
+      max-height: 150px;
+      overflow-y: auto;
+      display: none;
+      z-index: 10;
+    }
+
+    .suggestions-list.active {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .autocomplete-item:hover {
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .autocomplete-item span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
 
     /* Modal */
-    #editModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
-    .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; width: 100%; max-width: 400px; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .btn-cancel { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; }
+    #editModal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid var(--border);
+    }
+
+    .btn-edit {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-edit:hover {
+      background: var(--accent);
+      color: #0f172a;
+    }
   </style>
 </head>
 <body>
 
-  <!-- 1. Admin Login Screen -->
+  <!-- Login Screen -->
   <div id="loginScreen">
-    <h2>DigitAll Admin</h2>
-    <div class="input-group">
-      <label>Email Address</label>
-      <input type="email" id="emailInput" placeholder="admin@digitall.com" required>
+    <h2>Admin Login</h2>
+    <div class="form-group">
+      <label for="emailInput">Email Address</label>
+      <input type="email" id="emailInput" placeholder="admin@digitall.com">
     </div>
-    <div class="input-group">
-      <label>Password</label>
-      <input type="password" id="passwordInput" placeholder="••••••••" required>
+    <div class="form-group">
+      <label for="passwordInput">Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••">
     </div>
-    <button class="btn-primary" onclick="handleLogin()">Sign In to Dashboard</button>
+    <button type="button" id="btnLogin" class="btn-primary">Sign In to Dashboard</button>
   </div>
 
-  <!-- 2. Admin Dashboard -->
+  <!-- Admin Dashboard -->
   <div id="adminDashboard">
-    <header>
-      <h1>DigitAll Control Panel</h1>
-      <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
-    </header>
-
-    <!-- Navigation Tabs -->
-    <div class="tab-navigation">
-      <button class="tab-btn active" onclick="switchTab('promoTab', this)">Promo Codes</button>
-      <button class="tab-btn" onclick="switchTab('usersTab', this)">Registered Users</button>
-      <button class="tab-btn" onclick="switchTab('emailTab', this)">Send Email</button>
+    <div class="dashboard-header">
+      <h2>Digitall Control Center</h2>
+      <button id="btnLogout" class="btn-logout">Sign Out</button>
     </div>
 
-    <!-- TAB 1: Promo Codes -->
-    <div id="promoTab" class="tab-content active">
-      <div class="dashboard-card">
-        <h2>Create New Promo Code</h2>
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-          <input type="text" id="newPromoCode" placeholder="Code (e.g. SUMMER50)" />
-          
-          <select id="newPromoType">
-            <option value="percentage">Percentage (%)</option>
-            <option value="fixed">Fixed Amount / Money</option>
-            <option value="credits">Bonus Credits</option>
-          </select>
-
-          <input type="number" id="newPromoValue" placeholder="Value (e.g. 20 for 20%)" />
-          <input type="number" id="newPromoMaxUses" placeholder="Max Uses (e.g. 100)" value="100" />
-
-          <button id="btnCreatePromo" class="btn-primary" style="background: var(--accent-color);">Create Promo Code</button>
-        </div>
-        <div id="adminPromoMessage" style="margin-top: 10px; font-weight: 700; font-size: 14px;"></div>
-      </div>
-
-      <!-- Existing Promos Table -->
-      <div class="dashboard-card">
-        <div class="card-header-flex">
-          <h2>Active Promo Codes <span id="promoCounter" class="badge-count">0</span></h2>
-          <input type="text" id="searchPromoInput" class="search-input" placeholder="Search promos..." onkeyup="filterPromos()">
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Code</th>
-                <th>Type / Value</th>
-                <th>Current Uses</th>
-                <th>Max Uses</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="promoTableBody"></tbody>
-          </table>
-        </div>
-      </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="window.switchTab('usersTab', this)">Users (<span id="userCounter">0</span>)</button>
+      <button class="tab-btn" onclick="window.switchTab('promosTab', this)">Promo Codes (<span id="promoCounter">0</span>)</button>
+      <button class="tab-btn" id="emailTab" onclick="window.switchTab('emailsTab', this)">Dispatch Promo</button>
     </div>
 
-    <!-- TAB 2: Registered Users Table -->
-    <div id="usersTab" class="tab-content">
-      <div class="dashboard-card">
-        <div class="card-header-flex">
-          <div>
-            <h2>Registered Accounts <span id="userCounter" class="badge-count">0</span></h2>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Tap on any user's name to toggle their details.</p>
+    <!-- Users Tab -->
+    <div id="usersTab" class="tab-content active">
+      <div class="form-group" style="margin-bottom: 16px;">
+        <input type="text" id="searchUserInput" placeholder="Search users by name or email..." oninput="window.filterUsers()">
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Registered Accounts</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <!-- Dynamic User Rows -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Promo Codes Tab -->
+    <div id="promosTab" class="tab-content">
+      <div style="background: var(--bg-color); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
+        <h3 style="font-size: 16px; margin-bottom: 12px;">Create New Promo Code</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>Code Name</label>
+            <input type="text" id="newPromoCode" placeholder="e.g. WELCOME10">
           </div>
-          <input type="text" id="searchUserInput" class="search-input" placeholder="Search users or email..." onkeyup="filterUsers()">
+          <div class="form-group">
+            <label>Type</label>
+            <select id="newPromoType">
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed">Fixed ($)</option>
+              <option value="credits">Credits</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Value</label>
+            <input type="number" id="newPromoValue" placeholder="10">
+          </div>
+          <div class="form-group">
+            <label>Max Uses (0 for unlimited)</label>
+            <input type="number" id="newPromoMaxUses" placeholder="100" value="100">
+          </div>
         </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Full Name</th>
-              </tr>
-            </thead>
-            <tbody id="usersTableBody"></tbody>
-          </table>
-        </div>
+        <button type="button" id="btnCreatePromo" class="btn-primary" style="margin-top: 8px;">Create Promo Code</button>
+        <div id="adminPromoMessage" style="margin-top: 8px; font-size: 13px;"></div>
       </div>
+
+      <div class="form-group" style="margin-bottom: 16px;">
+        <input type="text" id="searchPromoInput" placeholder="Search promo codes..." oninput="window.filterPromos()">
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Value</th>
+            <th>Current Uses</th>
+            <th>Max Uses</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="promoTableBody">
+          <!-- Dynamic Promo Rows -->
+        </tbody>
+      </table>
     </div>
 
-    <!-- TAB 3: Send Email -->
-    <div id="emailTab" class="tab-content">
-      <div class="dashboard-card">
-        <h2>Send Promo Code Email</h2>
-        
-        <div class="input-group">
+    <!-- Dispatch Email Tab -->
+    <div id="emailsTab" class="tab-content">
+      <div style="max-width: 500px;">
+        <h3 style="font-size: 16px; margin-bottom: 16px;">Send Promo Code via Email</h3>
+        <div class="form-group autocomplete-wrapper">
           <label>Recipient Name</label>
-          <input type="text" id="admin-user-name" placeholder="Start typing name..." autocomplete="off">
+          <input type="text" id="admin-user-name" placeholder="Type or select user name...">
+          <ul id="name-suggestions" class="suggestions-list"></ul>
         </div>
-
-        <div class="input-group">
-          <label>Recipient Email Address</label>
-          <input type="email" id="admin-user-email" placeholder="Start typing email..." required autocomplete="off">
+        <div class="form-group autocomplete-wrapper">
+          <label>Recipient Email</label>
+          <input type="email" id="admin-user-email" placeholder="user@example.com">
+          <ul id="email-suggestions" class="suggestions-list"></ul>
         </div>
-
-        <div class="input-group">
-          <label>Promo Code to Send</label>
-          <input type="text" id="admin-promo-code" placeholder="WELCOME10">
+        <div class="form-group">
+          <label>Promo Code to Include</label>
+          <input type="text" id="admin-promo-code" placeholder="e.g. SPECIAL20">
         </div>
-
-        <button id="send-promo-btn" type="button" class="btn-primary" style="margin-top: 10px;">Send Promo Code</button>
+        <button type="button" id="send-promo-btn" class="btn-primary">Send Email</button>
       </div>
     </div>
   </div>
 
-  <!-- 3. Edit Promo Modal -->
+  <!-- Edit Modal -->
   <div id="editModal">
-    <div class="modal-content">
-      <h3 style="margin-bottom: 16px;">Edit Promo Code: <span id="editModalCodeTitle"></span></h3>
+    <div class="modal-box">
+      <h3 style="font-size: 18px; margin-bottom: 16px;">Edit Promo: <span id="editModalCodeTitle"></span></h3>
       <input type="hidden" id="editModalCode">
-      
-      <div class="input-group">
-        <label>Discount Type</label>
+      <div class="form-group">
+        <label>Type</label>
         <select id="editModalType">
           <option value="percentage">Percentage (%)</option>
-          <option value="fixed">Fixed Amount / Money</option>
-          <option value="credits">Store Credits</option>
+          <option value="fixed">Fixed ($)</option>
+          <option value="credits">Credits</option>
         </select>
       </div>
-      <div class="input-group">
-        <label>Discount Value</label>
-        <input type="number" id="editModalValue" required>
+      <div class="form-group">
+        <label>Value</label>
+        <input type="number" id="editModalValue">
       </div>
-      <div class="input-group">
+      <div class="form-group">
         <label>Max Uses</label>
-        <input type="number" id="editModalMaxUses" required>
+        <input type="number" id="editModalMaxUses">
       </div>
-
-      <div class="modal-actions">
-        <button class="btn-primary" onclick="savePromoEdit()">Save Changes</button>
-        <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button type="button" class="btn-primary" onclick="window.savePromoEdit()">Save Changes</button>
+        <button type="button" class="btn-logout" style="flex: 1;" onclick="window.closeEditModal()">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- 4. Load admin.js as a module -->
+  <!-- Main Script Module -->
   <script type="module" src="admin.js"></script>
 </body>
 </html>
