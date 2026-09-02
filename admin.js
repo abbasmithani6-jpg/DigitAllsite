@@ -1,4 +1,4 @@
-// // Initialize EmailJS with Public Key
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore.js";// // Initialize EmailJS with Public Key
 (function() {
   if (typeof emailjs !== 'undefined') {
     emailjs.init("l9xhVDI7VRC5H1tqk");
