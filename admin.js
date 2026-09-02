@@ -1,16 +1,219 @@
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore.js";// // Initialize EmailJS with Public Key
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// Initialize Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
+  authDomain: "digitall-c77d8.firebaseapp.com",
+  projectId: "digitall-c77d8",
+  storageBucket: "digitall-c77d8.firebasestorage.app",
+  messagingSenderId: "922798712588",
+  appId: "1:922798712588:web:43235136b5b1bf58168b29"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Cache database users globally for autocomplete search
+window.allUsers = [];
+
+// Initialize EmailJS with Public Key
 (function() {
   if (typeof emailjs !== 'undefined') {
     emailjs.init("l9xhVDI7VRC5H1tqk");
   }
 })();
+
+// Tab Switcher
+window.switchTab = function(tabId, element) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  
+  document.getElementById(tabId).classList.add('active');
+  element.classList.add('active');
+};
+
+// Toggle User Expansion
+window.toggleUserDetails = function(id) {
+  const detailsRow = document.getElementById(`user-details-${id}`);
+  if (detailsRow) {
+    detailsRow.classList.toggle('active');
+  }
+};
+
+// Real-time Search Filters
+window.filterPromos = function() {
+  const term = document.getElementById("searchPromoInput").value.toLowerCase();
+  const rows = document.querySelectorAll("#promoTableBody tr");
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(term) ? "" : "none";
+  });
+};
+
+window.filterUsers = function() {
+  const term = document.getElementById("searchUserInput").value.toLowerCase();
+  const rows = document.querySelectorAll("#usersTableBody tr.user-main-row");
+  rows.forEach(row => {
+    const userId = row.getAttribute('data-id');
+    const detailsRow = document.getElementById(`user-details-${userId}`);
+    const text = (row.innerText + " " + (detailsRow ? detailsRow.innerText : "")).toLowerCase();
+    
+    if (text.includes(term)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+      if (detailsRow) detailsRow.classList.remove('active');
+    }
+  });
+};
+
+// Auth Observer
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("adminDashboard").style.display = "block";
+    loadDashboardData();
+  } else {
+    document.getElementById("loginScreen").style.display = "block";
+    document.getElementById("adminDashboard").style.display = "none";
+  }
+});
+
+window.handleLogin = async function() {
+  const email = document.getElementById("emailInput").value;
+  const password = document.getElementById("passwordInput").value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    alert("Login failed: " + error.message);
+  }
+};
+
+window.handleLogout = function() {
+  signOut(auth);
+};
+
+async function loadDashboardData() {
+  try {
+    const currentUser = auth.currentUser;
+    
+    // Load Users
+    const usersSnap = await getDocs(collection(db, "users"));
+    const usersTable = document.getElementById("usersTableBody");
+    usersTable.innerHTML = "";
+    
+    window.allUsers = [];
+    let userCount = 0;
+    let foundSelf = false;
+
+    usersSnap.forEach((docSnap) => {
+      userCount++;
+      const u = docSnap.data();
+      if (currentUser && docSnap.id === currentUser.uid) foundSelf = true;
+      
+      const fullName = (u.firstName || u.lastName) 
+        ? `${u.firstName || ""} ${u.lastName || ""}`.trim() 
+        : (u.name || u.displayName || "Unnamed User");
+        
+      const email = u.email || "";
+      const role = u.role || (currentUser && docSnap.id === currentUser.uid ? "admin" : "user");
+      const safeId = docSnap.id;
+
+      if (email || fullName) {
+        window.allUsers.push({ name: fullName, email: email });
+      }
+
+      usersTable.innerHTML += `
+        <tr class="user-main-row" data-id="${safeId}" onclick="window.toggleUserDetails('${safeId}')">
+          <td>
+            <strong style="font-size: 15px;">${fullName}</strong>
+            <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">(Tap for details)</span>
+          </td>
+        </tr>
+        <tr id="user-details-${safeId}" class="user-details-row">
+          <td>
+            <div class="user-details-container">
+              <div class="user-details-grid">
+                <div class="user-detail-item">Full Name: <span>${fullName}</span></div>
+                <div class="user-detail-item">Email Address: <span>${email || "No email"}</span></div>
+                <div class="user-detail-item">User ID: <span><code>${safeId}</code></span></div>
+                <div class="user-detail-item">Account Role: <span><span class="badge ${role === 'admin' ? 'badge-admin' : ''}">${role}</span></span></div>
+              </div>
+            </div>
+          </td>
+        </tr>`;
+    });
+
+    if (!foundSelf && currentUser) {
+      userCount++;
+      const adminId = currentUser.uid;
+      const adminEmail = currentUser.email || "";
+      window.allUsers.push({ name: "Admin Account", email: adminEmail });
+
+      usersTable.innerHTML = `
+        <tr class="user-main-row" data-id="${adminId}" onclick="window.toggleUserDetails('${adminId}')">
+          <td>
+            <strong style="font-size: 15px;">Admin Account (You)</strong>
+            <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">(Tap for details)</span>
+          </td>
+        </tr>
+        <tr id="user-details-${adminId}" class="user-details-row">
+          <td>
+            <div class="user-details-container">
+              <div class="user-details-grid">
+                <div class="user-detail-item">Email Address: <span>${adminEmail}</span></div>
+                <div class="user-detail-item">User ID: <span><code>${adminId}</code></span></div>
+                <div class="user-detail-item">Role: <span><span class="badge badge-admin">admin</span></span></div>
+              </div>
+            </div>
+          </td>
+        </tr>` + usersTable.innerHTML;
+    }
+
+    document.getElementById("userCounter").innerText = userCount;
+
+    // Load Promo Codes
+    const promoSnap = await getDocs(collection(db, "promocodes"));
+    const promoTable = document.getElementById("promoTableBody");
+    promoTable.innerHTML = "";
+    
+    document.getElementById("promoCounter").innerText = promoSnap.size;
+
+    promoSnap.forEach((docSnap) => {
+      const p = docSnap.data();
+      const type = p.type || p.discountType || 'percentage';
+      const val = p.value ?? p.discountValue ?? p.discountPercent ?? 0;
+      const maxUses = p.maxUses ?? 0;
+
+      let displayValue = "";
+      if (type === "percentage" || type === "percent") displayValue = `${val}% Off`;
+      else if (type === "fixed" || type === "money") displayValue = `$${val} Off`;
+      else if (type === "credits") displayValue = `${val} Credits`;
+
+      promoTable.innerHTML += `
+        <tr>
+          <td><strong>${docSnap.id}</strong></td>
+          <td><span class="badge">${displayValue}</span></td>
+          <td>${p.currentUses ?? 0}</td>
+          <td>${maxUses}</td>
+          <td>
+            <button class="btn-edit" onclick="window.openEditModal('${docSnap.id}', '${type}', ${val}, ${maxUses})">Edit</button>
+          </td>
+        </tr>`;
+    });
+  } catch (err) {
+    console.error("Data fetch error:", err);
+  }
+}
+
+// Create Promo Code Logic
 document.addEventListener('DOMContentLoaded', () => {
   const createBtn = document.getElementById('btnCreatePromo');
   
-  if (!createBtn) {
-    console.error("Could not find btnCreatePromo element on the page!");
-    return;
-  }
+  if (!createBtn) return;
 
   createBtn.addEventListener('click', async () => {
     const codeInput = document.getElementById('newPromoCode').value.trim().toUpperCase();
@@ -19,8 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxUsesInput = Number(document.getElementById('newPromoMaxUses').value);
     const msg = document.getElementById('adminPromoMessage');
 
-    console.log("Create promo clicked for:", codeInput);
-
     if (!codeInput || isNaN(valueInput) || valueInput <= 0) {
       msg.style.color = "#ef4444";
       msg.textContent = "Please enter a valid code and a non-zero value.";
@@ -28,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      // Make sure 'doc', 'setDoc', and 'db' are imported at the top of your admin.js file from Firebase
       const promoRef = doc(db, "promocodes", codeInput);
       
       await setDoc(promoRef, {
@@ -42,9 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
       msg.style.color = "#00ff87";
       msg.textContent = `Promo code "${codeInput}" created successfully!`;
       
-      // Clear form fields
       document.getElementById('newPromoCode').value = '';
       document.getElementById('newPromoValue').value = '';
+      loadDashboardData();
     } catch (err) {
       console.error("Error creating promo code:", err);
       msg.style.color = "#ef4444";
@@ -52,6 +252,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// Edit Modal Handlers
+window.openEditModal = function(code, type, val, maxUses) {
+  document.getElementById("editModalCodeTitle").innerText = code;
+  document.getElementById("editModalCode").value = code;
+  document.getElementById("editModalType").value = type;
+  document.getElementById("editModalValue").value = val;
+  document.getElementById("editModalMaxUses").value = maxUses;
+  document.getElementById("editModal").style.display = "flex";
+};
+
+window.closeEditModal = function() {
+  document.getElementById("editModal").style.display = "none";
+};
+
+window.savePromoEdit = async function() {
+  const code = document.getElementById("editModalCode").value;
+  const type = document.getElementById("editModalType").value;
+  const val = Number(document.getElementById("editModalValue").value);
+  const maxUses = Number(document.getElementById("editModalMaxUses").value);
+
+  try {
+    await updateDoc(doc(db, "promocodes", code), {
+      type: type,
+      value: val,
+      maxUses: maxUses
+    });
+    alert(`Updated ${code}`);
+    window.closeEditModal();
+    loadDashboardData();
+  } catch (err) {
+    alert("Update error: " + err.message);
+  }
+};
+
 // Outlook-Style Autocomplete Logic
 document.addEventListener('DOMContentLoaded', function() {
   const nameInput = document.getElementById('admin-user-name');
@@ -71,7 +306,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Search users matching name or email
       const matches = window.allUsers.filter(u => {
         const nameMatch = u.name && u.name.toLowerCase().includes(query);
         const emailMatch = u.email && u.email.toLowerCase().includes(query);
@@ -83,7 +317,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // Display top 5 matches
       matches.slice(0, 5).forEach(user => {
         const li = document.createElement('li');
         li.className = 'autocomplete-item';
@@ -106,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
   setupAutocomplete(nameInput, nameList);
   setupAutocomplete(emailInput, emailList);
 
-  // Close suggestions when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.closest('#emailTab')) {
       if (nameList) nameList.classList.remove('active');
