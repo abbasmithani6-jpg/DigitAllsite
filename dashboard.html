@@ -1441,7 +1441,7 @@
   </script>
   <!-- Paste this modal HTML and script right before your closing </body> tag -->
 
-  <div id="checkout-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+<div id="checkout-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
     <div style="background: var(--bg-card, #1e1e24); padding: 24px; border-radius: 12px; width: 100%; max-width: 400px; color: var(--text-main, #fff); box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
       <h3 style="margin-top: 0; margin-bottom: 16px;">Complete Your Order</h3>
       <div id="checkout-plan-name" style="font-weight: 600; margin-bottom: 8px; color: var(--accent-purple);">Plan Name</div>
@@ -1477,6 +1477,22 @@
       requiredCredits: 0,
       usingCredits: false
     };
+
+    function triggerCheckoutFromDOM(planName, priceElementId, creditFeatureId) {
+      // Extract numbers safely directly from the rendered text on the page
+      const priceText = document.getElementById(priceElementId).innerText || "";
+      const creditText = document.getElementById(creditFeatureId).innerText || "";
+
+      // Pull out digits only
+      const extractedPrices = priceText.replace(/,/g, '').match(/\d+/g);
+      const extractedCredits = creditText.replace(/,/g, '').match(/\d+/g);
+
+      // Usually the final/discounted price is the last extracted number or first depending on layout. Let's grab the last valid number for price, and first for credits.
+      const finalPrice = extractedPrices ? parseInt(extractedPrices[extractedPrices.length - 1], 10) : 0;
+      const requiredCredits = extractedCredits ? parseInt(extractedCredits[0], 10) : 0;
+
+      openCheckout(planName, finalPrice, requiredCredits);
+    }
 
     function openCheckout(planName, finalPrice, requiredCredits) {
       currentCheckoutData = {
@@ -1545,6 +1561,7 @@
       
       closeCheckoutModal();
     }
+  </script>
   </script>
 </body>
 </html>
