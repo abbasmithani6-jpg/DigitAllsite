@@ -4,7 +4,43 @@
     emailjs.init("l9xhVDI7VRC5H1tqk");
   }
 })();
+document.getElementById('btnCreatePromo').addEventListener('click', async () => {
+  const codeInput = document.getElementById('newPromoCode').value.trim().toUpperCase();
+  const typeInput = document.getElementById('newPromoType').value;
+  const valueInput = Number(document.getElementById('newPromoValue').value);
+  const maxUsesInput = Number(document.getElementById('newPromoMaxUses').value);
+  const msg = document.getElementById('adminPromoMessage');
 
+  if (!codeInput || isNaN(valueInput) || valueInput <= 0) {
+    msg.style.color = "#ef4444";
+    msg.textContent = "Please enter a valid code and a non-zero value.";
+    return;
+  }
+
+  try {
+    // Uses the promo code itself as the Firestore Document ID, matching your dashboard setup
+    const promoRef = doc(db, "promocodes", codeInput);
+    
+    await setDoc(promoRef, {
+      code: codeInput,
+      type: typeInput,
+      value: valueInput,
+      maxUses: maxUsesInput,
+      currentUses: 0
+    });
+
+    msg.style.color = "#00ff87";
+    msg.textContent = `Promo code "${codeInput}" created successfully!`;
+    
+    // Clear form fields
+    document.getElementById('newPromoCode').value = '';
+    document.getElementById('newPromoValue').value = '';
+  } catch (err) {
+    console.error("Error creating promo code:", err);
+    msg.style.color = "#ef4444";
+    msg.textContent = "Error creating promo code. Check console.";
+  }
+});
 // Outlook-Style Autocomplete Logic
 document.addEventListener('DOMContentLoaded', function() {
   const nameInput = document.getElementById('admin-user-name');
