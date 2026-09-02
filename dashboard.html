@@ -588,82 +588,10 @@
         <h2 style="margin-bottom: 20px;" id="txt-plans-header">Available Subscription Plans</h2>
         
         <div class="promo-section">
-          
           <input type="text" id="promoCodeInput" class="promo-input" placeholder="ENTER PROMO CODE" />
           <button id="btnApplyPromo" class="btn-send">Apply Code</button>
         </div>
         <div id="promoMessage" style="margin-bottom: 16px; font-weight: 700; font-size: 14px;"></div>
-        <script>
-document.getElementById('btnApplyPromo').addEventListener('click', async () => {
-      const codeInput = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-      const msg = document.getElementById('promoMessage');
-
-      if (!codeInput) {
-        msg.style.color = "#ef4444";
-        msg.textContent = dictionary[currentLang].promoErrEmpty;
-        return;
-      }
-
-      try {
-        const promoRef = doc(db, "promocodes", codeInput);
-        const promoSnap = await getDoc(promoRef);
-
-        if (promoSnap.exists()) {
-          const data = promoSnap.data();
-          const promoType = data.type ? data.type.toLowerCase() : 'percentage';
-          const promoValue = Number(data.value) || 0;
-
-          if (promoValue <= 0) {
-            activeDiscount = 0;
-            msg.style.color = "#ef4444";
-            msg.textContent = dictionary[currentLang].promoInvalid;
-            updateAllPrices();
-            return;
-          }
-
-          // Handle different promo types
-// Save active promo details globally so your price calculator can read them
-window.activePromoType = promoType;
-window.activePromoValue = promoValue;
-
-// Handle different promo types
-if (promoType === 'percentage' || promoType === 'percent') {
-    activeDiscount = promoValue;
-    msg.style.color = "#00ff87";
-    msg.textContent = `${dictionary[currentLang].promoSuccess} ${promoValue}% Off`;
-} else if (promoType === 'fixed' || promoType === 'money') {
-    activeDiscount = promoValue;
-    msg.style.color = "#00ff87";
-    msg.textContent = `Success! $${promoValue} Off`;
-} else if (promoType === 'credits') {
-    activeDiscount = 0; // Doesn't discount the checkout price as a percentage
-    msg.style.color = "#00ff87";
-    msg.textContent = `Success! +${promoValue} Bonus Credits Added`;
-}
-          updateAllPrices();
-
-          // Increment currentUses safely matching your database field
-          try {
-            await updateDoc(promoRef, {
-              currentUses: increment(1)
-            });
-          } catch (e) {
-            console.log("Note: 'currentUses' field increment skipped or failed.", e);
-          }
-        } else {
-          activeDiscount = 0;
-          msg.style.color = "#ef4444";
-          msg.textContent = dictionary[currentLang].promoInvalid;
-          updateAllPrices();
-        }
-      } catch (err) {
-        console.error("Promo code fetch error:", err);
-        activeDiscount = 0;
-        msg.style.color = "#ef4444";
-        msg.textContent = dictionary[currentLang].promoInvalid;
-        updateAllPrices();
-      }
-    });</script>
 
         <div class="billing-toggle-container">
           <button class="cycle-btn" data-cycle="weekly" id="btn-cycle-weekly">Weekly</button>
@@ -879,7 +807,6 @@ if (promoType === 'percentage' || promoType === 'percent') {
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Replace with your valid Gemini API key to make the AI chat work properly
     const GEMINI_API_KEY = "AQ.Ab8RN6KquUOTTrDzANxfvsvJNUKGNWtIqbid9dTgwyAIUUoSSg"; 
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
@@ -971,7 +898,16 @@ if (promoType === 'percentage' || promoType === 'percent') {
 
     function renderPrice(elementId, creditElementId, baseMonthly) {
       const cyclePrice = getAdjustedMonthlyBase(baseMonthly);
-      const finalPrice = activeDiscount > 0 ? cyclePrice * (1 - activeDiscount / 100) : cyclePrice;
+      
+      let finalPrice = cyclePrice;
+      if (window.activePromoType === 'percentage' || window.activePromoType === 'percent') {
+        finalPrice = cyclePrice * (1 - (window.activePromoValue || activeDiscount) / 100);
+      } else if (window.activePromoType === 'fixed' || window.activePromoType === 'money') {
+        finalPrice = cyclePrice - (window.activePromoValue || 0);
+      }
+      
+      if (finalPrice < 0) finalPrice = 0;
+
       const target = document.getElementById(elementId);
       const creditTarget = document.getElementById(creditElementId);
       
@@ -990,7 +926,7 @@ if (promoType === 'percentage' || promoType === 'percent') {
         priceDisplay += ` <span style="font-size: 10px; opacity: 0.6; display: inline-block;">(Annual billing package)</span>`;
       }
 
-      if (activeDiscount > 0) {
+      if (finalPrice < cyclePrice) {
         target.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 16px; margin-right: 6px;">${roundedOriginal} AR</span>${priceDisplay}`;
       } else {
         target.innerHTML = priceDisplay;
@@ -1058,30 +994,61 @@ if (promoType === 'percentage' || promoType === 'percent') {
 
         if (promoSnap.exists()) {
           const data = promoSnap.data();
-          const parsedDiscount = Number(data.discount);
-          activeDiscount = isNaN(parsedDiscount) ? 0 : parsedDiscount;
+          const promoType = data.type ? data.type.toLowerCase() : 'percentage';
+          const promoValue = Number(data.value) || Number(data.discount) || 0;
 
-          msg.style.color = "#00ff87";
-          msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
+          if (promoValue <= 0 && promoType !== 'credits') {
+            activeDiscount = 0;
+            window.activePromoType = null;
+            window.activePromoValue = 0;
+            msg.style.color = "#ef4444";
+            msg.textContent = dictionary[currentLang].promoInvalid;
+            updateAllPrices();
+            return;
+          }
+
+          window.activePromoType = promoType;
+          window.activePromoValue = promoValue;
+
+          if (promoType === 'percentage' || promoType === 'percent') {
+            activeDiscount = promoValue;
+            msg.style.color = "#00ff87";
+            msg.textContent = `${dictionary[currentLang].promoSuccess} ${promoValue}% Off`;
+          } else if (promoType === 'fixed' || promoType === 'money') {
+            activeDiscount = promoValue;
+            msg.style.color = "#00ff87";
+            msg.textContent = `Success! $${promoValue} Off`;
+          } else if (promoType === 'credits') {
+            activeDiscount = 0;
+            userCredits += promoValue;
+            updateDashboardMetrics();
+            msg.style.color = "#00ff87";
+            msg.textContent = `Success! +${promoValue} Bonus Credits Added`;
+          }
+
           updateAllPrices();
 
-          // Increment usage count in Firestore if a usage counter field exists
           try {
             await updateDoc(promoRef, {
+              currentUses: increment(1),
               uses: increment(1)
             });
           } catch (e) {
-            console.log("Note: 'uses' field increment skipped or failed.", e);
+            console.log("Note: Usage counter increment skipped or failed.", e);
           }
         } else {
           const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
           if (staticCodes[codeInput] !== undefined) {
+            window.activePromoType = 'percentage';
+            window.activePromoValue = staticCodes[codeInput];
             activeDiscount = staticCodes[codeInput];
             msg.style.color = "#00ff87";
             msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
             updateAllPrices();
           } else {
             activeDiscount = 0;
+            window.activePromoType = null;
+            window.activePromoValue = 0;
             msg.style.color = "#ef4444";
             msg.textContent = dictionary[currentLang].promoInvalid;
             updateAllPrices();
@@ -1091,12 +1058,16 @@ if (promoType === 'percentage' || promoType === 'percent') {
         console.error("Promo code fetch error:", err);
         const staticCodes = { "DIGITALL20": 20, "WELCOME10": 10, "PRO50": 50 };
         if (staticCodes[codeInput] !== undefined) {
+          window.activePromoType = 'percentage';
+          window.activePromoValue = staticCodes[codeInput];
           activeDiscount = staticCodes[codeInput];
           msg.style.color = "#00ff87";
           msg.textContent = `${dictionary[currentLang].promoSuccess} ${activeDiscount}%`;
           updateAllPrices();
         } else {
           activeDiscount = 0;
+          window.activePromoType = null;
+          window.activePromoValue = 0;
           msg.style.color = "#ef4444";
           msg.textContent = dictionary[currentLang].promoInvalid;
           updateAllPrices();
@@ -1417,7 +1388,7 @@ if (promoType === 'percentage' || promoType === 'percent') {
       btn.addEventListener('click', function() { updateLanguage(this.getAttribute('data-lang')); });
     });
 
-const WORKER_URL = "https://digitall-gemini-proxy.abbasmithani6.workers.dev";
+    const WORKER_URL = "https://digitall-gemini-proxy.abbasmithani6.workers.dev";
 
     aiForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1460,7 +1431,7 @@ const WORKER_URL = "https://digitall-gemini-proxy.abbasmithani6.workers.dev";
 
       chatBox.scrollTop = chatBox.scrollHeight;
     });
-    // ...UP TO HERE.
+
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await signOut(auth);
       window.location.href = "login.html";
