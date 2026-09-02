@@ -622,35 +622,23 @@ document.getElementById('btnApplyPromo').addEventListener('click', async () => {
           }
 
           // Handle different promo types
-      function updateAllPrices() {
-  // Base price of your product/subscription
-  let basePrice = 10; // Change this to your actual base price variable
+// Save active promo details globally so your price calculator can read them
+window.activePromoType = promoType;
+window.activePromoValue = promoValue;
 
-  let finalPrice = basePrice;
-
-  // Check what type of promo code was applied
-  if (window.activePromoType === 'percentage' || window.activePromoType === 'percent') {
-    // Subtract percentage (e.g., 20% off)
-    finalPrice = basePrice - (basePrice * (window.activePromoValue / 100));
-  } 
-  else if (window.activePromoType === 'fixed' || window.activePromoType === 'money') {
-    // Subtract fixed money amount (e.g., $5 off)
-    finalPrice = basePrice - window.activePromoValue;
-  } 
-  else if (window.activePromoType === 'credits') {
-    // For credits, price stays the same or handles credit addition logic
-    finalPrice = basePrice;
-    // Add logic here to credit the user's account if needed
-  }
-
-  // Ensure price doesn't drop below zero
-  if (finalPrice < 0) finalPrice = 0;
-
-  // Update the price displayed on your UI element
-  const priceDisplay = document.getElementById("displayPrice");
-  if (priceDisplay) {
-    priceDisplay.textContent = `$${finalPrice.toFixed(2)}`;
-  }
+// Handle different promo types
+if (promoType === 'percentage' || promoType === 'percent') {
+    activeDiscount = promoValue;
+    msg.style.color = "#00ff87";
+    msg.textContent = `${dictionary[currentLang].promoSuccess} ${promoValue}% Off`;
+} else if (promoType === 'fixed' || promoType === 'money') {
+    activeDiscount = promoValue;
+    msg.style.color = "#00ff87";
+    msg.textContent = `Success! $${promoValue} Off`;
+} else if (promoType === 'credits') {
+    activeDiscount = 0; // Doesn't discount the checkout price as a percentage
+    msg.style.color = "#00ff87";
+    msg.textContent = `Success! +${promoValue} Bonus Credits Added`;
 }
           updateAllPrices();
 
