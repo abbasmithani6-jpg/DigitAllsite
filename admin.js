@@ -26,6 +26,23 @@ window.allUsers = [];
   }
 })();
 
+// Global Login Handler (Matches your original inline HTML setup)
+window.handleLogin = async function() {
+  const email = document.getElementById("emailInput").value.trim();
+  const password = document.getElementById("passwordInput").value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error("Login failed:", error);
+    alert("Login failed: " + error.message);
+  }
+};
+
+window.handleLogout = function() {
+  signOut(auth);
+};
+
 // Tab Switcher
 window.switchTab = function(tabId, element) {
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -207,51 +224,9 @@ async function loadDashboardData() {
   }
 }
 
-// DOMContentLoaded Listeners for Buttons and Interactions
+// DOMContentLoaded Listeners for Creation & Autocomplete
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Login Handler
-  const loginBtn = document.getElementById('btnLogin');
-  if (loginBtn) {
-    loginBtn.addEventListener('click', async () => {
-      const email = document.getElementById("emailInput").value.trim();
-      const password = document.getElementById("passwordInput").value;
-
-      let loginMsg = document.getElementById("loginMsg");
-      if (!loginMsg) {
-        loginMsg = document.createElement("div");
-        loginMsg.id = "loginMsg";
-        loginMsg.style.cssText = "margin-top: 12px; font-size: 13px; text-align: center;";
-        document.getElementById("loginScreen").appendChild(loginMsg);
-      }
-
-      if (!email || !password) {
-        loginMsg.style.color = "#ef4444";
-        loginMsg.textContent = "Please enter both email and password.";
-        return;
-      }
-
-      loginMsg.style.color = "#94a3b8";
-      loginMsg.textContent = "Signing in...";
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        console.error("Login error:", error);
-        loginMsg.style.color = "#ef4444";
-        loginMsg.textContent = "Login failed: " + error.message;
-      }
-    });
-  }
-
-  // 2. Logout Handler
-  const logoutBtn = document.getElementById('btnLogout');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      signOut(auth);
-    });
-  }
-
-  // 3. Create Promo Code Handler
+  // Create Promo Code Handler
   const createBtn = document.getElementById('btnCreatePromo');
   if (createBtn) {
     createBtn.addEventListener('click', async () => {
@@ -292,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. Autocomplete Setup
+  // Autocomplete Setup
   const nameInput = document.getElementById('admin-user-name');
   const emailInput = document.getElementById('admin-user-email');
   const nameList = document.getElementById('name-suggestions');
@@ -351,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Modal Handlers (Exposed globally for inline HTML buttons)
+// Modal Handlers
 window.openEditModal = function(code, type, val, maxUses) {
   document.getElementById("editModalCodeTitle").innerText = code;
   document.getElementById("editModalCode").value = code;
