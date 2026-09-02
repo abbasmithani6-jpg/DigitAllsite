@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error("Error creating promo code:", err);
       msg.style.color = "#ef4444";
-      msg.textContent = "Error creating promo code. Check console.";
+      msg.textContent = "Error: " + (err.message || err);
     }
   });
 });
