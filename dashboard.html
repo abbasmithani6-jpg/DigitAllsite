@@ -1349,6 +1349,7 @@
     const aiInput = document.getElementById('aiInput');
     const chatBox = document.getElementById('chatBox');
 
+    // REPLACE EVERYTHING FROM HERE...
     aiForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = aiInput.value.trim();
@@ -1397,7 +1398,7 @@
 
       chatBox.scrollTop = chatBox.scrollHeight;
     });
-
+    // ...UP TO HERE.
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await signOut(auth);
       window.location.href = "login.html";
