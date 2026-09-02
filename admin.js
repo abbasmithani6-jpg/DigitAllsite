@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Initialize Firebase configuration
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBc0-yyvbJH7gk5Fmh6-0u0AI6XTyqrdXU",
   authDomain: "digitall-c77d8.firebaseapp.com",
@@ -16,10 +16,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Cache database users globally for autocomplete search
+// Global state
 window.allUsers = [];
 
-// Initialize EmailJS with Public Key
+// Initialize EmailJS
 (function() {
   if (typeof emailjs !== 'undefined') {
     emailjs.init("l9xhVDI7VRC5H1tqk");
@@ -31,11 +31,12 @@ window.switchTab = function(tabId, element) {
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   
-  document.getElementById(tabId).classList.add('active');
-  element.classList.add('active');
+  const targetTab = document.getElementById(tabId);
+  if (targetTab) targetTab.classList.add('active');
+  if (element) element.classList.add('active');
 };
 
-// Toggle User Expansion
+// Toggle User Details
 window.toggleUserDetails = function(id) {
   const detailsRow = document.getElementById(`user-details-${id}`);
   if (detailsRow) {
@@ -45,7 +46,9 @@ window.toggleUserDetails = function(id) {
 
 // Real-time Search Filters
 window.filterPromos = function() {
-  const term = document.getElementById("searchPromoInput").value.toLowerCase();
+  const input = document.getElementById("searchPromoInput");
+  if (!input) return;
+  const term = input.value.toLowerCase();
   const rows = document.querySelectorAll("#promoTableBody tr");
   rows.forEach(row => {
     const text = row.innerText.toLowerCase();
@@ -54,7 +57,9 @@ window.filterPromos = function() {
 };
 
 window.filterUsers = function() {
-  const term = document.getElementById("searchUserInput").value.toLowerCase();
+  const input = document.getElementById("searchUserInput");
+  if (!input) return;
+  const term = input.value.toLowerCase();
   const rows = document.querySelectorAll("#usersTableBody tr.user-main-row");
   rows.forEach(row => {
     const userId = row.getAttribute('data-id');
@@ -72,30 +77,19 @@ window.filterUsers = function() {
 
 // Auth Observer
 onAuthStateChanged(auth, (user) => {
+  const loginScreen = document.getElementById("loginScreen");
+  const adminDashboard = document.getElementById("adminDashboard");
   if (user) {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("adminDashboard").style.display = "block";
+    if (loginScreen) loginScreen.style.display = "none";
+    if (adminDashboard) adminDashboard.style.display = "block";
     loadDashboardData();
   } else {
-    document.getElementById("loginScreen").style.display = "block";
-    document.getElementById("adminDashboard").style.display = "none";
+    if (loginScreen) loginScreen.style.display = "block";
+    if (adminDashboard) adminDashboard.style.display = "none";
   }
 });
 
-window.handleLogin = async function() {
-  const email = document.getElementById("emailInput").value;
-  const password = document.getElementById("passwordInput").value;
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error) {
-    alert("Login failed: " + error.message);
-  }
-};
-
-window.handleLogout = function() {
-  signOut(auth);
-};
-
+// Load Dashboard Data
 async function loadDashboardData() {
   try {
     const currentUser = auth.currentUser;
@@ -103,6 +97,7 @@ async function loadDashboardData() {
     // Load Users
     const usersSnap = await getDocs(collection(db, "users"));
     const usersTable = document.getElementById("usersTableBody");
+    if (!usersTable) return;
     usersTable.innerHTML = "";
     
     window.allUsers = [];
@@ -173,14 +168,17 @@ async function loadDashboardData() {
         </tr>` + usersTable.innerHTML;
     }
 
-    document.getElementById("userCounter").innerText = userCount;
+    const userCounter = document.getElementById("userCounter");
+    if (userCounter) userCounter.innerText = userCount;
 
     // Load Promo Codes
     const promoSnap = await getDocs(collection(db, "promocodes"));
     const promoTable = document.getElementById("promoTableBody");
+    if (!promoTable) return;
     promoTable.innerHTML = "";
     
-    document.getElementById("promoCounter").innerText = promoSnap.size;
+    const promoCounter = document.getElementById("promoCounter");
+    if (promoCounter) promoCounter.innerText = promoSnap.size;
 
     promoSnap.forEach((docSnap) => {
       const p = docSnap.data();
@@ -209,86 +207,92 @@ async function loadDashboardData() {
   }
 }
 
-// Create Promo Code Logic
+// DOMContentLoaded Listeners for Buttons and Interactions
 document.addEventListener('DOMContentLoaded', () => {
-  const createBtn = document.getElementById('btnCreatePromo');
-  
-  if (!createBtn) return;
+  // 1. Login Handler
+  const loginBtn = document.getElementById('btnLogin');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', async () => {
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
 
-  createBtn.addEventListener('click', async () => {
-    const codeInput = document.getElementById('newPromoCode').value.trim().toUpperCase();
-    const typeInput = document.getElementById('newPromoType').value;
-    const valueInput = Number(document.getElementById('newPromoValue').value);
-    const maxUsesInput = Number(document.getElementById('newPromoMaxUses').value);
-    const msg = document.getElementById('adminPromoMessage');
+      let loginMsg = document.getElementById("loginMsg");
+      if (!loginMsg) {
+        loginMsg = document.createElement("div");
+        loginMsg.id = "loginMsg";
+        loginMsg.style.cssText = "margin-top: 12px; font-size: 13px; text-align: center;";
+        document.getElementById("loginScreen").appendChild(loginMsg);
+      }
 
-    if (!codeInput || isNaN(valueInput) || valueInput <= 0) {
-      msg.style.color = "#ef4444";
-      msg.textContent = "Please enter a valid code and a non-zero value.";
-      return;
-    }
+      if (!email || !password) {
+        loginMsg.style.color = "#ef4444";
+        loginMsg.textContent = "Please enter both email and password.";
+        return;
+      }
 
-    try {
-      const promoRef = doc(db, "promocodes", codeInput);
-      
-      await setDoc(promoRef, {
-        code: codeInput,
-        type: typeInput,
-        value: valueInput,
-        maxUses: maxUsesInput,
-        currentUses: 0
-      });
+      loginMsg.style.color = "#94a3b8";
+      loginMsg.textContent = "Signing in...";
 
-      msg.style.color = "#00ff87";
-      msg.textContent = `Promo code "${codeInput}" created successfully!`;
-      
-      document.getElementById('newPromoCode').value = '';
-      document.getElementById('newPromoValue').value = '';
-      loadDashboardData();
-    } catch (err) {
-      console.error("Error creating promo code:", err);
-      msg.style.color = "#ef4444";
-      msg.textContent = "Crash: " + (err.message || JSON.stringify(err) || err);
-    }
-  });
-});
-
-// Edit Modal Handlers
-window.openEditModal = function(code, type, val, maxUses) {
-  document.getElementById("editModalCodeTitle").innerText = code;
-  document.getElementById("editModalCode").value = code;
-  document.getElementById("editModalType").value = type;
-  document.getElementById("editModalValue").value = val;
-  document.getElementById("editModalMaxUses").value = maxUses;
-  document.getElementById("editModal").style.display = "flex";
-};
-
-window.closeEditModal = function() {
-  document.getElementById("editModal").style.display = "none";
-};
-
-window.savePromoEdit = async function() {
-  const code = document.getElementById("editModalCode").value;
-  const type = document.getElementById("editModalType").value;
-  const val = Number(document.getElementById("editModalValue").value);
-  const maxUses = Number(document.getElementById("editModalMaxUses").value);
-
-  try {
-    await updateDoc(doc(db, "promocodes", code), {
-      type: type,
-      value: val,
-      maxUses: maxUses
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        console.error("Login error:", error);
+        loginMsg.style.color = "#ef4444";
+        loginMsg.textContent = "Login failed: " + error.message;
+      }
     });
-    alert(`Updated ${code}`);
-    window.closeEditModal();
-    loadDashboardData();
-  } catch (err) {
-    alert("Update error: " + err.message);
   }
-};
 
-// Outlook-Style Autocomplete Logic
-document.addEventListener('DOMContentLoaded', function() {
+  // 2. Logout Handler
+  const logoutBtn = document.getElementById('btnLogout');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      signOut(auth);
+    });
+  }
+
+  // 3. Create Promo Code Handler
+  const createBtn = document.getElementById('btnCreatePromo');
+  if (createBtn) {
+    createBtn.addEventListener('click', async () => {
+      const codeInput = document.getElementById('newPromoCode').value.trim().toUpperCase();
+      const typeInput = document.getElementById('newPromoType').value;
+      const valueInput = Number(document.getElementById('newPromoValue').value);
+      const maxUsesInput = Number(document.getElementById('newPromoMaxUses').value);
+      const msg = document.getElementById('adminPromoMessage');
+
+      if (!codeInput || isNaN(valueInput) || valueInput <= 0) {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Please enter a valid code and a non-zero value.";
+        return;
+      }
+
+      try {
+        const promoRef = doc(db, "promocodes", codeInput);
+        
+        await setDoc(promoRef, {
+          code: codeInput,
+          type: typeInput,
+          value: valueInput,
+          maxUses: maxUsesInput,
+          currentUses: 0
+        });
+
+        msg.style.color = "#00ff87";
+        msg.textContent = `Promo code "${codeInput}" created successfully!`;
+        
+        document.getElementById('newPromoCode').value = '';
+        document.getElementById('newPromoValue').value = '';
+        loadDashboardData();
+      } catch (err) {
+        console.error("Error creating promo code:", err);
+        msg.style.color = "#ef4444";
+        msg.textContent = "Crash: " + (err.message || JSON.stringify(err) || err);
+      }
+    });
+  }
+
+  // 4. Autocomplete Setup
   const nameInput = document.getElementById('admin-user-name');
   const emailInput = document.getElementById('admin-user-email');
   const nameList = document.getElementById('name-suggestions');
@@ -346,6 +350,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+// Modal Handlers (Exposed globally for inline HTML buttons)
+window.openEditModal = function(code, type, val, maxUses) {
+  document.getElementById("editModalCodeTitle").innerText = code;
+  document.getElementById("editModalCode").value = code;
+  document.getElementById("editModalType").value = type;
+  document.getElementById("editModalValue").value = val;
+  document.getElementById("editModalMaxUses").value = maxUses;
+  document.getElementById("editModal").style.display = "flex";
+};
+
+window.closeEditModal = function() {
+  document.getElementById("editModal").style.display = "none";
+};
+
+window.savePromoEdit = async function() {
+  const code = document.getElementById("editModalCode").value;
+  const type = document.getElementById("editModalType").value;
+  const val = Number(document.getElementById("editModalValue").value);
+  const maxUses = Number(document.getElementById("editModalMaxUses").value);
+
+  try {
+    await updateDoc(doc(db, "promocodes", code), {
+      type: type,
+      value: val,
+      maxUses: maxUses
+    });
+    alert(`Updated ${code}`);
+    window.closeEditModal();
+    loadDashboardData();
+  } catch (err) {
+    alert("Update error: " + err.message);
+  }
+};
 
 // Delegated Click Listener for Email Dispatch
 document.addEventListener('click', function(event) {
